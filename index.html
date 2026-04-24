@@ -79,6 +79,24 @@ body::before {
     linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
   background-size: 60px 60px;
 }
+  .creator-credit {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.creator-credit span {
+  color: var(--cyan);
+  text-shadow: 0 0 10px var(--cyan);
+  font-weight: 700;
+}
 
 /* ── FLOATING ORBS ── */
 .orb {
@@ -1270,5 +1288,8 @@ function shuffle(arr) {
 window.quitQuiz = function() { showScreen('screen-year'); };
 window.playAgain = function() { showScreen('screen-year'); };
 </script>
+  <div class="creator-credit">
+  DESIGNED & ENGINEERED BY <span>RICKY BRUCE AMISSAH</span>
+</div>
 </body>
 </html>

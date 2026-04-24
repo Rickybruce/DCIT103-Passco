@@ -206,9 +206,25 @@ body::before {
 /* ── AVATAR GRID ── */
 .avatar-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
-  margin-top: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+  max-height: 300px; 
+  overflow-y: auto;
+}
+.avatar-item {
+  padding: 10px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+.avatar-item.selected {
+  border-color: var(--cyan);
+  background: var(--cyan-dim);
+  box-shadow: 0 0 15px var(--cyan-dim);
 }
 @media (max-width: 500px) {
   .avatar-grid { grid-template-columns: repeat(4, 1fr); }

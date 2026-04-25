@@ -262,6 +262,22 @@ body::before {
   display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 0;
 }
 
+/* ── SOLANDOAKAKRI EASTER EGG ── */
+.solando-popup {
+  position: fixed; top: 18px; left: 18px; transform: none;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+  border-radius: 12px; padding: 14px; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  backdrop-filter: blur(6px); pointer-events: none; max-width: 240px;
+}
+.solando-popup img { width: 180px; height: auto; border-radius: 10px; display: block; }
+.solando-label { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
+
+@media (max-width: 600px) {
+  .solando-popup { top: 12px; left: 12px; padding: 10px; max-width: 160px; }
+  .solando-popup img { width: 120px; }
+  .solando-label { font-size: 12px; }
+}
+
 /* ── BUTTONS ── */
 .btn {
   font-family: 'Orbitron', sans-serif;
@@ -802,12 +818,12 @@ const db = getDatabase(app);
 const WARRIORS = [
   { id: 'male1', emoji: '⚔️',  label: 'Warrior' },
   { id: 'male2', emoji: '🧙',  label: 'Mage'    },
-  { id: 'male3', emoji: '🤖',  label: 'Ninja'   },
+  { id: 'male3', emoji: '🥷',  label: 'Ninja'   },
   { id: 'male4', emoji: '🕵️', label: 'Agent'   },
   { id: 'male5', emoji: '🦄',  label: 'Maverick'},
 ];
 const ANDROIDS = [
-  { id: 'fem1', emoji: '🎀', label: 'Android'  },
+  { id: 'fem1', emoji: '🤖', label: 'Android'  },
   { id: 'fem2', emoji: '👾', label: 'CyberBot' },
   { id: 'fem3', emoji: '🎭', label: 'Mech'     },
   { id: 'fem4', emoji: '🧠', label: 'BioBot'   },
@@ -818,6 +834,7 @@ const SPECIAL = [
 ];
 const DEV_AVATAR = { id: 'dev', emoji: '👑', label: 'Developer', dev: true };
 const DEFAULT_AVATAR = { id: 'anon', emoji: '👤', label: 'Anon' };
+const SOLANDO_AVATAR = { id: 'solando', emoji: '🦉', label: 'Solando', special: true };
 
 // ── STATE ──
 let state = {
@@ -834,13 +851,14 @@ let diagramVisible = false;
 
 // ── GET EMOJI FROM ID ──
 function getAvatarEmoji(id) {
-  const all = [...WARRIORS, ...ANDROIDS, ...SPECIAL, DEV_AVATAR, DEFAULT_AVATAR];
+  const all = [...WARRIORS, ...ANDROIDS, ...SPECIAL, DEV_AVATAR, SOLANDO_AVATAR, DEFAULT_AVATAR];
   const found = all.find(a => a.id === id);
   return found ? found.emoji : '👤';
 }
 
 // ── RENDER AVATAR MODAL ──
 function renderAvatarModal(isRicky) {
+  const isSol = document.getElementById('nickname').value.trim().toLowerCase() === 'solandoakakri';
   const renderGrid = (container, items) => {
     container.innerHTML = '';
     items.forEach(av => {
@@ -861,8 +879,10 @@ function renderAvatarModal(isRicky) {
   renderGrid(document.getElementById('grid-warriors'), WARRIORS);
   renderGrid(document.getElementById('grid-androids'), ANDROIDS);
 
-  // Special section — always includes Anon; adds Dev if Ricky
-  const specialItems = isRicky ? [...SPECIAL, DEV_AVATAR] : [...SPECIAL];
+  // Special section — always includes Anon; add Dev if Ricky, Solando if nickname match
+  let specialItems = [...SPECIAL];
+  if (isRicky) specialItems = [...specialItems, DEV_AVATAR];
+  if (isSol) specialItems = [...specialItems, SOLANDO_AVATAR];
   const specialSection = document.getElementById('section-special');
   specialSection.textContent = isRicky ? '🎖 Special & Developer' : '🎖 Special';
   renderGrid(document.getElementById('grid-special'), specialItems);
@@ -874,7 +894,7 @@ function selectAvatar(id, btn) {
   state.avatar = id;
   // Update trigger preview
   const emoji = getAvatarEmoji(id);
-  const label = [...WARRIORS, ...ANDROIDS, ...SPECIAL, DEV_AVATAR].find(a => a.id === id)?.label || 'Anon';
+  const label = [...WARRIORS, ...ANDROIDS, ...SPECIAL, DEV_AVATAR, SOLANDO_AVATAR].find(a => a.id === id)?.label || 'Anon';
   const previewIcon = document.getElementById('avatar-preview-icon');
   previewIcon.textContent = emoji;
   previewIcon.className = 'avatar-preview-icon' + (id === 'dev' ? ' dev-preview' : '');
@@ -912,6 +932,42 @@ document.getElementById('nickname').addEventListener('input', function() {
   }
   if (isRicky && state.avatar !== 'dev') {
     showToast('👑 Type "Ricky" to unlock Developer avatar!', 'warn');
+  }
+  // ── Solandoakakri easter egg: show image popup + owl avatar
+  const isSol = val.toLowerCase() === 'solandoakakri';
+  this.classList.toggle('solando-input', isSol);
+  const previewIcon = document.getElementById('avatar-preview-icon');
+  const existingPopup = document.getElementById('solando-popup');
+  if (isSol) {
+    // select Solando avatar and change preview to owl emoji
+    state.avatar = 'solando';
+    previewIcon.textContent = '🦉';
+    previewIcon.classList.add('dev-preview');
+    document.getElementById('avatar-trigger-title').textContent = SOLANDO_AVATAR.label;
+    document.getElementById('avatar-trigger-sub').textContent = 'Avatar selected ✓';
+    document.getElementById('avatar-trigger').classList.add('has-avatar');
+    // show popup (create if missing)
+    if (!existingPopup) {
+      const pop = document.createElement('div');
+      pop.id = 'solando-popup';
+      pop.className = 'solando-popup';
+      const img = document.createElement('img');
+      img.src = 'blamo.jpg';
+      img.alt = 'Solando Special';
+      const lbl = document.createElement('div');
+      lbl.className = 'solando-label';
+      lbl.textContent = 'FRESHEST';
+      pop.appendChild(img);
+      pop.appendChild(lbl);
+      document.body.appendChild(pop);
+    }
+  } else {
+    // restore preview based on selected avatar or default
+    if (existingPopup) existingPopup.remove();
+    const emoji = state.avatar ? getAvatarEmoji(state.avatar) : '🎮';
+    previewIcon.textContent = emoji;
+    // remove special preview classes
+    previewIcon.classList.remove('dev-preview');
   }
 });
 

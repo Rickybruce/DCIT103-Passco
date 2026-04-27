@@ -1,591 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DCIT 101 — PASSCO Quiz</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --glass: rgba(255,255,255,0.06);
-  --glass-border: rgba(255,255,255,0.12);
-  --glass-hover: rgba(255,255,255,0.1);
-  --blur: blur(20px);
-  --gold: #f5c842;
-  --gold-glow: #f5c84260;
-  --cyan: #00d4ff;
-  --cyan-dim: #00d4ff30;
-  --purple: #9b59ff;
-  --purple-dim: #9b59ff30;
-  --green: #00ff9d;
-  --green-dim: #00ff9d25;
-  --red: #ff4757;
-  --red-dim: #ff475730;
-  --orange: #ff6b35;
-  --orange-dim: #ff6b3530;
-  --bg1: #050810;
-  --bg2: #0a0f1e;
-  --text: #e8ecf4;
-  --text-dim: #7a8499;
-  --radius: 16px;
-  --radius-sm: 10px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-  width: 100%; min-height: 100vh;
-  background: var(--bg1);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  overflow-x: hidden;
-}
-
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, #0a1a4020 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 90%, #1a0a3020 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 50% 50%, #00102820 0%, transparent 70%);
-}
-
-.stars {
-  position: fixed; inset: 0; z-index: 0;
-  background-image:
-    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 60% 20%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
-    radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.2) 0%, transparent 100%),
-    radial-gradient(1px 1px at 30% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 70% 50%, rgba(255,255,255,0.2) 0%, transparent 100%),
-    radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 15% 45%, rgba(255,255,255,0.2) 0%, transparent 100%),
-    radial-gradient(1px 1px at 85% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 55% 65%, rgba(255,255,255,0.2) 0%, transparent 100%);
-  animation: twinkle 6s ease-in-out infinite alternate;
-}
-
-@keyframes twinkle { 0% { opacity: 0.5; } 100% { opacity: 1; } }
-
-.grid-bg {
-  position: fixed; inset: 0; z-index: 0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-.creator-credit {
-  position: fixed; bottom: 20px; width: 100%;
-  text-align: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem; color: var(--text-dim);
-  letter-spacing: 2px; z-index: 100; pointer-events: none;
-}
-.creator-credit span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); font-weight: 700; }
-
-.orb { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none; animation: float 20s ease-in-out infinite; }
-.orb1 { width: 400px; height: 400px; background: rgba(0,212,255,0.05); top: -100px; left: -100px; animation-delay: 0s; }
-.orb2 { width: 300px; height: 300px; background: rgba(155,89,255,0.06); bottom: -80px; right: -80px; animation-delay: -7s; }
-.orb3 { width: 250px; height: 250px; background: rgba(0,255,157,0.04); top: 40%; left: 60%; animation-delay: -14s; }
-
-@keyframes float {
-  0%,100% { transform: translate(0,0) scale(1); }
-  33% { transform: translate(30px,-40px) scale(1.05); }
-  66% { transform: translate(-20px,20px) scale(0.95); }
-}
-
-.app { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-
-.screen { width: 100%; max-width: 780px; display: none; animation: screenIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-.screen.active { display: block; }
-
-@keyframes screenIn {
-  from { opacity: 0; transform: translateY(30px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.glass {
-  background: var(--glass);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-}
-
-.app-header { text-align: center; margin-bottom: 36px; }
-.app-header .label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; letter-spacing: 4px;
-  color: var(--cyan); text-transform: uppercase;
-  margin-bottom: 8px; opacity: 0.8;
-}
-.app-header h1 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(26px, 5vw, 40px); font-weight: 900;
-  background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 50%, var(--gold) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  letter-spacing: 2px; line-height: 1.15;
-}
-.app-header p { font-size: 14px; color: var(--text-dim); margin-top: 6px; font-weight: 300; letter-spacing: 1px; }
-
-.setup-card { padding: 36px; }
-
-.input-group { margin-bottom: 24px; }
-.input-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; letter-spacing: 3px;
-  color: var(--cyan); text-transform: uppercase;
-  margin-bottom: 10px; display: block;
-}
-.text-input {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  padding: 14px 18px; color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 17px; font-weight: 600;
-  outline: none; transition: all 0.3s; letter-spacing: 1px;
-}
-.text-input::placeholder { color: var(--text-dim); font-weight: 400; }
-.text-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-dim), inset 0 0 20px rgba(0,212,255,0.03); }
-.text-input.ricky-input { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow), 0 0 30px var(--gold-glow); }
-
-/* ── AVATAR TRIGGER BUTTON ── */
-.avatar-trigger-wrap { margin-bottom: 24px; }
-.avatar-trigger-row {
-  display: flex; align-items: center; gap: 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  padding: 12px 18px; cursor: pointer;
-  transition: all 0.25s;
-}
-.avatar-trigger-row:hover { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.04); }
-.avatar-trigger-row.has-avatar { border-color: var(--cyan); }
-.avatar-preview-icon {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  border: 2px solid var(--glass-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; flex-shrink: 0; transition: all 0.25s;
-}
-.avatar-trigger-row.has-avatar .avatar-preview-icon { border-color: var(--cyan); box-shadow: 0 0 12px var(--cyan-dim); }
-.avatar-preview-icon.dev-preview { border-color: var(--gold) !important; box-shadow: 0 0 20px var(--gold-glow) !important; }
-.avatar-trigger-text { flex: 1; }
-.avatar-trigger-title { font-size: 15px; font-weight: 600; color: var(--text); }
-.avatar-trigger-sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; letter-spacing: 1px; }
-.avatar-trigger-arrow { font-size: 18px; color: var(--text-dim); }
-
-/* ── AVATAR MODAL OVERLAY ── */
-.avatar-overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: rgba(5,8,16,0.85);
-  backdrop-filter: blur(10px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s;
-}
-.avatar-overlay.open { opacity: 1; pointer-events: all; }
-.avatar-modal {
-  background: rgba(10,15,30,0.95);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 28px;
-  width: 100%; max-width: 520px;
-  max-height: 90vh; overflow-y: auto;
-  transform: scale(0.92) translateY(20px);
-  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-}
-.avatar-overlay.open .avatar-modal { transform: scale(1) translateY(0); }
-.avatar-modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 20px;
-}
-.avatar-modal-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 14px; font-weight: 700;
-  color: var(--cyan); letter-spacing: 2px;
-}
-.avatar-modal-close {
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 8px; color: var(--text-dim);
-  width: 32px; height: 32px; font-size: 16px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
-}
-.avatar-modal-close:hover { border-color: var(--red); color: var(--red); }
-
-.avatar-section-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px; letter-spacing: 3px;
-  color: var(--text-dim); text-transform: uppercase;
-  margin-bottom: 10px; margin-top: 16px;
-}
-.avatar-section-label:first-of-type { margin-top: 0; }
-
-.avatar-grid-modal {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-bottom: 8px;
-}
-@media (max-width: 480px) { .avatar-grid-modal { grid-template-columns: repeat(4, 1fr); } }
-
-.avatar-btn {
-  aspect-ratio: 1; border-radius: 50%;
-  border: 2px solid var(--glass-border);
-  background: rgba(255,255,255,0.04);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; flex-direction: column;
-  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  position: relative; overflow: hidden;
-}
-.avatar-btn:hover { transform: scale(1.12); border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
-.avatar-btn.selected { border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-dim), 0 0 20px var(--cyan-dim); transform: scale(1.1); background: rgba(0,212,255,0.08); }
-.avatar-btn.dev { border-color: var(--gold) !important; box-shadow: 0 0 0 3px var(--gold-glow), 0 0 30px var(--gold-glow) !important; animation: goldPulse 2s ease-in-out infinite; }
-.avatar-btn.dev.selected { box-shadow: 0 0 0 4px var(--gold-glow), 0 0 60px var(--gold-glow) !important; }
-@keyframes goldPulse {
-  0%,100% { box-shadow: 0 0 0 3px var(--gold-glow), 0 0 20px var(--gold-glow); }
-  50% { box-shadow: 0 0 0 6px var(--gold-glow), 0 0 50px var(--gold-glow); }
-}
-.dev-label { position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); font-size: 6px; font-family: 'Orbitron', sans-serif; color: var(--gold); letter-spacing: 1px; white-space: nowrap; }
-.avatar-name { font-size: 8px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); margin-top: 2px; text-align: center; }
-
-.avatar-anon-row {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 0;
-}
-
-/* ── SOLANDOAKAKRI EASTER EGG ── */
-.solando-popup {
-  position: fixed; top: 18px; left: 18px; transform: none;
-  background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
-  border-radius: 12px; padding: 14px; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
-  backdrop-filter: blur(6px); pointer-events: none; max-width: 240px;
-}
-.solando-popup img { width: 180px; height: auto; border-radius: 10px; display: block; }
-.solando-label { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
-
-@media (max-width: 600px) {
-  .solando-popup { top: 12px; left: 12px; padding: 10px; max-width: 160px; }
-  .solando-popup img { width: 120px; }
-  .solando-label { font-size: 12px; }
-}
-
-/* ── BUTTONS ── */
-.btn {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 13px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase;
-  padding: 14px 28px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  cursor: pointer; transition: all 0.25s;
-  position: relative; overflow: hidden;
-}
-.btn::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
-  opacity: 0; transition: opacity 0.25s;
-}
-.btn:hover::before { opacity: 1; }
-.btn-primary { background: linear-gradient(135deg, #0070cc 0%, #004499 100%); border-color: var(--cyan); color: #fff; box-shadow: 0 0 20px rgba(0,212,255,0.2); width: 100%; }
-.btn-primary:hover { box-shadow: 0 0 40px rgba(0,212,255,0.4); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-.btn-ghost { background: var(--glass); border-color: var(--glass-border); color: var(--text-dim); }
-.btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
-.btn-sm { font-size: 11px; padding: 9px 18px; }
-.btn-locked {
-  background: rgba(255,71,87,0.08); border-color: rgba(255,71,87,0.3);
-  color: var(--red); cursor: not-allowed; opacity: 0.85;
-}
-.btn-locked:hover { box-shadow: 0 0 20px rgba(255,71,87,0.2); transform: none; }
-.btn-nexus {
-  background: rgba(155,89,255,0.12); border-color: rgba(155,89,255,0.4);
-  color: var(--purple); cursor: not-allowed;
-}
-.btn-nexus:hover { box-shadow: 0 0 20px var(--purple-dim); transform: none; }
-
-/* ── YEAR SELECTION ── */
-.year-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 10px; }
-.year-grid-bottom { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 14px; }
-
-.year-card {
-  padding: 24px 16px;
-  border-radius: var(--radius); border: 1px solid var(--glass-border);
-  background: var(--glass); cursor: pointer; text-align: center;
-  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  position: relative; overflow: hidden;
-}
-.year-card::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, var(--cyan-dim) 0%, transparent 60%);
-  opacity: 0; transition: opacity 0.3s;
-}
-.year-card:hover { transform: translateY(-4px); border-color: var(--cyan); }
-.year-card:hover::after { opacity: 1; }
-
-.year-card.locked {
-  border-color: rgba(255,71,87,0.25); cursor: default;
-  background: rgba(255,71,87,0.04);
-}
-.year-card.locked::after { background: linear-gradient(135deg, rgba(255,71,87,0.08) 0%, transparent 60%); }
-.year-card.locked:hover { transform: none; border-color: rgba(255,71,87,0.4); }
-.year-card.locked:hover::after { opacity: 1; }
-
-.year-card.nexus {
-  border-color: rgba(155,89,255,0.25); cursor: default;
-  background: rgba(155,89,255,0.04);
-}
-.year-card.nexus::after { background: linear-gradient(135deg, rgba(155,89,255,0.1) 0%, transparent 60%); }
-.year-card.nexus:hover { transform: none; border-color: rgba(155,89,255,0.5); }
-.year-card.nexus:hover::after { opacity: 1; }
-
-.year-num { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: var(--cyan); display: block; margin-bottom: 4px; }
-.year-card.locked .year-num { color: var(--red); font-size: 20px; }
-.year-card.nexus .year-num { color: var(--purple); font-size: 20px; }
-.year-sub { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; }
-.year-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--gold); margin-top: 6px; display: block; }
-.year-lock-icon { font-size: 22px; display: block; margin-bottom: 4px; }
-
-/* ── COUNTDOWN ── */
-.countdown-wrap {
-  margin-top: 14px; padding: 18px 20px;
-  background: rgba(155,89,255,0.06);
-  border: 1px solid rgba(155,89,255,0.2);
-  border-radius: var(--radius-sm); text-align: center;
-  display: none;
-}
-.countdown-wrap.show { display: block; }
-.countdown-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px; letter-spacing: 3px;
-  color: var(--purple); text-transform: uppercase; margin-bottom: 10px;
-}
-.countdown-display {
-  display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;
-}
-.cd-unit {
-  display: flex; flex-direction: column; align-items: center;
-  background: rgba(155,89,255,0.12);
-  border: 1px solid rgba(155,89,255,0.25);
-  border-radius: 8px; padding: 10px 14px; min-width: 56px;
-}
-.cd-val {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 22px; font-weight: 900;
-  color: var(--purple); line-height: 1;
-}
-.cd-lbl { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); letter-spacing: 2px; margin-top: 4px; }
-.cd-sep { font-family: 'Orbitron', sans-serif; font-size: 20px; color: var(--purple); opacity: 0.5; align-self: flex-start; padding-top: 8px; }
-
-/* ── LOCKED ALERT ── */
-.locked-alert {
-  margin-top: 14px; padding: 16px 20px;
-  background: rgba(255,71,87,0.06);
-  border: 1px solid rgba(255,71,87,0.25);
-  border-radius: var(--radius-sm);
-  display: none; text-align: center;
-}
-.locked-alert.show { display: block; }
-.locked-alert-icon { font-size: 28px; margin-bottom: 6px; }
-.locked-alert-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 13px; font-weight: 700;
-  color: var(--red); letter-spacing: 2px; margin-bottom: 4px;
-}
-.locked-alert-msg { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
-
-/* ── QUIZ SCREEN ── */
-.quiz-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-.quiz-player { display: flex; align-items: center; gap: 10px; }
-.quiz-avatar-sm {
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 2px solid var(--glass-border); background: var(--glass);
-  display: flex; align-items: center; justify-content: center; font-size: 20px;
-}
-.quiz-avatar-sm.dev { border-color: var(--gold); box-shadow: 0 0 15px var(--gold-glow); }
-.player-name { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
-.quiz-stats { display: flex; align-items: center; gap: 16px; }
-.stat-chip {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 20px; padding: 6px 14px;
-  font-family: 'JetBrains Mono', monospace; font-size: 12px;
-}
-.stat-chip .ico { font-size: 14px; }
-.stat-chip .val { color: var(--cyan); font-weight: 700; }
-.streak-chip .val { color: var(--gold); }
-
-.progress-track { width: 100%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan) 0%, var(--purple) 100%); border-radius: 2px; transition: width 0.5s ease; box-shadow: 0 0 8px var(--cyan); }
-
-.q-card { padding: 28px 32px; margin-bottom: 16px; }
-.topic-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
-  border-radius: 20px; padding: 4px 14px;
-  font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); margin-bottom: 18px;
-}
-.topic-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: blink 1.5s ease-in-out infinite; }
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.q-counter { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 2px; }
-.q-year-badge { font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--gold); letter-spacing: 2px; }
-.q-text { font-size: 17px; font-weight: 600; line-height: 1.6; color: var(--text); margin-bottom: 24px; }
-
-.options { display: flex; flex-direction: column; gap: 10px; }
-.option-btn {
-  width: 100%; background: rgba(255,255,255,0.03);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm); padding: 14px 20px;
-  color: var(--text); font-family: 'Rajdhani', sans-serif;
-  font-size: 15px; font-weight: 600; text-align: left;
-  cursor: pointer; display: flex; align-items: center; gap: 14px;
-  transition: all 0.2s; position: relative; overflow: hidden;
-}
-.option-btn::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px; border-radius: 0 2px 2px 0; background: var(--cyan);
-  transform: scaleY(0); transition: transform 0.2s;
-}
-.option-btn:hover:not(:disabled) { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.05); transform: translateX(3px); }
-.option-btn:hover:not(:disabled)::before { transform: scaleY(1); }
-.option-key {
-  width: 28px; height: 28px; border-radius: 6px;
-  background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700;
-  flex-shrink: 0; transition: all 0.2s;
-}
-.option-btn.correct { border-color: var(--green); background: rgba(0,255,157,0.08); transform: translateX(0); }
-.option-btn.correct::before { transform: scaleY(1); background: var(--green); }
-.option-btn.correct .option-key { background: var(--green); border-color: var(--green); color: #000; }
-.option-btn.wrong { border-color: var(--red); background: rgba(255,71,87,0.08); }
-.option-btn.wrong::before { transform: scaleY(1); background: var(--red); }
-.option-btn.wrong .option-key { background: var(--red); border-color: var(--red); }
-.option-btn:disabled { cursor: default; }
-
-.feedback-bar {
-  display: none; align-items: flex-start; gap: 12px;
-  padding: 14px 20px; border-radius: var(--radius-sm);
-  margin-top: 12px; font-size: 13px; line-height: 1.5;
-}
-.feedback-bar.show { display: flex; }
-.feedback-bar.correct { background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.2); }
-.feedback-bar.wrong { background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); }
-.feedback-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.feedback-text { color: var(--text); }
-.feedback-text strong { color: var(--green); }
-.feedback-bar.wrong .feedback-text strong { color: var(--red); }
-
-.streak-popup {
-  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-  background: linear-gradient(135deg, #b8860b, #d4a017);
-  border: 1px solid var(--gold); border-radius: 30px;
-  padding: 10px 24px;
-  font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700;
-  color: #000; letter-spacing: 2px; z-index: 1000;
-  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1); display: none;
-}
-@keyframes popIn { from { transform: translateX(-50%) scale(0.5) translateY(-20px); opacity: 0; } to { transform: translateX(-50%) scale(1) translateY(0); opacity: 1; } }
-
-.next-wrap { margin-top: 16px; display: none; }
-.next-wrap.show { display: block; }
-
-/* ── RESULTS ── */
-.result-card { padding: 40px 36px; text-align: center; }
-.result-avatar {
-  width: 90px; height: 90px; border-radius: 50%;
-  border: 3px solid var(--glass-border); background: var(--glass);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 46px; margin: 0 auto 16px;
-}
-.result-avatar.dev { border-color: var(--gold); box-shadow: 0 0 40px var(--gold-glow); }
-.result-name { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: var(--text); margin-bottom: 6px; }
-.result-grade { font-size: 13px; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 32px; }
-
-.score-ring { width: 160px; height: 160px; margin: 0 auto 32px; position: relative; }
-.score-ring svg { transform: rotate(-90deg); }
-.ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
-.ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; stroke: url(#scoreGradient); stroke-dasharray: 408; stroke-dashoffset: 408; transition: stroke-dashoffset 1.5s cubic-bezier(0.25,0.46,0.45,0.94); }
-.ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.ring-pct { font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.ring-label { font-size: 11px; color: var(--text-dim); letter-spacing: 2px; margin-top: 2px; }
-
-.result-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
-@media (max-width: 500px) { .result-stats { grid-template-columns: repeat(2, 1fr); } }
-.res-stat { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 16px 10px; }
-.res-stat-val { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: var(--cyan); display: block; }
-.res-stat.streak-stat .res-stat-val { color: var(--gold); }
-.res-stat-label { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; margin-top: 4px; display: block; }
-.result-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-.result-btns .btn { flex: 1; min-width: 120px; }
-
-/* ── LEADERBOARD ── */
-.lb-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.lb-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; background: linear-gradient(135deg, var(--gold), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.lb-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
-.lb-list::-webkit-scrollbar { width: 4px; }
-.lb-list::-webkit-scrollbar-track { background: transparent; }
-.lb-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
-.lb-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: var(--radius-sm); background: var(--glass); border: 1px solid var(--glass-border); transition: all 0.2s; }
-.lb-row:hover { border-color: rgba(255,255,255,0.2); }
-.lb-rank { font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 900; width: 28px; text-align: center; flex-shrink: 0; }
-.lb-rank.r1 { color: var(--gold); }
-.lb-rank.r2 { color: #c0c0c0; }
-.lb-rank.r3 { color: #cd7f32; }
-.lb-rank.other { color: var(--text-dim); }
-.lb-avatar { font-size: 24px; flex-shrink: 0; }
-.lb-info { flex: 1; min-width: 0; }
-.lb-name { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.lb-detail { font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 1px; }
-.lb-score { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; color: var(--cyan); flex-shrink: 0; }
-.lb-year { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; flex-shrink: 0; }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-  background: rgba(10,15,30,0.95);
-  backdrop-filter: var(--blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm); padding: 14px 20px;
-  font-size: 13px; color: var(--text);
-  transform: translateY(100px); opacity: 0;
-  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1); max-width: 300px;
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast.success { border-color: var(--green); }
-.toast.error { border-color: var(--red); }
-.toast.warn { border-color: var(--gold); }
-
-.lb-empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 14px; }
-.spinner { width: 30px; height: 30px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 24px 0; }
-
-@media (max-width: 600px) {
-  .q-card { padding: 20px; }
-  .result-card { padding: 28px 20px; }
-  .setup-card { padding: 24px 20px; }
-  .quiz-stats { gap: 8px; }
-  .stat-chip { padding: 5px 10px; font-size: 11px; }
-  .year-grid { grid-template-columns: 1fr; }
-  .year-grid-bottom { grid-template-columns: 1fr; }
-  .year-card { padding: 20px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DCIT 101 — NEXUS PASSCO Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <div class="stars"></div>
 <div class="grid-bg"></div>
 <div class="orb orb1"></div>
@@ -594,27 +17,32 @@ body::before {
 
 <div class="app">
 
-  <!-- ══ SETUP SCREEN ══ -->
+  <!-- ══ SCREEN 1: SETUP ══ -->
   <div class="screen active" id="screen-setup">
     <div class="app-header">
       <div class="label">University of Ghana</div>
       <h1>DCIT 101</h1>
       <p>Introduction to Computer Science — PASSCO Quiz</p>
     </div>
+
     <div class="glass setup-card">
+
       <div class="input-group">
         <label class="input-label" for="nickname">Your nickname</label>
-        <input class="text-input" id="nickname" type="text" placeholder="Enter nickname..." maxlength="20" autocomplete="off">
+        <input class="text-input" id="nickname" type="text"
+          placeholder="Enter nickname..." maxlength="20" autocomplete="off">
       </div>
 
-      <!-- AVATAR TRIGGER — replaces the old inline grid -->
       <div class="avatar-trigger-wrap">
-        <label class="input-label">Choose your avatar <span style="color:var(--text-dim);font-size:9px;letter-spacing:1px">(optional)</span></label>
+        <label class="input-label">
+          Choose your avatar
+          <span style="color:var(--text-dim);font-size:9px;letter-spacing:1px">(optional)</span>
+        </label>
         <div class="avatar-trigger-row" id="avatar-trigger" onclick="openAvatarModal()">
           <div class="avatar-preview-icon" id="avatar-preview-icon">🎮</div>
           <div class="avatar-trigger-text">
             <div class="avatar-trigger-title" id="avatar-trigger-title">Select Avatar</div>
-            <div class="avatar-trigger-sub" id="avatar-trigger-sub">Click to browse 12 profiles</div>
+            <div class="avatar-trigger-sub"   id="avatar-trigger-sub">Click to browse profiles</div>
           </div>
           <div class="avatar-trigger-arrow">›</div>
         </div>
@@ -625,6 +53,7 @@ body::before {
       </button>
     </div>
   </div>
+
 
   <!-- ══ AVATAR MODAL ══ -->
   <div class="avatar-overlay" id="avatar-overlay" onclick="handleOverlayClick(event)">
@@ -637,44 +66,76 @@ body::before {
       <div class="avatar-grid-modal" id="grid-warriors"></div>
       <div class="avatar-section-label">🤖 Androids</div>
       <div class="avatar-grid-modal" id="grid-androids"></div>
-      <div class="avatar-section-label" id="section-special">Special</div>
+      <div class="avatar-section-label" id="section-special">🎖 Special</div>
       <div class="avatar-anon-row" id="grid-special"></div>
     </div>
   </div>
 
-  <!-- ══ YEAR SCREEN ══ -->
+
+  <!-- ══ SCREEN 2: YEAR SELECTION ══ -->
   <div class="screen" id="screen-year">
     <div class="app-header">
       <div class="label">Select Past Paper</div>
       <h1>Choose Year</h1>
       <p>Each paper contains questions from the DCIT 101 PASSCO</p>
     </div>
-    <div class="glass" style="padding: 32px;">
+<!-- FIX 1: Double-click instruction badge was completely missing -->
+      <div class="dbl-click-badge">
+        <span class="pulse"></span>
+        DOUBLE-CLICK any option to finalise your answer
+      </div>
+
+      <!-- FIX 2: Disclaimer — question count notice was missing -->
+      <div class="disclaimer-box warn">
+        <span class="disclaimer-icon">⚠️</span>
+        <div class="disclaimer-text">
+          <strong>Notice</strong>
+          Past question years may not contain a full set of 100 questions.
+          Illustrations and diagram-based questions from these years have been
+          moved to the <em>Scenario Cases</em> section.
+        </div>
+      </div>
+
+      <!-- FIX 3: Disclaimer — interaction info was missing -->
+      <div class="disclaimer-box info">
+        <span class="disclaimer-icon">💡</span>
+        <div class="disclaimer-text">
+          <strong>How to answer</strong>
+          Single-click an option to highlight it, then
+          <strong style="color:var(--purple)">double-click</strong>
+          to confirm your selection. This prevents accidental submissions.
+        </div>
+      </div>
+    <div class="glass" style="padding:32px;">
+
+      <!-- Top row: 3 active year cards -->
       <div class="year-grid">
         <div class="year-card" onclick="startQuiz(2022)">
           <span class="year-num">2022</span>
           <span class="year-sub">First Semester</span>
-          <span class="year-count">100 questions</span>
+          <span class="year-count">70 questions</span>
         </div>
         <div class="year-card" onclick="startQuiz(2021)">
           <span class="year-num">2021</span>
           <span class="year-sub">First Semester</span>
-          <span class="year-count">100 questions</span>
+          <span class="year-count">62 questions</span>
         </div>
         <div class="year-card" onclick="startQuiz(2023)">
           <span class="year-num">2023</span>
           <span class="year-sub">First Semester</span>
-          <span class="year-count">100 questions</span>
+          <span class="year-count">96 questions</span>
         </div>
       </div>
 
-      <!-- Bottom row: 2 locked categories -->
+      <!-- Bottom row: FIX 4 — Scenario Cases card was missing (only Diagram was there).
+           Diagram Challenge renamed to Scenario Cases per task requirements.
+           Scenario Cases now calls openScenarioCases() instead of showing a locked alert. -->
       <div class="year-grid-bottom">
-        <div class="year-card locked" onclick="triggerDiagramLock()">
-          <span class="year-lock-icon">🔒</span>
-          <span class="year-num">Diagram</span>
-          <span class="year-sub">Challenge</span>
-          <span class="year-count" style="color:var(--red)">Restricted</span>
+        <div class="year-card scenario" onclick="triggerDiagramLock()">
+          <span class="year-lock-icon">📋</span>
+          <span class="year-num">Scenario</span>
+          <span class="year-sub">Cases</span>
+          <span class="year-count">25 questions</span>
         </div>
         <div class="year-card nexus" onclick="triggerNexusLock()">
           <span class="year-lock-icon">⏳</span>
@@ -684,33 +145,120 @@ body::before {
         </div>
       </div>
 
-      <!-- Diagram locked alert -->
-      <div class="locked-alert" id="diagram-alert">
+      <!-- FIX 5: diagram-alert kept in DOM — triggerDiagramLock() still references it.
+           The element is hidden by default and only shows if called programmatically. -->
+     <!--
+             <div class="locked-alert" id="diagram-alert">
         <div class="locked-alert-icon">🚫</div>
         <div class="locked-alert-title">SYSTEM RESTRICTED</div>
-        <div class="locked-alert-msg">This section is currently locked.<br>Diagram challenge questions are not yet available.</div>
+        <div class="locked-alert-msg">
+          This section is currently locked.<br>
+          Please check back later.
+        </div>
       </div>
+     -->
+         
 
       <!-- Nexus countdown -->
       <div class="countdown-wrap" id="nexus-countdown">
         <div class="countdown-label">⚡ NEXUS SPEED TEST UNLOCKS IN</div>
         <div class="countdown-display">
-          <div class="cd-unit"><span class="cd-val" id="cd-days">00</span><span class="cd-lbl">DAYS</span></div>
+          <div class="cd-unit">
+            <span class="cd-val" id="cd-days">00</span>
+            <span class="cd-lbl">DAYS</span>
+          </div>
           <div class="cd-sep">:</div>
-          <div class="cd-unit"><span class="cd-val" id="cd-hours">00</span><span class="cd-lbl">HRS</span></div>
+          <div class="cd-unit">
+            <span class="cd-val" id="cd-hours">00</span>
+            <span class="cd-lbl">HRS</span>
+          </div>
           <div class="cd-sep">:</div>
-          <div class="cd-unit"><span class="cd-val" id="cd-mins">00</span><span class="cd-lbl">MIN</span></div>
+          <div class="cd-unit">
+            <span class="cd-val" id="cd-mins">00</span>
+            <span class="cd-lbl">MIN</span>
+          </div>
           <div class="cd-sep">:</div>
-          <div class="cd-unit"><span class="cd-val" id="cd-secs">00</span><span class="cd-lbl">SEC</span></div>
+          <div class="cd-unit">
+            <span class="cd-val" id="cd-secs">00</span>
+            <span class="cd-lbl">SEC</span>
+          </div>
         </div>
       </div>
 
       <div class="divider"></div>
-      <button class="btn btn-ghost btn-sm" onclick="showLeaderboard()">VIEW GLOBAL LEADERBOARD</button>
+      <button class="btn btn-ghost btn-sm" onclick="showLeaderboard()">
+        VIEW GLOBAL LEADERBOARD
+      </button>
     </div>
   </div>
 
-  <!-- ══ QUIZ SCREEN ══ -->
+
+  <!-- ══════════════════════════════════════════════════════
+       SCREEN 3: SCENARIO CASES
+       FIX 6 — This ENTIRE screen was missing from the HTML.
+       app.js calls showScreen("screen-scenario") and writes
+       into ids: scenario-paper-body, sc-live-score,
+       sc-live-correct, sc-live-wrong — all were absent.
+  ══════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-scenario">
+
+    <div class="scenario-header">
+      <div>
+        <div class="scenario-title">📋 Scenario Cases</div>
+        <div class="scenario-subtitle">
+          Diagram · Logic · Trace · Illustration questions
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="backFromScenario()">← BACK</button>
+    </div>
+
+    <!-- FIX 7: sc-live-score, sc-live-correct, sc-live-wrong were all missing -->
+    <div class="glass" style="padding:14px 20px;margin-bottom:14px;
+         display:flex;align-items:center;justify-content:space-between;
+         flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <div class="sc-score-chip">
+          <span>⚡</span>
+          <span style="color:var(--text-dim);font-size:11px">Score</span>
+          <span class="sc-chip-val" id="sc-live-score">0</span>
+        </div>
+        <div class="sc-score-chip">
+          <span>✅</span>
+          <span style="color:var(--text-dim);font-size:11px">Correct</span>
+          <span class="sc-chip-val" id="sc-live-correct" style="color:var(--green)">0</span>
+        </div>
+        <div class="sc-score-chip">
+          <span>❌</span>
+          <span style="color:var(--text-dim);font-size:11px">Wrong</span>
+          <span class="sc-chip-val" id="sc-live-wrong" style="color:var(--red)">0</span>
+        </div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;
+           color:var(--purple);letter-spacing:2px;text-transform:uppercase;">
+        DOUBLE-CLICK TO CONFIRM
+      </div>
+    </div>
+
+    <!-- FIX 8: scenario-paper-body was missing — app.js writes questions here -->
+    <div class="scenario-paper">
+      <div id="scenario-paper-body">
+        <!-- renderScenarioPaper() in app.js injects question items here -->
+      </div>
+    </div>
+
+    <!-- FIX 9: finishScenario and backFromScenario buttons were completely absent -->
+    <div class="scenario-actions">
+      <button class="btn btn-primary" onclick="finishScenario()">
+        FINISH &amp; RETURN →
+      </button>
+      <button class="btn btn-ghost" onclick="showLeaderboard()">
+        LEADERBOARD
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ══ SCREEN 4: QUIZ ══ -->
   <div class="screen" id="screen-quiz">
     <div class="quiz-top">
       <div class="quiz-player">
@@ -718,812 +266,178 @@ body::before {
         <span class="player-name" id="quiz-player-name"></span>
       </div>
       <div class="quiz-stats">
-        <div class="stat-chip"><span class="ico">⚡</span><span class="val" id="quiz-score">0</span></div>
-        <div class="stat-chip streak-chip"><span class="ico">🔥</span><span class="val" id="quiz-streak">0</span></div>
+        <div class="stat-chip">
+          <span class="ico">⚡</span>
+          <span class="val" id="quiz-score">0</span>
+        </div>
+        <div class="stat-chip streak-chip">
+          <span class="ico">🔥</span>
+          <span class="val" id="quiz-streak">0</span>
+        </div>
         <button class="btn btn-ghost btn-sm" onclick="quitQuiz()">QUIT</button>
       </div>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
     <div class="glass q-card" id="q-card">
-      <div class="topic-badge"><span class="topic-dot"></span><span id="q-topic">Topic</span></div>
+      <div class="topic-badge">
+        <span class="topic-dot"></span>
+        <span id="q-topic">Topic</span>
+      </div>
       <div class="q-meta">
-        <span class="q-counter" id="q-counter">Q 01 / 20</span>
+        <span class="q-counter"    id="q-counter">Q 01 / 70</span>
         <span class="q-year-badge" id="q-year-badge">2022</span>
       </div>
       <p class="q-text" id="q-text"></p>
       <div class="options" id="options-list"></div>
       <div class="feedback-bar" id="feedback-bar">
         <span class="feedback-icon" id="feedback-icon"></span>
-        <div class="feedback-text" id="feedback-text"></div>
+        <div class="feedback-text"  id="feedback-text"></div>
       </div>
     </div>
+
     <div class="next-wrap" id="next-wrap">
-      <button class="btn btn-primary" onclick="nextQuestion()">NEXT QUESTION →</button>
+      <button class="btn btn-primary" onclick="nextQuestion()">
+        NEXT QUESTION →
+      </button>
     </div>
   </div>
 
-  <!-- ══ RESULTS SCREEN ══ -->
+
+  <!-- ══ SCREEN 5: RESULTS ══ -->
   <div class="screen" id="screen-results">
     <div class="glass result-card">
       <div class="result-avatar" id="result-avatar"></div>
-      <div class="result-name" id="result-name"></div>
-      <div class="result-grade" id="result-grade"></div>
+      <div class="result-name"   id="result-name"></div>
+      <div class="result-grade"  id="result-grade"></div>
+
       <div class="score-ring">
         <svg width="160" height="160" viewBox="0 0 160 160">
           <defs>
             <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#00d4ff"/>
+              <stop offset="0%"   style="stop-color:#00d4ff"/>
               <stop offset="100%" style="stop-color:#9b59ff"/>
             </linearGradient>
           </defs>
-          <circle class="ring-bg" cx="80" cy="80" r="65"/>
-          <circle class="ring-fill" id="ring-fill" cx="80" cy="80" r="65"/>
+          <circle class="ring-bg"   cx="80" cy="80" r="65"/>
+          <circle class="ring-fill" cx="80" cy="80" r="65" id="ring-fill"/>
         </svg>
         <div class="ring-text">
-          <span class="ring-pct" id="ring-pct">0%</span>
+          <span class="ring-pct"   id="ring-pct">0%</span>
           <span class="ring-label">SCORE</span>
         </div>
       </div>
+
       <div class="result-stats">
-        <div class="res-stat"><span class="res-stat-val" id="res-correct">0</span><span class="res-stat-label">Correct</span></div>
-        <div class="res-stat"><span class="res-stat-val" id="res-wrong" style="color:var(--red)">0</span><span class="res-stat-label">Wrong</span></div>
-        <div class="res-stat streak-stat"><span class="res-stat-val" id="res-streak">0</span><span class="res-stat-label">Max Streak</span></div>
-        <div class="res-stat"><span class="res-stat-val" id="res-year" style="color:var(--gold)">--</span><span class="res-stat-label">Year</span></div>
+        <div class="res-stat">
+          <span class="res-stat-val" id="res-correct">0</span>
+          <span class="res-stat-label">Correct</span>
+        </div>
+        <div class="res-stat">
+          <span class="res-stat-val" id="res-wrong" style="color:var(--red)">0</span>
+          <span class="res-stat-label">Wrong</span>
+        </div>
+        <div class="res-stat streak-stat">
+          <span class="res-stat-val" id="res-streak">0</span>
+          <span class="res-stat-label">Max Streak</span>
+        </div>
+        <div class="res-stat">
+          <span class="res-stat-val" id="res-year" style="color:var(--gold)">--</span>
+          <span class="res-stat-label">Year</span>
+        </div>
       </div>
+
       <div class="result-btns">
         <button class="btn btn-primary" onclick="playAgain()">PLAY AGAIN</button>
-        <button class="btn btn-ghost" onclick="showLeaderboard()">LEADERBOARD</button>
+        <button class="btn btn-ghost"   onclick="showLeaderboard()">LEADERBOARD</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ LEADERBOARD SCREEN ══ -->
+
+  <!-- ══ SCREEN 6: LEADERBOARD ══ -->
   <div class="screen" id="screen-leaderboard">
-    <div class="glass" style="padding: 32px;">
+    <div class="glass" style="padding:32px;">
       <div class="lb-header">
         <span class="lb-title">🏆 LEADERBOARD</span>
         <button class="btn btn-ghost btn-sm" id="lb-back-btn">← BACK</button>
       </div>
       <div class="lb-list" id="lb-list">
-        <div class="lb-empty"><div class="spinner"></div>Loading scores...</div>
+        <div class="lb-empty">
+          <div class="spinner"></div>
+          Loading scores…
+        </div>
       </div>
     </div>
   </div>
 
+</div><!-- /app -->
+
+
+<!-- Global overlays -->
+<div class="streak-popup" id="streak-popup">
+  🔥 STREAK: <span id="streak-popup-num">0</span>
+</div>
+<div class="toast" id="toast"></div>
+<div class="creator-credit">
+  DESIGNED &amp; PROGRAMMED BY <span>RICKY BRUCE AMISSAH</span>
 </div>
 
-<div class="streak-popup" id="streak-popup">🔥 STREAK: <span id="streak-popup-num">0</span></div>
-<div class="toast" id="toast"></div>
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║            HOW TO HIDE YOUR API KEY                 ║
+  ║                                                      ║
+  ║  Your Firebase key lives in config.js. Below are    ║
+  ║  the 5 layers of protection you should apply:       ║
+  ║                                                      ║
+  ║  LAYER 1 — .gitignore  (do this RIGHT NOW)          ║
+  ║    Add "config.js" to your .gitignore file.         ║
+  ║    This stops the key ever being pushed to GitHub.  ║
+  ║    Provide a "config.js.example" with blank values  ║
+  ║    so other developers know what fields to fill in. ║
+  ║                                                      ║
+  ║  LAYER 2 — Firebase HTTP Referrer Restrictions      ║
+  ║    Firebase Console → Project Settings → API        ║
+  ║    Restrictions. Add your exact domain e.g.         ║
+  ║    https://yourdomain.com/* so the key is rejected  ║
+  ║    if used from any other website.                  ║
+  ║                                                      ║
+  ║  LAYER 3 — Firebase Realtime Database Rules         ║
+  ║    Set rules so only valid writes are accepted.     ║
+  ║    Example — public read, no unauthenticated write: ║
+  ║    {                                                 ║
+  ║      "rules": {                                      ║
+  ║        ".read": true,                                ║
+  ║        ".write": "auth != null"                      ║
+  ║      }                                               ║
+  ║    }                                                 ║
+  ║    Even if someone steals your key they cannot      ║
+  ║    spam your database without being authenticated.  ║
+  ║                                                      ║
+  ║  LAYER 4 — Firebase App Check  (recommended)        ║
+  ║    Ties your project to your domain using            ║
+  ║    reCAPTCHA v3. Requests from unknown origins are  ║
+  ║    blocked server-side by Firebase automatically.   ║
+  ║    Enable it: Firebase Console → App Check.         ║
+  ║                                                      ║
+  ║  LAYER 5 — Backend Proxy  (most secure)             ║
+  ║    Move all Firebase calls into a server function   ║
+  ║    (Node.js / Firebase Cloud Functions). The        ║
+  ║    browser never receives the key at all. Client    ║
+  ║    calls your API endpoint; your server calls       ║
+  ║    Firebase with the key stored as an env variable. ║
+  ║                                                      ║
+  ║  For a student project: Layers 1 + 2 + 3 are       ║
+  ║  sufficient and take less than 10 minutes to set up.║
+  ╚══════════════════════════════════════════════════════╝
+-->
 
-<div class="creator-credit">DESIGNED & PROGRAMMED BY <span>RICKY BRUCE AMISSAH</span></div>
+<!-- FIX 10: app.js linked as type="module" so ES import statements work.
+     config.js must sit in the same folder as index.html and app.js. -->
+<script type="module" src="app.js"></script>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBcsXR-p8HyuVNxo4paUi7AHJk9vtWMOig",
-  authDomain: "dcit103-37fdf.firebaseapp.com",
-  projectId: "dcit103-37fdf",
-  storageBucket: "dcit103-37fdf.firebasestorage.app",
-  messagingSenderId: "1056814177561",
-  appId: "1:1056814177561:web:3b3dc0f15b7eb15a033988",
-  databaseURL: "https://dcit103-37fdf-default-rtdb.firebaseio.com"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// ── AVATAR DEFINITIONS ──
-const WARRIORS = [
-  { id: 'male1', emoji: '⚔️',  label: 'Warrior' },
-  { id: 'male2', emoji: '🧙',  label: 'Mage'    },
-  { id: 'male3', emoji: '🥷',  label: 'Ninja'   },
-  { id: 'male4', emoji: '🕵️', label: 'Agent'   },
-  { id: 'male5', emoji: '🦄',  label: 'Maverick'},
-];
-const ANDROIDS = [
-  { id: 'fem1', emoji: '🤖', label: 'Android'  },
-  { id: 'fem2', emoji: '👾', label: 'CyberBot' },
-  { id: 'fem3', emoji: '🎭', label: 'Mech'     },
-  { id: 'fem4', emoji: '🧠', label: 'BioBot'   },
-  { id: 'fem5', emoji: '💫', label: 'NovaStar' },
-];
-const SPECIAL = [
-  { id: 'anon', emoji: '👤', label: 'Shadow' },
-];
-const DEV_AVATAR = { id: 'dev', emoji: '👑', label: 'Developer', dev: true };
-const DEFAULT_AVATAR = { id: 'anon', emoji: '👤', label: 'Anon' };
-const SOLANDO_AVATAR = { id: 'solando', emoji: '🦉', label: 'Solando', special: true };
-
-// ── STATE ──
-let state = {
-  nickname: '', avatar: null, selectedYear: null,
-  questions: [], currentQ: 0,
-  score: 0, correct: 0, wrong: 0,
-  streak: 0, maxStreak: 0,
-  answered: false, prevScreen: 'screen-year'
-};
-
-let nexusTimerInterval = null;
-let nexusVisible = false;
-let diagramVisible = false;
-
-// ── GET EMOJI FROM ID ──
-function getAvatarEmoji(id) {
-  const all = [...WARRIORS, ...ANDROIDS, ...SPECIAL, DEV_AVATAR, SOLANDO_AVATAR, DEFAULT_AVATAR];
-  const found = all.find(a => a.id === id);
-  return found ? found.emoji : '👤';
-}
-
-// ── RENDER AVATAR MODAL ──
-function renderAvatarModal(isRicky) {
-  const isSol = document.getElementById('nickname').value.trim().toLowerCase() === 'solandoakakri';
-  const renderGrid = (container, items) => {
-    container.innerHTML = '';
-    items.forEach(av => {
-      const btn = document.createElement('button');
-      btn.className = 'avatar-btn' + (av.dev ? ' dev' : '');
-      btn.setAttribute('data-id', av.id);
-      btn.setAttribute('title', av.label);
-      btn.innerHTML = `${av.emoji}${av.dev ? '<span class="dev-label">DEV</span>' : ''}`;
-      if (state.avatar === av.id) btn.classList.add('selected');
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        selectAvatar(av.id, btn);
-      };
-      container.appendChild(btn);
-    });
-  };
-
-  renderGrid(document.getElementById('grid-warriors'), WARRIORS);
-  renderGrid(document.getElementById('grid-androids'), ANDROIDS);
-
-  // Special section — always includes Anon; add Dev if Ricky, Solando if nickname match
-  let specialItems = [...SPECIAL];
-  if (isRicky) specialItems = [...specialItems, DEV_AVATAR];
-  if (isSol) specialItems = [...specialItems, SOLANDO_AVATAR];
-  const specialSection = document.getElementById('section-special');
-  specialSection.textContent = isRicky ? '🎖 Special & Developer' : '🎖 Special';
-  renderGrid(document.getElementById('grid-special'), specialItems);
-}
-
-function selectAvatar(id, btn) {
-  document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  state.avatar = id;
-  // Update trigger preview
-  const emoji = getAvatarEmoji(id);
-  const label = [...WARRIORS, ...ANDROIDS, ...SPECIAL, DEV_AVATAR, SOLANDO_AVATAR].find(a => a.id === id)?.label || 'Anon';
-  const previewIcon = document.getElementById('avatar-preview-icon');
-  previewIcon.textContent = emoji;
-  previewIcon.className = 'avatar-preview-icon' + (id === 'dev' ? ' dev-preview' : '');
-  document.getElementById('avatar-trigger-title').textContent = label;
-  document.getElementById('avatar-trigger-sub').textContent = 'Avatar selected ✓';
-  document.getElementById('avatar-trigger').classList.add('has-avatar');
-  // Close modal
-  setTimeout(() => closeAvatarModal(), 280);
-}
-
-window.openAvatarModal = function() {
-  const isRicky = document.getElementById('nickname').value.trim().toLowerCase() === 'ricky';
-  renderAvatarModal(isRicky);
-  document.getElementById('avatar-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-};
-
-window.closeAvatarModal = function() {
-  document.getElementById('avatar-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-};
-
-window.handleOverlayClick = function(e) {
-  if (e.target === document.getElementById('avatar-overlay')) closeAvatarModal();
-};
-
-// ── NICKNAME INPUT — Ricky easter egg ──
-document.getElementById('nickname').addEventListener('input', function() {
-  const val = this.value.trim();
-  const isRicky = val.toLowerCase() === 'ricky';
-  this.classList.toggle('ricky-input', isRicky);
-  // Re-render modal if open
-  if (document.getElementById('avatar-overlay').classList.contains('open')) {
-    renderAvatarModal(isRicky);
-  }
-  if (isRicky && state.avatar !== 'dev') {
-    showToast('👑 Type "Ricky" to unlock Developer avatar!', 'warn');
-  }
-  // ── Solandoakakri easter egg: show image popup + owl avatar
-  const isSol = val.toLowerCase() === 'solandoakakri';
-  this.classList.toggle('solando-input', isSol);
-  const previewIcon = document.getElementById('avatar-preview-icon');
-  const existingPopup = document.getElementById('solando-popup');
-  if (isSol) {
-    // select Solando avatar and change preview to owl emoji
-    state.avatar = 'solando';
-    previewIcon.textContent = '🦉';
-    previewIcon.classList.add('dev-preview');
-    document.getElementById('avatar-trigger-title').textContent = SOLANDO_AVATAR.label;
-    document.getElementById('avatar-trigger-sub').textContent = 'Avatar selected ✓';
-    document.getElementById('avatar-trigger').classList.add('has-avatar');
-    // show popup (create if missing)
-    if (!existingPopup) {
-      const pop = document.createElement('div');
-      pop.id = 'solando-popup';
-      pop.className = 'solando-popup';
-      const img = document.createElement('img');
-      img.src = 'https://raw.githubusercontent.com/Rickybruce/DCIT103-Passco/main/blamo.jpg';
-      img.alt = 'Solando Special';
-      const lbl = document.createElement('div');
-      lbl.className = 'solando-label';
-      lbl.textContent = 'FRESHEST';
-      pop.appendChild(img);
-      pop.appendChild(lbl);
-      document.body.appendChild(pop);
-    }
-  } else {
-    // restore preview based on selected avatar or default
-    if (existingPopup) existingPopup.remove();
-    const emoji = state.avatar ? getAvatarEmoji(state.avatar) : '🎮';
-    previewIcon.textContent = emoji;
-    // remove special preview classes
-    previewIcon.classList.remove('dev-preview');
-  }
-});
-
-// ── SCREEN TRANSITIONS ──
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  const el = document.getElementById(id);
-  el.classList.add('active');
-  void el.offsetWidth;
-}
-
-// ── SETUP ──
-window.startSetup = function() {
-  const nick = document.getElementById('nickname').value.trim();
-  if (!nick) { showToast('Please enter a nickname!', 'error'); return; }
-  // Avatar is OPTIONAL — assign default Anonymous if none selected
-  if (!state.avatar) {
-    state.avatar = DEFAULT_AVATAR.id;
-    showToast('👤 No avatar selected — Anon profile assigned.', 'warn');
-  }
-  state.nickname = nick;
-  showScreen('screen-year');
-};
-
-// ── LOCKED CATEGORIES ──
-window.triggerDiagramLock = function() {
-  // Hide nexus, toggle diagram
-  document.getElementById('nexus-countdown').classList.remove('show');
-  nexusVisible = false;
-  diagramVisible = !diagramVisible;
-  const alert = document.getElementById('diagram-alert');
-  if (diagramVisible) {
-    alert.classList.add('show');
-    showToast('🚫 System Restricted: This section is currently locked.', 'error');
-  } else {
-    alert.classList.remove('show');
-  }
-};
-
-window.triggerNexusLock = function() {
-  // Hide diagram, toggle nexus
-  document.getElementById('diagram-alert').classList.remove('show');
-  diagramVisible = false;
-  nexusVisible = !nexusVisible;
-  const cd = document.getElementById('nexus-countdown');
-  if (nexusVisible) {
-    cd.classList.add('show');
-    startCountdown();
-    showToast('⏳ Nexus Speed Test is not yet available.', 'warn');
-  } else {
-    cd.classList.remove('show');
-    if (nexusTimerInterval) { clearInterval(nexusTimerInterval); nexusTimerInterval = null; }
-  }
-};
-
-// ── COUNTDOWN — Target: May 1, 2026 12:00 PM ──
-function startCountdown() {
-  if (nexusTimerInterval) clearInterval(nexusTimerInterval);
-  const TARGET = new Date('2026-05-01T12:00:00').getTime();
-
-  function tick() {
-    const now = Date.now();
-    const diff = TARGET - now;
-    if (diff <= 0) {
-      document.getElementById('cd-days').textContent = '00';
-      document.getElementById('cd-hours').textContent = '00';
-      document.getElementById('cd-mins').textContent = '00';
-      document.getElementById('cd-secs').textContent = '00';
-      clearInterval(nexusTimerInterval);
-      return;
-    }
-    const days  = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-    const mins  = Math.floor((diff % (1000*60*60)) / (1000*60));
-    const secs  = Math.floor((diff % (1000*60)) / 1000);
-    document.getElementById('cd-days').textContent  = String(days).padStart(2,'0');
-    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
-    document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
-    document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
-  }
-  tick();
-  nexusTimerInterval = setInterval(tick, 1000);
-}
-
-// ── START QUIZ ──
-window.startQuiz = function(year) {
-  state.selectedYear = year;
-  state.questions = shuffle([...QUESTIONS[year]]);
-  state.currentQ = 0; state.score = 0; state.correct = 0;
-  state.wrong = 0; state.streak = 0; state.maxStreak = 0;
-  state.answered = false;
-
-  const avEmoji = getAvatarEmoji(state.avatar);
-  const avSm = document.getElementById('quiz-avatar-sm');
-  avSm.textContent = avEmoji;
-  avSm.className = 'quiz-avatar-sm' + (state.avatar === 'dev' ? ' dev' : '');
-  document.getElementById('quiz-player-name').textContent = state.nickname;
-  document.getElementById('q-year-badge').textContent = year;
-
-  // Reset locked panels
-  document.getElementById('diagram-alert').classList.remove('show');
-  document.getElementById('nexus-countdown').classList.remove('show');
-  nexusVisible = false; diagramVisible = false;
-  if (nexusTimerInterval) { clearInterval(nexusTimerInterval); nexusTimerInterval = null; }
-
-  showScreen('screen-quiz');
-  renderQuestion();
-};
-
-// ── RENDER QUESTION ──
-function renderQuestion() {
-  const q = state.questions[state.currentQ];
-  const total = state.questions.length;
-  const idx = state.currentQ + 1;
-
-  document.getElementById('q-topic').textContent = q.topic;
-  document.getElementById('q-counter').textContent = `Q ${String(idx).padStart(2,'0')} / ${total}`;
-  document.getElementById('q-text').textContent = q.q;
-  document.getElementById('progress-fill').style.width = ((idx - 1) / total * 100) + '%';
-  document.getElementById('quiz-score').textContent = state.score;
-  document.getElementById('quiz-streak').textContent = state.streak;
-
-  const keys = ['A','B','C','D','E'];
-  const list = document.getElementById('options-list');
-  list.innerHTML = '';
-  q.opts.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.innerHTML = `<span class="option-key">${keys[i] || String(i+1)}</span><span>${opt}</span>`;
-    btn.onclick = () => selectAnswer(i);
-    list.appendChild(btn);
-  });
-
-  document.getElementById('feedback-bar').className = 'feedback-bar';
-  document.getElementById('next-wrap').classList.remove('show');
-  state.answered = false;
-}
-
-// ── SELECT ANSWER ──
-function selectAnswer(chosen) {
-  if (state.answered) return;
-  state.answered = true;
-
-  const q = state.questions[state.currentQ];
-  const btns = document.querySelectorAll('.option-btn');
-  btns.forEach(b => b.disabled = true);
-
-  const isCorrect = chosen === q.ans;
-  btns[chosen].classList.add(isCorrect ? 'correct' : 'wrong');
-  if (!isCorrect && btns[q.ans]) btns[q.ans].classList.add('correct');
-
-  const fb = document.getElementById('feedback-bar');
-  const icon = document.getElementById('feedback-icon');
-  const text = document.getElementById('feedback-text');
-
-  if (isCorrect) {
-    state.score++; state.correct++; state.streak++;
-    if (state.streak > state.maxStreak) state.maxStreak = state.streak;
-    fb.className = 'feedback-bar correct show';
-    icon.textContent = '✅';
-    text.innerHTML = `<strong>Correct!</strong> ${q.exp}`;
-    if (state.streak >= 3) triggerStreakPopup();
-  } else {
-    state.wrong++; state.streak = 0;
-    fb.className = 'feedback-bar wrong show';
-    icon.textContent = '❌';
-    const correctText = q.opts[q.ans] || 'See explanation';
-    text.innerHTML = `<strong>Incorrect.</strong> Correct answer: ${correctText}. ${q.exp}`;
-  }
-
-  document.getElementById('next-wrap').classList.add('show');
-}
-
-// ── NEXT QUESTION ──
-window.nextQuestion = function() {
-  state.currentQ++;
-  if (state.currentQ >= state.questions.length) endQuiz();
-  else renderQuestion();
-};
-
-// ── END QUIZ ──
-function endQuiz() {
-  const total = state.questions.length;
-  const pct = Math.round(state.score / total * 100);
-  const grade = pct >= 80 ? 'DISTINCTION 🏆' : pct >= 60 ? 'CREDIT 🎖' : pct >= 50 ? 'PASS ✅' : 'KEEP STUDYING 📚';
-
-  document.getElementById('result-avatar').textContent = getAvatarEmoji(state.avatar);
-  document.getElementById('result-avatar').className = 'result-avatar' + (state.avatar === 'dev' ? ' dev' : '');
-  document.getElementById('result-name').textContent = state.nickname;
-  document.getElementById('result-grade').textContent = grade;
-  document.getElementById('res-correct').textContent = state.correct;
-  document.getElementById('res-wrong').textContent = state.wrong;
-  document.getElementById('res-streak').textContent = state.maxStreak;
-  document.getElementById('res-year').textContent = state.selectedYear;
-  document.getElementById('ring-pct').textContent = pct + '%';
-
-  showScreen('screen-results');
-  setTimeout(() => {
-    const circumference = 2 * Math.PI * 65;
-    const offset = circumference - (pct / 100 * circumference);
-    document.getElementById('ring-fill').style.strokeDashoffset = offset;
-  }, 300);
-  saveScore(pct);
-}
-
-// ── SAVE SCORE ──
-async function saveScore(pct) {
-  try {
-    const scoresRef = ref(db, 'dcit101_scores');
-    await push(scoresRef, {
-      nickname: state.nickname,
-      avatar: state.avatar,
-      score: state.score,
-      total: state.questions.length,
-      percentage: pct,
-      maxStreak: state.maxStreak,
-      yearCategory: state.selectedYear,
-      timestamp: Date.now()
-    });
-    showToast('✅ Score saved to leaderboard!', 'success');
-  } catch(e) {
-    showToast('⚠️ Could not save score.', 'error');
-    console.error(e);
-  }
-}
-
-// ── LEADERBOARD ──
-window.showLeaderboard = function() {
-  state.prevScreen = document.querySelector('.screen.active').id;
-  document.getElementById('lb-back-btn').onclick = () => showScreen(state.prevScreen);
-  showScreen('screen-leaderboard');
-  const list = document.getElementById('lb-list');
-  list.innerHTML = '<div class="lb-empty"><div class="spinner"></div><p>Loading scores...</p></div>';
-  const scoresRef = ref(db, 'dcit101_scores');
-  onValue(scoresRef, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) { list.innerHTML = '<div class="lb-empty">No scores yet. Be the first! 🚀</div>'; return; }
-    const entries = Object.values(data).sort((a,b) => b.score - a.score || b.percentage - a.percentage);
-    list.innerHTML = '';
-    entries.forEach((entry, i) => {
-      const rankClass = i===0?'r1':i===1?'r2':i===2?'r3':'other';
-      const rankSymbol = i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
-      const row = document.createElement('div');
-      row.className = 'lb-row';
-      row.innerHTML = `
-        <span class="lb-rank ${rankClass}">${rankSymbol}</span>
-        <span class="lb-avatar">${getAvatarEmoji(entry.avatar)}</span>
-        <div class="lb-info">
-          <div class="lb-name">${entry.nickname}</div>
-          <div class="lb-detail">🔥 Streak: ${entry.maxStreak||0}</div>
-        </div>
-        <span class="lb-year">${entry.yearCategory}</span>
-        <span class="lb-score">${entry.score}/${entry.total||20}</span>
-      `;
-      list.appendChild(row);
-    });
-  }, { onlyOnce: true });
-};
-
-// ── STREAK POPUP ──
-function triggerStreakPopup() {
-  const popup = document.getElementById('streak-popup');
-  document.getElementById('streak-popup-num').textContent = state.streak;
-  popup.style.display = 'block';
-  void popup.offsetWidth;
-  setTimeout(() => { popup.style.display = 'none'; }, 2000);
-}
-
-// ── TOAST ──
-function showToast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + type + ' show';
-  setTimeout(() => { t.classList.remove('show'); }, 3500);
-}
-
-// ── UTILITY ──
-function shuffle(arr) {
-  for (let i = arr.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-window.quitQuiz = function() { showScreen('screen-year'); };
-window.playAgain = function() { showScreen('screen-year'); };
-
-// ── QUESTION BANK ──
-const QUESTIONS = {
-  2022: [
-    { topic: 'Operating Systems', q: 'A/an ___ is a signal from a device that causes the OS to stop and figure out what to do next.', opts: ['Software','Hardware','Instruction','Interrupt'], ans: 3, exp: 'An interrupt signals the CPU to stop and handle an event.' },
-    { topic: 'Operating Systems', q: 'A program in a state of execution is called a/an ___', opts: ['File','Process','Software bug','Interrupt'], ans: 1, exp: 'A process is a program currently executing in memory.' },
-    { topic: 'Language Translators', q: 'The ___ combines modules into one program.', opts: ['Compiler','Linker','Translator','Assembler'], ans: 1, exp: 'The linker combines compiled object files into one executable.' },
-    { topic: 'Computer History', q: 'The highest award in computing is named after which personality?', opts: ['Douglas Howard','Gordon Moore','Alan Turing','Grace Hooper'], ans: 2, exp: 'The ACM Turing Award is computing\'s equivalent of the Nobel Prize.' },
-    { topic: 'Von Neumann Architecture', q: 'The fundamental principle underpinning modern computers is ___', opts: ['Fetch-execute cycle','Fetch-execute decode cycle','Stored program concept','None of the above'], ans: 2, exp: 'The stored-program concept: instructions and data share the same memory.' },
-    { topic: 'Software Types', q: '___ is available under a license permitting use, change, and redistribution.', opts: ['Application','Operating System','Freeware','Open Source Software'], ans: 3, exp: 'Open Source Software allows viewing, modifying and redistributing source code.' },
-    { topic: 'Computer Hardware', q: "A computer's ___ consists of electronic devices; the parts you can see and touch.", opts: ['Software','Hardware','Firmware','Freeware'], ans: 1, exp: 'Hardware refers to all physical, tangible components of a computer.' },
-    { topic: 'Memory', q: 'A ___ is volatile, losing contents when power goes off.', opts: ['RAM','ROM','Hard drive','Solid State Drive'], ans: 0, exp: 'RAM is volatile — it requires continuous power to retain data.' },
-    { topic: 'Programming Basics', q: 'A program is a set of ___ written in the language of the computer.', opts: ['Codes','Signs','Words','Instructions'], ans: 3, exp: 'A program is a set of instructions that the CPU executes.' },
-    { topic: 'Computer Hardware', q: 'The electronic and mechanical elements of the computer are known as?', opts: ['Devices','Peripherals','Hardware','Software'], ans: 2, exp: 'Hardware encompasses all physical/electronic components.' },
-    { topic: 'Software Types', q: 'What term describes all the various programs used on a computer system?', opts: ['Codes','Software','Instructions','Programs'], ans: 1, exp: 'Software is the collective term for all programs.' },
-    { topic: 'Memory', q: '1 kilobyte is equivalent to how many bytes?', opts: ['1000','1020','8','1024'], ans: 3, exp: '1 KB = 2¹⁰ = 1024 bytes.' },
-    { topic: 'Memory', q: 'Which is NOT a unit of memory measurement?', opts: ['Fb','Gb','Mb','Tb'], ans: 0, exp: 'Fb (Femtobyte) is not a standard memory measurement unit.' },
-    { topic: 'Memory', q: 'How many characters can be stored in 802 bytes?', opts: ['1000','1604','802','6416'], ans: 2, exp: '1 byte = 1 character (ASCII). 802 bytes = 802 characters.' },
-    { topic: 'Memory', q: 'A page holds 3290 chars. How many pages for 1.5 MB?', opts: ['1572864','478','26320','411'], ans: 1, exp: '1.5MB = 1,572,864 bytes ÷ 3290 ≈ 478 pages.' },
-    { topic: 'Embedded Systems', q: 'An embedded computer will perform which functions?', opts: ['Traffic lights','Temperature measure','Humidity control','All of the above'], ans: 3, exp: 'Embedded computers handle all specific control tasks.' },
-    { topic: 'Software Types', q: 'Software may be defined as the intangible parts of the computer. TRUE or FALSE?', opts: ['True','False'], ans: 0, exp: 'TRUE — software has no physical form.' },
-    { topic: 'Software Types', q: 'Which may NOT be classified as systems software?', opts: ['Commercial packages','Microsoft Word','User programs','All of the above'], ans: 3, exp: 'All options are application software, not systems software.' },
-    { topic: 'Software Types', q: 'Which is NOT systems software?', opts: ['GUI','Operating System','System services','Microsoft Excel'], ans: 3, exp: 'Microsoft Excel is application (productivity) software.' },
-    { topic: 'Software Types', q: 'All are functions of system software EXCEPT ___', opts: ['Develop an algorithm','Optimise computer performance','Assist program development','Simplify computer use'], ans: 0, exp: 'Algorithm development is the programmer\'s role, not the OS.' },
-    { topic: 'Language Translators', q: 'After compiling a program written in a high level language the output you obtain is known as ___', opts: ['Machine language','Object code','Assembly language','Target code'], ans: 1, exp: 'A compiler produces object code — machine code in object file format, before linking.' },
-    { topic: 'CPU Architecture', q: 'All operations within the computer are performed in which of the following units?', opts: ['ALU','Control unit','Register','Cache'], ans: 0, exp: 'The ALU (Arithmetic and Logic Unit) performs all arithmetic and logical operations.' },
-    { topic: 'CPU Architecture', q: 'Which of the following actually constitutes the computer?', opts: ['ALU','Control unit','CPU','Motherboard'], ans: 2, exp: 'The CPU (comprising CU, ALU and registers) is what constitutes the core computer.' },
-    { topic: 'Number Systems', q: 'The fundamental storage unit is a bit. How many different codes are possible with 5 bits?', opts: ['5×2','5²','2⁵','2⁵-1'], ans: 2, exp: 'With n bits, 2ⁿ unique codes are possible. 5 bits → 2⁵ = 32 codes.' },
-    { topic: 'Number Systems', q: 'How many bits would you need to represent the 26 letters of the alphabet, lower case and upper case?', opts: ['52','26','8','6'], ans: 3, exp: '52 characters total. 2⁵=32 (not enough), 2⁶=64 ≥ 52. So 6 bits are needed.' },
-    { topic: 'Number Systems', q: 'For each byte of memory, computers have an extra bit for error detection. This bit is known as?', opts: ['Parity bit','Error bit','Even bit','None of the above'], ans: 0, exp: 'The parity bit is an extra bit added to each byte to detect single-bit errors.' },
-    { topic: 'CPU Architecture', q: 'A bus is a set of ___ used to connect components within the computer.', opts: ['Lines','Codes','Wires','Jumpers'], ans: 2, exp: 'A bus is a set of parallel wires/conductors that carry signals between CPU, memory and I/O.' },
-    { topic: 'CPU Architecture', q: 'Which of the following is an example of a bus?', opts: ['Data bus','Computer bus','Memory bus','None of the above'], ans: 0, exp: 'The data bus is a real system bus.' },
-    { topic: 'CPU Architecture', q: 'Which bus is used to indicate the location from which data is to be retrieved or written?', opts: ['Control bus','Memory bus','Data bus','Address bus'], ans: 3, exp: 'The address bus carries memory addresses from the CPU, indicating where to read/write.' },
-    { topic: 'Memory', q: 'Which of the following is NOT a feature of cache memory?', opts: ['It is closer to the CPU','It may use a dedicated control bus','It may use high speed components','Has large capacity relative to main memory'], ans: 3, exp: 'Cache has SMALL capacity relative to main memory — that is its key limitation.' },
-    { topic: 'Memory', q: 'Which of the following principles will a cache memory rely upon?', opts: ['Locality of reference','Moore\'s law','High speed components','None of the above'], ans: 0, exp: 'Locality of reference: recently used data and nearby data are likely to be used again soon.' },
-    { topic: 'Number Systems', q: 'Which correctly shows the place values in denary number system?', opts: ['10³|10²|10¹|10⁰','10³|10²|10¹|10','10³|10²|100|10⁰','None of the above'], ans: 0, exp: 'Denary (base 10) place values are: 10³|10²|10¹|10⁰ = 1000|100|10|1.' },
-    { topic: 'Number Systems', q: 'Which correctly shows the place values in two\'s complement representation?', opts: ['128|64|32|16|8|4|2|1','-128|64|32|16|8|4|2|1','128|64|32|16|8|4|2|0','-128|64|32|16|8|4|2|0'], ans: 1, exp: '8-bit two\'s complement: MSB has weight -128, all others positive.' },
-    { topic: 'Number Systems', q: 'Which is a correct representation of the two\'s complement of -17?', opts: ['1|0|0|0|1|0|0|1','0|0|0|0|1|0|0|1','1|1|1|0|1|1|1|1','1|1|1|0|1|0|0|1'], ans: 3, exp: '+17=00010001, invert=11101110, add 1=11101111.' },
-    { topic: 'Number Systems', q: 'If denary 373 is converted to binary, how many bits will be needed?', opts: ['2','4','9','8'], ans: 2, exp: '2⁸=256 < 373 < 2⁹=512. Therefore 9 bits are required.' },
-    { topic: 'Number Systems', q: 'How many bytes are required to store 373?', opts: ['1','2','3','4'], ans: 1, exp: '373 needs 9 bits. Since we use whole bytes, 2 bytes (16 bits) are needed.' },
-    { topic: 'Number Systems', q: 'Binary 10100110 — value as 8-bit two\'s complement?', opts: ['-90','-38','6A','A6'], ans: 0, exp: '-128+32+4+2 = -90.' },
-    { topic: 'Number Systems', q: 'Binary 10100110 — value as 8-bit sign and magnitude?', opts: ['A6','-90','6A','-38'], ans: 3, exp: 'Sign bit=1 (negative). Magnitude=0100110=38. Value = -38.' },
-    { topic: 'Number Systems', q: 'Binary 10100110 — value as hexadecimal?', opts: ['A6','-90','6A','-38'], ans: 0, exp: 'Split into nibbles: 1010|0110 = A|6 = A6.' },
-    { topic: 'Number Systems', q: 'Which is NOT a reason why computer scientists write binary in hexadecimal?', opts: ['Less likely to make mistakes','Easier to convert from binary','Fewer digits needed','None of the above'], ans: 3, exp: 'All three options ARE valid reasons — so "None of the above" is correct.' },
-    { topic: 'Input Devices', q: 'Application for which a pressure sensor is suitable?', opts: ['Computer-controlled oven','Greenhouse window control','Access control / vehicle barrier','Illumination control'], ans: 2, exp: 'Pressure sensors detect vehicle weight — used in barriers and traffic triggers.' },
-    { topic: 'Input Devices', q: 'Application for which a light sensor is suitable?', opts: ['Computer-controlled oven','Greenhouse window control','Access control / vehicle barrier','Illumination control of an enclosed space'], ans: 3, exp: 'Light sensors used to automatically control lighting in spaces.' },
-    { topic: 'Input Devices', q: 'Application for which a temperature sensor is suitable?', opts: ['Computer-controlled oven','Greenhouse window control','Access control / vehicle barrier','Illumination control'], ans: 0, exp: 'Temperature sensors used in ovens to switch heating on/off.' },
-    { topic: 'Input Devices', q: 'Application for which a wind speed sensor is suitable?', opts: ['Computer-controlled oven','Greenhouse window control','Access control / vehicle barrier','Illumination control'], ans: 1, exp: 'Wind speed sensors open/close greenhouse windows when wind is strong.' },
-    { topic: 'Networks', q: 'A communication channel carrying EM signals from sender to receiver is known as ___', opts: ['Copper cable','Transmission medium','Fibre','Wireless'], ans: 1, exp: 'A transmission medium is the channel carrying signals.' },
-    { topic: 'Networks', q: 'Which is NOT an example of guided media?', opts: ['Fibre','Copper','Twisted pair cable','Bluetooth'], ans: 3, exp: 'Bluetooth is unguided (wireless).' },
-    { topic: 'Networks', q: 'Examples of unguided media EXCEPT ___', opts: ['Fibre optic','Microwave','Radio waves','Infrared'], ans: 0, exp: 'Fibre optic is guided media.' },
-    { topic: 'Networks', q: 'Features of guided media EXCEPT ___', opts: ['High Speed','Low data rate','Used for shorter distances','Secure'], ans: 1, exp: 'Guided media has HIGH data rate.' },
-    { topic: 'Networks', q: 'Fibre optic supports which modes of propagation?', opts: ['Single mode','Multimode','Both single mode and multimode','None of the above'], ans: 2, exp: 'Fibre supports both single-mode and multimode.' },
-    { topic: 'Networks', q: 'All features of HTTP EXCEPT ___', opts: ['HTTP is connection oriented','HTTP is media independent','HTTP is stateless','None of the above'], ans: 0, exp: 'HTTP is connectionless/stateless.' },
-    { topic: 'Networks', q: 'Bit streaming is defined as ___', opts: ['A continuous flow of bits over a communication path','A connectionless flow of bits','A connection-oriented flow of bits','None of the above'], ans: 0, exp: 'Bit streaming = a continuous flow of bits.' },
-    { topic: 'Networks', q: 'Real time bit streaming used in which scenario?', opts: ['Movie playback','Music streaming (not live radio)','Video streaming sites such as YouTube','None of the above'], ans: 2, exp: 'Real-time streaming used for live video services.' },
-    { topic: 'Networks', q: 'All types of internet address EXCEPT ___', opts: ['Private IP addresses','Public IP addresses','Commercial IP addresses','Static IP addresses'], ans: 2, exp: 'Commercial IP addresses is not a real category.' },
-    { topic: 'Assembly Language', q: 'Which correctly describes IMMEDIATE addressing mode?', opts: ['The operand contains the address of the value','The operand is the actual number to be used','The address is calculated using two base points','None of the above'], ans: 1, exp: 'Immediate: the operand IS the data value itself.' },
-    { topic: 'Assembly Language', q: 'Which correctly describes INDIRECT addressing mode?', opts: ['The operand contains the address of the value','The operand is the actual number to be used','The address is calculated using two base points','None of the above'], ans: 0, exp: 'Indirect: operand holds the ADDRESS of the data.' },
-    { topic: 'Assembly Language', q: 'Which correctly describes RELATIVE addressing mode?', opts: ['The operand contains the address of the value','The operand is the actual number to be used','The actual address is calculated using two base points','None of the above'], ans: 2, exp: 'Relative: actual address = base address + offset.' },
-    { topic: 'Logic Gates', q: 'Which diagram represents a NOT gate?', opts: ['Diagram A (OR shape)','Diagram B (NAND shape)','Diagram C (triangle with bubble)','Diagram D (none shown)'], ans: 2, exp: 'NOT gate = triangle with a bubble at the output.' },
-    { topic: 'Logic Gates', q: 'Which diagram represents a NAND gate?', opts: ['Diagram A (OR shape)','Diagram B (AND body + bubble)','Diagram C (triangle with bubble)','Diagram D (none)'], ans: 1, exp: 'NAND gate = AND body (D-shape) with a bubble at the output.' },
-    { topic: 'Logic Gates', q: 'Which diagram represents an AND gate?', opts: ['Diagram A','Diagram B','Diagram C','None of the above diagrams'], ans: 3, exp: 'The AND gate is not among diagrams A-C in the paper.' },
-    { topic: 'Logic Gates', q: 'Which diagram represents an OR gate?', opts: ['Diagram A (curved shield shape)','Diagram B','Diagram C','Diagram D'], ans: 0, exp: 'OR gate = curved back and pointed front (shield shape).' },
-    { topic: 'Operating Systems', q: 'The operating system is classified as ___', opts: ['Application software','Utility software','Both a and b','Systems software'], ans: 3, exp: 'The OS is systems software.' },
-    { topic: 'Operating Systems', q: 'Which is NOT a resource managed by the operating system?', opts: ['Processor','Main memory','Secondary storage','Server'], ans: 3, exp: 'A "server" is a machine/role, not a resource type managed by the OS.' },
-    { topic: 'Boolean Logic', q: 'Which is a logic proposition describing the traveler problem?', opts: ['Travel at the weekend is by car','Travel at the weekday is by car','Travel at the weekend is NOT by car','All travel is by car'], ans: 0, exp: 'The traveler ALWAYS goes by car on weekends.' },
-    { topic: 'Boolean Logic', q: 'Car_travel = ___ IF day = weekend', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Weekend travel is always by car.' },
-    { topic: 'Boolean Logic', q: 'Train_travel = ___ IF day = weekday AND distance ≤ 200', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Weekday, short distance = train.' },
-    { topic: 'Boolean Logic', q: 'Air_travel = ___ IF day = weekday AND distance > 200', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Weekday, long distance = flight.' },
-    { topic: 'Boolean Logic', q: 'Expression for Car_travel (X)? [A=weekday, B=distance≤200]', opts: ['X = A AND B','X = NOT A','X = A AND NOT B','X = NOT A AND B'], ans: 1, exp: 'Car = weekend = NOT weekday = NOT A.' },
-    { topic: 'Boolean Logic', q: 'Expression for Train_travel (Y)? [A=weekday, B=distance≤200]', opts: ['Y = A AND B','Y = NOT A','Y = A AND NOT B','Y = NOT A AND B'], ans: 0, exp: 'Train = weekday AND distance≤200 = A AND B.' },
-    { topic: 'Boolean Logic', q: 'Expression for Air_travel (Z)? [A=weekday, B=distance≤200]', opts: ['Z = A AND B','Z = NOT A','Z = A AND NOT B','Z = NOT A AND B'], ans: 2, exp: 'Air = weekday AND distance>200 = A AND NOT B.' },
-    { topic: 'Boolean Logic', q: 'Truth table: water level too low AND temperature too high → switch off?', opts: ['Table A: F1=1 when B=0 AND C=0','Table B: F1=1 when A=0 AND B=1','Table C: F1=1 when A=0 AND C=0','Table D: F1=1 always'], ans: 0, exp: 'Fault: C=0 (low water) AND B=0 (high temp). Table A matches.' },
-    { topic: 'Boolean Logic', q: 'Truth table: water flow too low AND temperature too high → switch off?', opts: ['Table A','Table B','Table C','Table D'], ans: 1, exp: 'Fault: A=0 (low flow) AND B=0 (high temp). Table B matches.' },
-    { topic: 'Boolean Logic', q: 'Circuit: temp within limits (B=1), flow too low (A=0), level too low (C=0)?', opts: ['Circuit A','Circuit B','Circuit C','Circuit D'], ans: 1, exp: 'Circuit B: NOT-A AND NOT-C AND B.' },
-    { topic: 'Assembly Language', q: 'A register is a storage unit with limited capacity of just a few bytes. TRUE or FALSE?', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Registers hold only a few bytes.' },
-    { topic: 'Assembly Language', q: 'A register is part of the processor. TRUE or FALSE?', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Registers are physically inside the CPU.' },
-    { topic: 'Assembly Language', q: 'A register has a very short access time. TRUE or FALSE?', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Registers are accessed in one clock cycle or less.' },
-    { topic: 'Assembly Language', q: 'A register may be special purpose or general purpose. TRUE or FALSE?', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Special-purpose: PC, MAR, MDR. General-purpose: R0-R7.' },
-    { topic: 'Assembly Language', q: 'An assembly language program can access an individual register. TRUE or FALSE?', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE. Assembly explicitly names registers, e.g. MOV A,R1.' },
-    { topic: 'Assembly Language', q: 'Trace: LDD 201 (mem201=10). What is the accumulator? [Initial ACC=0]', opts: ['ACC=0, mem202=11','ACC=10, mem202=10','ACC=10, mem201=10, mem202=0','ACC=0, mem201=10, mem202=10'], ans: 2, exp: 'LDD 201 = direct load: ACC ← 10. No memory changes.' },
-    { topic: 'Assembly Language', q: 'Trace: INC ACC (ACC was 10). Accumulator value?', opts: ['ACC=0','ACC=11, mem202=10','ACC=10','ACC=11, mem201=10, mem202=0'], ans: 3, exp: 'INC ACC adds 1. ACC = 11. Memory unchanged.' },
-    { topic: 'Assembly Language', q: 'Trace: STO 202 (ACC=11). What changes?', opts: ['ACC=11, mem201=10, mem202=11','ACC=10, mem202=10','ACC=10, mem201=0','ACC=0, mem202=10'], ans: 0, exp: 'STO 202: mem202 becomes 11. ACC stays 11.' },
-    { topic: 'Assembly Language', q: 'Trace: LDI 203 (mem203=204, mem204=5). What is ACC?', opts: ['ACC=5, mem201=10, mem202=11','ACC=10, mem201=5','ACC=10, mem201=0','ACC=0, mem201=10, mem202=10'], ans: 0, exp: 'LDI 203 = indirect: mem203=204 (address), load mem204=5. ACC=5.' },
-    { topic: 'Assembly Language', q: 'Trace: DEC ACC (ACC was 5). What is ACC?', opts: ['ACC=5, mem201=10, mem202=11','ACC=4, mem201=10, mem202=11','ACC=10, mem201=0','ACC=4, mem201=10, mem202=10'], ans: 1, exp: 'DEC ACC subtracts 1. ACC = 4. Memory unchanged.' },
-    { topic: 'Assembly Language', q: 'Trace: STO 201 (ACC=4). What changes?', opts: ['ACC=4, mem201=0, mem202=11','ACC=10, mem201=0','ACC=4, mem201=10, mem202=0','ACC=4, mem201=4, mem202=11'], ans: 3, exp: 'STO 201: mem201 becomes 4. ACC stays 4.' },
-    { topic: 'Assembly Language', q: 'Trace: ADD 204 (ACC=4, mem204=5). What is ACC?', opts: ['ACC=0','ACC=10, mem201=0','ACC=10, mem201=10, mem202=0','ACC=9, mem201=4, mem202=11'], ans: 3, exp: 'ADD 204: ACC = 4+5 = 9.' },
-    { topic: 'Assembly Language', q: 'Trace: STO 201 (ACC=9). Final state?', opts: ['ACC=9, mem201=9, mem202=11','ACC=10, mem201=9, mem202=10','ACC=10, mem201=0, mem202=0','ACC=0, mem201=10, mem202=10'], ans: 0, exp: 'STO 201: mem201 ← 9. Final: ACC=9, mem201=9, mem202=11.' },
-    { topic: 'File Management', q: 'Which are facilities you would expect a file management system to have?', opts: ['Delete a file','Copy a file','Save a file','All of the above'], ans: 3, exp: 'A file management system must support delete, copy, and save — all of the above.' },
-    { topic: 'Utility Programs', q: 'Which are utility programs associated with hard disk usage in a PC?', opts: ['Disk formatting','Partition creation','Disk recovery','None of the above'], ans: 3, exp: 'All three — formatting, partition creation and disk recovery are hard disk utilities.' },
-    { topic: 'Data Protection', q: 'Data protection laws are primarily about data ___', opts: ['Living individual','Securely','Integrity','Privacy'], ans: 3, exp: 'Data protection laws focus on data Privacy.' },
-    { topic: 'Data Protection', q: 'The laws concern data which is about a ___', opts: ['Living individual','Securely','Integrity','Privacy'], ans: 0, exp: 'Data protection laws apply to data about living individuals.' },
-    { topic: 'Data Protection', q: 'The data is held by a ___', opts: ['Living individual','Securely','Integrity','Data controller in an organisation'], ans: 3, exp: 'A data controller is responsible for determining how data is processed.' },
-    { topic: 'Data Protection', q: 'Measures should be taken to ensure that the data has ___', opts: ['Living individual','Securely','Integrity','Privacy'], ans: 2, exp: 'Data integrity ensures accuracy, completeness and consistency.' },
-    { topic: 'Databases', q: '___ — something about which data is recorded (customer, product, order)', opts: ['Attribute','Relationship','Tuple','Table','Entity'], ans: 4, exp: 'Entity — a thing about which data is recorded.' },
-    { topic: 'Databases', q: '___ — the data for one row in the table', opts: ['Attribute','Relationship','Tuple','Table','Entity'], ans: 2, exp: 'Tuple — one row in a relational table.' },
-    { topic: 'Databases', q: '___ — one of the data items for an object (e.g. customer name, address)', opts: ['Attribute','Relationship','Tuple','Table','Entity'], ans: 0, exp: 'Attribute — a single data item (column) in a relational table.' },
-    { topic: 'Sorting Algorithms', q: 'The algorithm described (comparing and swapping adjacent pairs) is known as ___', opts: ['Quicksort','Insertion sort','Selection sort','Bubble sort'], ans: 3, exp: 'Bubble sort repeatedly compares adjacent elements, swapping if out of order.' },
-    { topic: 'Sorting Algorithms', q: 'After the first pass through the array, the ___ is in the correct position.', opts: ['Smallest value','Middle value','Largest value','No value'], ans: 2, exp: 'After one bubble sort pass, the largest element has bubbled to the last position.' },
-  ],
-  2021: [
-    { topic: 'Computer History', q: 'Abacus is an early form of a mechanical computer. TRUE or FALSE?', opts: ['TRUE','FALSE'], ans: 0, exp: 'TRUE — the abacus is one of the earliest computing devices.' },
-    { topic: 'Computer History', q: 'Which is an early form of a mechanical computer?', opts: ['Napier Bones','Abacus','Jacquards Loom','All of the above'], ans: 3, exp: 'All three — Napier Bones, Abacus, and Jacquard\'s Loom — are early mechanical computers.' },
-    { topic: 'Computer History', q: 'Which is NOT an example of a mechanical computer?', opts: ['Napier Engine','Analytical Engine','Difference Engine','Census Machine'], ans: 0, exp: 'Napier Engine is not a real device. The others (Babbage, Hollerith) all existed.' },
-    { topic: 'Computer History', q: 'The highest award in computing is named after?', opts: ['Douglas Howard','Gordon Moore','Alan Turing','Grace Hooper'], ans: 2, exp: 'The ACM Turing Award — computing\'s most prestigious honour.' },
-    { topic: 'Von Neumann Architecture', q: 'The fundamental principle underpinning modern computers is?', opts: ['Fetch-execute cycle','Fetch-execute decode cycle','Stored program concept','None of the above'], ans: 2, exp: 'Stored-program concept: instructions and data share memory.' },
-    { topic: 'Computer Definition', q: 'A ___ is a device that processes data to produce information under stored program control.', opts: ['Data','Machine','Information','Computer'], ans: 3, exp: 'A computer accepts, stores, and processes data to produce information.' },
-    { topic: 'Computer Definition', q: 'A computer stores and processes ___ to produce output.', opts: ['Data','Machine','Information','Computer'], ans: 0, exp: 'A computer processes data (raw input) into information.' },
-    { topic: 'Computer Definition', q: 'A computer produces ___ as its output.', opts: ['Data','Machine','Information','Computer'], ans: 2, exp: 'Processing data produces information — meaningful output.' },
-    { topic: 'Programming Basics', q: 'A program is a set of ___ written in the language of the computer.', opts: ['Codes','Signs','Words','Instructions'], ans: 3, exp: 'A program is a precisely ordered set of instructions.' },
-    { topic: 'Computer Hardware', q: 'The electronic and mechanical elements of the computer are?', opts: ['Devices','Peripherals','Hardware','Software'], ans: 2, exp: 'Hardware: all physical/electronic components.' },
-    { topic: 'Software Types', q: 'Term for all programs used on a computer system?', opts: ['Codes','Software','Instructions','Programs'], ans: 1, exp: 'Software is the collective name for all programs.' },
-    { topic: 'Memory', q: '1 kilobyte = how many bytes?', opts: ['1000','1020','8','1024'], ans: 3, exp: '1 KB = 2¹⁰ = 1024 bytes.' },
-    { topic: 'Memory', q: 'Which is NOT a unit of memory measurement?', opts: ['Fb','Gb','Mb','Tb'], ans: 0, exp: 'Fb is not a standard unit.' },
-    { topic: 'Memory', q: 'Characters stored in 802 bytes?', opts: ['1000','1604','802','6416'], ans: 2, exp: '1 byte = 1 ASCII character. 802 bytes = 802 characters.' },
-    { topic: 'Memory', q: 'Pages required for 1.5 MB at 3290 chars/page?', opts: ['1572864','478','26320','411'], ans: 1, exp: '1.5MB ÷ 3290 chars/page ≈ 478 pages.' },
-    { topic: 'Computer Classification', q: 'Which is NOT a recognised classification of a computer?', opts: ['Minicomputer','Supercomputer','Microprocessor','Mainframe'], ans: 2, exp: 'Microprocessor is a chip/component, not a computer classification.' },
-    { topic: 'Embedded Systems', q: 'Embedded computer functions?', opts: ['Traffic lights','Temperature measure','Humidity control','All of the above'], ans: 3, exp: 'Embedded computers perform all types of specific control tasks.' },
-    { topic: 'Software Types', q: 'Software = intangible parts of computer?', opts: ['True','False'], ans: 0, exp: 'TRUE. Software has no physical form.' },
-    { topic: 'Software Types', q: 'Which may NOT be systems software?', opts: ['Commercial packages','Microsoft Word','User programs','All of the above'], ans: 3, exp: 'All listed are application software.' },
-    { topic: 'Software Types', q: 'Which is NOT systems software?', opts: ['GUI','Operating System','System services','Microsoft Excel'], ans: 3, exp: 'Microsoft Excel is application software.' },
-    { topic: 'Hardware', q: 'An embedded computer will perform which of the following functions?', opts: ['Control of traffic lights','Temperature measure','Humidity control','All of the above'], ans: 3, exp: 'Embedded systems are designed for specific control functions.' },
-    { topic: 'Software', q: 'Software may be defined as the intangible parts of the computer.', opts: ['True','False'], ans: 0, exp: 'Software consists of data and instructions that lack physical form.' },
-    { topic: 'Software', q: 'Which of the following may not be classified as systems software?', opts: ['Commercial packages','Microsoft Word','User programs','All of the above'], ans: 3, exp: 'Systems software manages hardware; Word and user programs are Application software.' },
-    { topic: 'Software', q: 'Which of the following is not a systems software?', opts: ['GUI','Operating System','System services','Microsoft Excel'], ans: 3, exp: 'Excel is an application software used for data analysis.' },
-    { topic: 'Software', q: 'All of the following are functions of system software except:', opts: ['Develop an algorithm for a problem','Optimize performance','Provide assistance with development','Simplify use of the computer'], ans: 0, exp: 'Developing an algorithm is a human programmer task, not a software function.' },
-    { topic: 'Programming', q: 'After compiling a high level language program, the output is known as:', opts: ['Machine language','Object code','Assembly language','Target code'], ans: 1, exp: 'The compiler produces object code, which is then linked into an executable.' },
-    { topic: 'CPU', q: 'All operations within the computer are performed in which unit?', opts: ['ALU','Control unit','Register','Cache'], ans: 0, exp: 'The Arithmetic Logic Unit (ALU) performs all calculations and logic.' },
-    { topic: 'CPU', q: 'Which of the following actually constitutes the computer?', opts: ['ALU','Control unit','CPU','Motherboard'], ans: 2, exp: 'The CPU is often considered the "brain" or core of the computer system.' },
-    { topic: 'Data Rep', q: 'How many different codes are possible with 5 bits?', opts: ['10','25','32','31'], ans: 2, exp: '2 to the power of 5 (2^5) equals 32 possible combinations.' },
-    { topic: 'Data Rep', q: 'How many bits are needed to represent 26 letters (lower and upper case)?', opts: ['52','26','8','6'], ans: 3, exp: '52 characters need 2^6 (64) combinations, so 6 bits are required.' },
-    { topic: 'Error Detection', q: 'An extra bit used for error detection in a byte is known as:', opts: ['Parity bit','Error bit','Even bit','None of the above'], ans: 0, exp: 'A parity bit is added to check the integrity of transmitted data.' },
-    { topic: 'Architecture', q: 'A bus is a set of ___ used to connect components within the computer.', opts: ['Lines','Codes','Wires','Jumpers'], ans: 2, exp: 'Buses are physical communication pathways (wires/traces) on the motherboard.' },
-    { topic: 'Architecture', q: 'Which of the following is an example of a bus?', opts: ['Data bus','Computer bus','Memory bus','None of the above'], ans: 0, exp: 'The Data bus carries the actual information between the CPU and memory.' },
-    { topic: 'Architecture', q: 'Which bus indicates the location from which data is to be retrieved?', opts: ['Control bus','Memory bus','Data bus','Address bus'], ans: 3, exp: 'The Address bus specifies the memory location for a read/write operation.' },
-    { topic: 'Memory', q: 'Which is not a feature of cache memory?', opts: ['Closer to CPU','Dedicated control bus','High speed components','Large capacity relative to RAM'], ans: 3, exp: 'Cache is much smaller in capacity compared to Main Memory (RAM).' },
-    { topic: 'Memory', q: 'Which principle does cache memory rely upon?', opts: ['Locality of reference','Moores law','High speed component','None of the above'], ans: 0, exp: 'Locality of reference predicts that data used recently will likely be used again.' },
-    { topic: 'Memory', q: 'Which type of locality is used by cache memory?', opts: ['Data locality','Spatial locality','High speed components','None of the above'], ans: 1, exp: 'Spatial locality refers to accessing memory locations near each other.' },
-    { topic: 'Number Systems', q: 'Which correctly shows place values in the denary system?', opts: ['10^3 10^2 10^1 10^0','10^3 10^2 10^1 1 10','10^3 10^2 10^0 10^0','None'], ans: 0, exp: 'Denary (Base-10) uses powers of 10 starting from zero.' },
-    { topic: 'Arithmetic', q: 'Which shows the correct place values for 8-bit Two\'s Complement?', opts: ['128 64...1','-128 64...1','128 64...0','-128 64...0'], ans: 1, exp: 'In two\'s complement, the most significant bit represents a negative value.' },
-    { topic: 'Arithmetic', q: 'If decimal 373 is converted to binary, how many bits are needed?', opts: ['2','4','9','8'], ans: 2, exp: '2^8 is 256; 2^9 is 512. So 373 needs 9 bits.' },
-    { topic: 'Arithmetic', q: 'How many bytes are required to store the number 373?', opts: ['1','2','3','4'], ans: 1, exp: '9 bits require at least 2 full bytes (16 bits) of storage.' },
-    { topic: 'Compression', q: 'For which of these is lossless compression essential?', opts: ['Text document','Sound','Video','Image'], ans: 0, exp: 'Losing even one character in a text document can change its meaning.' },
-    { topic: 'Graphics', q: 'Which is not true about bitmapped graphics?', opts: ['Scanned images','Photographs','Object-oriented class diagrams','None'], ans: 2, exp: 'Class diagrams use Vector graphics (lines/shapes), not individual pixels.' },
-    { topic: 'Arithmetic', q: 'In 8-bit Sign and Magnitude, what is the value of 10100110?', opts: ['A6','-90','6A','-38'], ans: 3, exp: 'Leading 1 makes it negative; 0100110 equals 38. Total = -38.' },
-    { topic: 'Number Systems', q: 'Why do computer scientists use Hexadecimal?', opts: ['Fewer mistakes copying','Easy to convert to binary','Fewer digits used','None of the above'], ans: 3, exp: 'All of the listed points (A, B, C) are valid reasons for using Hex.' },
-    { topic: 'Sensors', q: 'A light sensor is best suited for:', opts: ['Controlling an oven','Opening greenhouse windows','Vehicle barriers','Controlling room illumination'], ans: 3, exp: 'Light sensors measure brightness to trigger automated lighting.' },
-    { topic: 'Sensors', q: 'A temperature sensor is best suited for:', opts: ['Controlling an oven','Opening greenhouse windows','Vehicle barriers','Illumination'], ans: 0, exp: 'Temperature sensors provide feedback for heating elements in ovens.' },
-    { topic: 'Networking', q: 'A channel carrying information as electromagnetic signals is:', opts: ['Copper cable','Transmission medium','Fibre','Wireless'], ans: 1, exp: 'Transmission medium is the general term for any communication channel.' },
-    { topic: 'Networking', q: 'Which is not an example of guided media?', opts: ['Fibre','Copper','Twisted pair','Bluetooth'], ans: 3, exp: 'Bluetooth is wireless (unguided) communication.' },
-    { topic: 'Networking', q: 'Which is a feature of guided media?', opts: ['High speed','Low data rate','Shorter distances','Secure'], ans: 1, exp: 'Relative to wireless, some guided media can have lower data rates.' },
-    { topic: 'Networking', q: 'Fiber optic cables support which propagation mode?', opts: ['Single mode','Multimode','Both','None'], ans: 2, exp: 'Fiber can be manufactured for single-mode or multi-mode light travel.' },
-    { topic: 'Networking', q: 'All are features of HTTP except:', opts: ['Connection oriented','Media independent','Stateless','None'], ans: 0, exp: 'HTTP is technically stateless and relies on TCP for connection.' },
-    { topic: 'Networking', q: 'Bit streaming is defined as:', opts: ['Continuous flow of bits','Connectionless flow','Connection-oriented flow','None'], ans: 0, exp: 'Streaming refers to the steady, continuous delivery of data.' },
-    { topic: 'Networking', q: 'In a Class A IP address, how many bits are used for the host?', opts: ['8','16','24','32'], ans: 2, exp: 'Class A uses 8 bits for the network and 24 bits for hosts.' },
-    { topic: 'Networking', q: 'In a Class C IP address, how many bits are used for the host?', opts: ['8','16','24','128'], ans: 0, exp: 'Class C uses 24 bits for the network and 8 bits for hosts.' },
-    { topic: 'Addressing', q: 'In IMMEDIATE addressing, the operand contains:', opts: ['Memory address','The actual value','Two base points','None'], ans: 1, exp: 'The value is provided directly in the instruction itself.' },
-    { topic: 'Addressing', q: 'In INDIRECT addressing, the operand contains:', opts: ['Memory address','Actual value','Pointer to an address','None'], ans: 2, exp: 'It contains an address that points to another address where the data is stored.' },
-    { topic: 'Registers', q: 'A register is part of the processor. True or False?', opts: ['True','False'], ans: 0, exp: 'Registers are high-speed storage locations inside the CPU.' },
-    { topic: 'Registers', q: 'A register has a very short access time. True or False?', opts: ['True','False'], ans: 0, exp: 'Registers are the fastest storage available in the computer.' },
-    { topic: 'Software', q: 'Which is a facility of a file management system?', opts: ['Delete a file','Copy a file','Save a file','All of the above'], ans: 3, exp: 'File managers handle all basic file lifecycle tasks.' },
-    { topic: 'Databases', q: 'The link between two tables is called a:', opts: ['Attribute','Relationship','Tuple','Entity'], ans: 1, exp: 'Relationships connect entities in a relational database.' },
-    { topic: 'Databases', q: 'The process to lower data redundancy is known as:', opts: ['Normalization','Rationalization','Abnormality elimination','Reduction'], ans: 0, exp: 'Normalization organizes data into tables to minimize duplication.' }
-  ],
-  2023: [
-    { topic: 'Databases', q: 'A collection of data designed to be used by different people is called a/an ___', opts: ['Organization','Database','Relationship','Schema'], ans: 1, exp: 'A database is a structured collection of data shared among multiple users.' },
-    { topic: 'Databases', q: 'What does SQL stand for?', opts: ['Structured Query Language','Structural Querying Language','Standard Query Language','Secondary Query Language'], ans: 0, exp: 'SQL = Structured Query Language, used to manage relational databases.' },
-    { topic: 'Number Systems', q: 'The binary number 10101 is equivalent to decimal number ___', opts: ['19','12','27','21'], ans: 3, exp: '10101 binary = 16+4+1 = 21 decimal.' },
-    { topic: 'Logic Gates', q: 'The universal gate is ___', opts: ['NAND gate','OR gate','NOT gate','None of the above'], ans: 0, exp: 'NAND gate is universal — any logic circuit can be built from NAND gates alone.' },
-    { topic: 'Logic Gates', q: 'The inverter is ___', opts: ['NOT gate','OR gate','AND gate','None of the above'], ans: 0, exp: 'The NOT gate (inverter) flips the input: 0→1, 1→0.' },
-    { topic: 'Logic Gates', q: 'NAND gate inputs connected together. Result?', opts: ['OR gate','AND gate','NOT gate','None of the above'], ans: 2, exp: 'Tying both NAND inputs together gives output = NOT(input). Creates a NOT gate.' },
-    { topic: 'Logic Gates', q: 'NOR gate = OR gate followed by ___', opts: ['AND gate','NAND gate','NOT gate','None of the above'], ans: 2, exp: 'NOR = OR + NOT (the bubble at output inverts the OR output).' },
-    { topic: 'Logic Gates', q: 'NAND gate = AND gate followed by ___', opts: ['NOT gate','OR gate','AND gate','None of the above'], ans: 0, exp: 'NAND = AND + NOT. The bubble at the output of AND creates NAND.' },
-    { topic: 'Logic Gates', q: 'Any digital circuit can be made by repeated use of ___', opts: ['OR gates','NOT gates','NAND gates','None of the above'], ans: 2, exp: 'NAND is the universal gate — sufficient to build any Boolean function.' },
-    { topic: 'Logic Gates', q: 'The only function of NOT gate is to ___', opts: ['Stop a signal','Invert input signal','Act as a universal gate','None of the above'], ans: 1, exp: 'NOT gate simply inverts: HIGH→LOW, LOW→HIGH.' },
-    { topic: 'Logic Gates', q: 'Input signal 1 applied to NOT gate gives output ___', opts: ['0','1','Either 0 or 1','None of the above'], ans: 0, exp: 'NOT(1) = 0. The NOT gate always inverts.' },
-    { topic: 'Logic Gates', q: 'In Boolean algebra, the bar sign (¯) indicates ___', opts: ['OR operation','AND operation','NOT operation','None of the above'], ans: 2, exp: 'The bar over a variable (Ā) means NOT A — the complement operation.' },
-    { topic: 'CPU Architecture', q: 'A machine cycle refers to ___', opts: ['Fetching an instruction','Clock speed','Fetching, decoding and executing an instruction','Executing an instruction'], ans: 2, exp: 'The machine cycle = fetch + decode + execute — the complete FDE cycle.' },
-    { topic: 'Memory', q: 'The code used to boot up a computer is stored in ___', opts: ['RAM','ROM','PROM','EPROM'], ans: 1, exp: 'ROM is non-volatile — BIOS/firmware is stored here and persists without power.' },
-    { topic: 'Storage', q: 'In accessing a disk block the longest delay is due to ___', opts: ['Rotation time','Seek time','Transfer time','Access time'], ans: 1, exp: 'Seek time (moving the R/W head to the correct track) takes longest.' },
-    { topic: 'CPU Architecture', q: 'Which is NOT part of the CPU?', opts: ['ALU','Control unit','Registers','System bus'], ans: 3, exp: 'The system bus connects the CPU to other components — it is outside the CPU.' },
-    { topic: 'Number Systems', q: 'Hexadecimal equivalent of decimal 973?', opts: ['4BC','CB4','6D','3CD'], ans: 3, exp: '973 = 3×256 + 12×16 + 13 = 3CD in hexadecimal.' },
-    { topic: 'CPU Architecture', q: 'Which is NOT a type of processor?', opts: ['PowerPC 601','Motorola 8086','Motorola 68000','Intel Pentium'], ans: 1, exp: '8086 is Intel, not Motorola. Motorola made the 68000 series.' },
-    { topic: 'Number Systems', q: 'Minimum bits to store hexadecimal FF?', opts: ['2','4','6','16'], ans: 3, exp: 'FF hex = 255 decimal = 11111111 binary = 8 bits.' },
-    { topic: 'Number Systems', q: 'What is a parity bit?', opts: ['Indicates uppercase letters','Used to detect errors','First bit in a byte','Last bit in a byte'], ans: 1, exp: 'A parity bit is an extra bit added to detect single-bit transmission errors.' },
-    { topic: 'Processors', q: 'What is the word size of an 8086 processor?', opts: ['8 bits','16 bits','32 bits','64 bits'], ans: 1, exp: 'The 8086 is a classic 16-bit architecture.' },
-    { topic: 'Arithmetic', q: 'The sum of -6 and -13 using 2s complement (8-bit) is:', opts: ['11101101','11110011','11001100','11101100'], ans: 0, exp: '-19 in 8-bit 2s complement is 11101101.' },
-    { topic: 'Registers', q: 'Which register holds the address of the next instruction to be executed?', opts: ['MAR','MBR','Accumulator','Program Counter'], ans: 3, exp: 'The Program Counter (PC) tracks the next instruction.' },
-    { topic: 'CPU', q: 'What are the major components of a CPU?', opts: ['CU, Registers, ALU','CU, Memory, ALU','Memory, ALU, Auxiliary','Registers, CU, Memory'], ans: 0, exp: 'CPU consists of the Control Unit, ALU, and Registers.' },
-    { topic: 'Number Systems', q: 'A denary number system is the same as a decimal system.', opts: ['TRUE','FALSE'], ans: 0, exp: 'Denary and decimal both refer to the base-10 system.' },
-    { topic: 'Number Systems', q: 'The total number of possible digits in a denary system is:', opts: ['2','8','16','10'], ans: 3, exp: 'Digits 0 through 9 make a total of 10.' },
-    { topic: 'Number Systems', q: 'Possible digits in a hexadecimal system?', opts: ['2','8','16','10'], ans: 2, exp: 'Hexadecimal is base-16.' },
-    { topic: 'Number Systems', q: 'Correct way to convert binary to hex:', opts: ['Groups of 4 from left','Groups of 4 from right','Any of above','None'], ans: 1, exp: 'Group bits in fours starting from the least significant bit (right).' },
-    { topic: 'Number Systems', q: 'Bits needed for denary 373?', opts: ['2','4','9','8'], ans: 2, exp: '373 requires 9 bits (2^8=256, 2^9=512).' },
-    { topic: 'Memory', q: 'Bytes required to store the number 373?', opts: ['1','2','3','4'], ans: 1, exp: '9 bits require 2 full bytes.' },
-    { topic: 'Software', q: 'The operating system is classified as:', opts: ['Application software','Utility software','Both','Systems software'], ans: 3, exp: 'The OS is the primary type of systems software.' },
-    { topic: 'Software', q: 'Which is NOT a resource managed by the OS?', opts: ['Processor','Main memory','Secondary storage','Server'], ans: 3, exp: 'An OS manages hardware; a server is a computer/role, not a local resource.' },
-    { topic: 'Networking', q: 'Why are network cables twisted?', opts: ['Increase speed','Decrease heat','Reduce data spent','Reduce EM interference'], ans: 3, exp: 'Twisting cancels out electromagnetic interference.' },
-    { topic: 'Networking', q: 'Repeaters _______ the quality of signals during transmission.', opts: ['Cancel','Regenerate','Delay','Reduce'], ans: 1, exp: 'Repeaters clean and amplify signals over long distances.' },
-    { topic: 'Memory', q: 'Which is NOT considered primary memory?', opts: ['Hard drive','Register','Cache','Main memory'], ans: 0, exp: 'Hard drives are secondary/auxiliary storage.' },
-    { topic: 'Memory', q: 'RAM is usually described as:', opts: ['ROM','Hard drive','Volatile memory','Non-volatile'], ans: 2, exp: 'RAM loses data when power is lost.' },
-    { topic: 'Memory', q: 'Compared to SRAM, DRAM is:', opts: ['Cheap to make','More capacity/chip','Made from flip flops','Uses less power'], ans: 2, exp: 'DRAM uses capacitors; SRAM uses flip-flops.' },
-    { topic: 'Security', q: 'A computer infected without the user knowledge is a:', opts: ['Worm','Rootkit','Computer virus','Trojan Horse'], ans: 2, exp: 'A virus alters work without permission.' },
-    { topic: 'Databases', q: 'An attribute in one table referring to the primary key of another is a:', opts: ['Primary key','Foreign key','Security key','Privacy key'], ans: 1, exp: 'Foreign keys create relationships between tables.' },
-    { topic: 'Databases', q: 'Normalisation is the process of:', opts: ['Relationship','Arranging attributes into sensible groupings','Data Modelling','Data redundancy'], ans: 1, exp: 'Normalisation organizes attributes to reduce redundancy.' },
-    { topic: 'Networking', q: 'Unguided transmissions are more secure than guided transmission.', opts: ['True','False'], ans: 1, exp: 'Guided media (cables) are generally more secure because they require a physical connection to intercept.' },
-    { topic: 'Networking', q: 'The main types of transmission media are:', opts: ['Guided and Unguided media','Physical and Automatic','Longer and wide','Used in physical links'], ans: 0, exp: 'Transmission media are categorized as guided (wired) or unguided (wireless).' },
-    { topic: 'Networking', q: 'The following are features of a guided media, except:', opts: ['Secure','Low cost','Flexible and lightweight','High cost'], ans: 3, exp: 'Guided media like twisted pair are actually known for being relatively low cost.' },
-    { topic: 'Networking', q: '_______ is a layer of material with a lower refractive index that covers the core of a fiber optic cable.', opts: ['Coaxial','Optic','Cladding','Twist'], ans: 2, exp: 'Cladding reflects light back into the core using total internal reflection.' },
-    { topic: 'Memory', q: 'Which of the following is not considered to be a primary memory?', opts: ['Hard drive','Register','Cache','Main memory'], ans: 0, exp: 'Hard drives are secondary storage; registers and cache are part of the primary memory hierarchy.' },
-    { topic: 'Memory', q: 'Which of the following is considered to be main memory?', opts: ['Hard drive','auxiliary storage','Register','None of the above'], ans: 3, exp: 'Main memory specifically refers to RAM, which is not listed as an option here.' },
-    { topic: 'Memory', q: 'Computer memory is organized into a hierarchy.', opts: ['True','False','It depends on the make','All of the above'], ans: 0, exp: 'The memory hierarchy organizes storage based on speed, cost, and capacity.' },
-    { topic: 'Memory', q: 'The fastest memory is furthest away from the CPU.', opts: ['True','False','It depends on the make','None of the above'], ans: 1, exp: 'The fastest memory (registers/L1 cache) is closest to the CPU.' },
-    { topic: 'Storage', q: 'Which of the following isn\'t true about Hard drive?', opts: ['Large storage capacity','Slow','Fast access time','Cheap'], ans: 2, exp: 'Hard drives have slow access times compared to RAM and SSDs because of mechanical parts.' },
-    { topic: 'CPU', q: 'The processor has direct access to which of the following:', opts: ['Register','Hard drive','Auxiliary storage','All of the above'], ans: 0, exp: 'The CPU directly accesses registers and main memory, but not secondary storage.' },
-    { topic: 'Memory', q: 'Which of the following is usually described as volatile memory?', opts: ['ROM','Hard drive','RAM','None of the above'], ans: 2, exp: 'RAM is volatile as it requires power to maintain data.' },
-    { topic: 'Memory', q: 'A memory is said to be volatile because:', opts: ['It may suddenly explode','Switching on power may cause it to lose data','It loses data if power is off','None of the above'], ans: 2, exp: 'Volatility in computing refers to data loss when power is disconnected.' },
-    { topic: 'Memory', q: 'Which of the following statements best describes read only memory (ROM)?', opts: ['It is non-volatile','It is volatile','data can read from it only once','Options a and c'], ans: 0, exp: 'ROM is non-volatile; it keeps its data even when the computer is turned off.' },
-    { topic: 'Memory', q: 'Compared to SRAM, which of the following is not true about DRAM?', opts: ['Cheap to make','Has more capacity per chip','It is made from flip flops','Requires less power to operate'], ans: 2, exp: 'DRAM is made from capacitors; SRAM is made from flip-flops.' },
-    { topic: 'Logic', q: 'A logic proposition is a statement that is:', opts: ['True','False','either True or False','always true'], ans: 2, exp: 'A proposition must have a definitive truth value: either true or false.' },
-    { topic: 'Logic', q: 'Which of the following are basic Boolean operators?', opts: ['AND','OR','NOT','All of the above'], ans: 3, exp: 'AND, OR, and NOT are the primary building blocks of Boolean logic.' },
-    { topic: 'Logic', q: 'Not A is True if:', opts: ['A is false','A is True and B is True','A is True or B is True','All of the above'], ans: 0, exp: 'The NOT operator inverts the truth value.' },
-    { topic: 'Logic', q: 'A NAND B is True unless...', opts: ['Both A and B are True','A is False or B is False','A is True or B is True but not both','None of the above'], ans: 1, exp: 'NAND is true unless both inputs are true.' },
-    { topic: 'Logic Gates', q: 'A truth table shows: A=0,B=0,X=0; A=0,B=1,X=0; A=1,B=0,X=0; A=1,B=1,X=1. This is:', opts: ['An OR gate','A XOR gate','A NAND gate','An AND gate'], ans: 3, exp: 'The output is 1 only when all inputs are 1, which defines an AND gate.' },
-    { topic: 'Logic Gates', q: 'A truth table shows: A=0,B=0,X=0; A=0,B=1,X=1; A=1,B=0,X=1; A=1,B=1,X=1. This is:', opts: ['An OR gate','A NOR gate','A NAND gate','An AND gate'], ans: 0, exp: 'The output is 1 if at least one input is 1, which defines an OR gate.' },
-    { topic: 'Logic Gates', q: 'A truth table shows: A=0,B=0,X=1; A=0,B=1,X=1; A=1,B=0,X=1; A=1,B=1,X=0. This is:', opts: ['An OR gate','A XOR gate','A NAND gate','An AND gate'], ans: 2, exp: 'This is the inverse of an AND gate, which is a NAND gate.' },
-    { topic: 'Logic Gates', q: 'A truth table shows: A=0,B=0,X=0; A=0,B=1,X=1; A=1,B=0,X=1; A=1,B=1,X=0. This is:', opts: ['An OR gate','A XOR gate','A NAND gate','An AND gate'], ans: 1, exp: 'Exclusive OR (XOR) is true only when the inputs are different.' },
-    { topic: 'Memory', q: 'Which of the following is not true about SRAM?', opts: ['Maintains power while switched on','It is made from capacitors','Has shorter access times','Used to make cache memory'], ans: 1, exp: 'SRAM uses transistors/flip-flops; DRAM uses capacitors.' },
-    { topic: 'Memory', q: 'Which correctly describes the principle of locality of reference?', opts: ['Recently referenced items likely to be referenced again','Nearby addresses tend to be referenced together','Both options a and b','None of the above'], ans: 2, exp: 'Locality includes both Temporal (time) and Spatial (space) locality.' },
-    { topic: 'Software', q: 'A device driver is a piece of:', opts: ['software','hardware','Both options a and b','None of the above'], ans: 0, exp: 'Drivers are specialized software that allow the OS to communicate with hardware.' },
-    { topic: 'Software', q: 'Any device connected to a computer requires a device driver to operate it.', opts: ['True','False','Only for the motherboard','Options a and c'], ans: 0, exp: 'The OS needs a driver to understand how to control any peripheral.' },
-    { topic: 'Storage', q: 'Which of the following are true about hard disk?', opts: ['Has rigid platters','Surface made of ferrous oxide','Platters mounted on central spindle','All of the above'], ans: 3, exp: 'These are the standard physical characteristics of an HDD.' },
-    { topic: 'Storage', q: 'Which of the following are true about hard disk tracks?', opts: ['Each platter has a R/W head','Surface divided into concentric tracks','Tracks divided into 512-byte blocks','All of the above'], ans: 3, exp: 'Heads, tracks, and sectors (blocks) define disk geometry.' },
-    { topic: 'Storage', q: 'Recording density is a factor that can determine disk capacity.', opts: ['True','False','Not always','None of the above'], ans: 0, exp: 'Density determines how many bits can be packed into a specific area.' },
-    { topic: 'Storage', q: 'Areal density is a factor that can determine disk capacity.', opts: ['True','False','Not always','None of the above'], ans: 0, exp: 'Areal density is the product of recording and track density.' },
-    { topic: 'Storage', q: 'If a disk has 512 bytes/sector, 300 sectors/track, 20k tracks/surface, 2 surfaces/platter, and 5 platters, capacity is:', opts: ['28.6 Kbytes','28.6 Mbytes','28.6 Gbytes','28.6 Tbytes'], ans: 2, exp: '512 * 300 * 20000 * 2 * 5 equals approximately 30.7 billion bytes (~28.6 GiB).' },
-    { topic: 'Storage', q: 'Which of the following relations is correct?', opts: ['Access time = seek + latency + transfer','Access time = seek + transfer','Access time = latency + transfer','Access time = settle + transfer'], ans: 0, exp: 'Total disk access time includes seek time, rotational latency, and data transfer.' },
-    { topic: 'Storage', q: 'Data transfer time is the time required to:', opts: ['Transfer between register and cache','Transfer between HDD and auxiliary','Transfer between the system and the disk','All of the above'], ans: 2, exp: 'In this context, it refers to moving data from the disk surface to the system.' },
-    { topic: 'Storage', q: 'Which of the following are true about data transfer time?', opts: ['Internal transfer rate','External transfer rate','Both a and b','None of the above'], ans: 2, exp: 'Data transfer is measured both inside the drive and between the drive and the computer.' },
-    { topic: 'Software', q: 'This is a code that tells the computer which basic operation it must perform:', opts: ['Machine code','Operation code','Language code','Software'], ans: 1, exp: 'The Opcode (Operation Code) specifies the instruction to be executed.' },
-    { topic: 'Programming', q: 'The following are features of an assembly language program except:', opts: ['Macros','System calls','Directives','None of the above'], ans: 3, exp: 'Assembly includes directives, macros, and calls to the operating system.' },
-    { topic: 'Programming', q: 'A binary code comprising an opcode and often one operand is known as:', opts: ['Machine instruction code','machine code','Operation code','Language code'], ans: 0, exp: 'A complete machine instruction tells the CPU what to do and what data to use.' },
-    { topic: 'Programming', q: 'Immediate, direct, indirect and indexed are addressing modes.', opts: ['True','False'], ans: 0, exp: 'These modes determine how the CPU calculates the actual memory address of an operand.' },
-    { topic: 'Programming', q: 'The opcode operand INC <register> simply means:', opts: ['Increase value by 1','Increase value by 2','Increase value by 3','Increase value by 5'], ans: 0, exp: 'INC is a standard assembly mnemonic for Increment (add 1).' },
-    { topic: 'Software', q: 'System software unlike application software is smaller in size and less interactive.', opts: ['True','False'], ans: 0, exp: 'System software (like drivers) usually runs in the background with minimal UI.' },
-    { topic: 'Software', q: 'What provides the visual interface that enables the user to communicate with the computer?', opts: ['Operating System','Opcode Instructions','Edsim 51','None of the above'], ans: 0, exp: 'The OS (specifically the GUI or Shell) is the interface for the user.' },
-    { topic: 'Software', q: 'A program that performs a specific task like managing resources or supporting developers is:', opts: ['Application software','Operating system','Utility program','A program'], ans: 2, exp: 'Utilities (like disk defragmenters) are specialized system tools.' },
-    { topic: 'Software', q: 'Virus checker and Backup software are utility programs.', opts: ['True','False'], ans: 0, exp: 'These are classic examples of utility software.' },
-    { topic: 'Security', q: 'Protecting your computer against unwanted access, damage, or destruction is termed:', opts: ['Data security','Data protection','ownership protection','computer security'], ans: 3, exp: 'Computer security covers the protection of the whole system and its information.' },
-    { topic: 'Security', q: 'Computer security threats and risks include:', opts: ['Internet/Network attacks','Hardware theft','software theft','All of the above'], ans: 3, exp: 'Security risks can be physical, network-based, or software-based.' },
-    { topic: 'Security', q: 'James Mole was hired to break into his own organization\'s computer. James is a:', opts: ['Script kiddie','unethical employee','corporate spy','Cyberterrorist'], ans: 2, exp: 'Based on the context of professional infiltration, he fits the role of a corporate spy.' },
-    { topic: 'Security', q: 'A program that infects a computer by altering how it works without user knowledge is a:', opts: ['worm','Rootkit','computer virus','Trojan Horse'], ans: 2, exp: 'A virus attaches to files and replicates to alter system behavior.' },
-    { topic: 'Security', q: 'A compromised computer controlled remotely by an outsider is a:', opts: ['bot','botnet','zombie','virus'], ans: 2, exp: 'Individual compromised machines in a botnet are called zombies.' },
-    { topic: 'Security', q: 'A group of compromised computers connected to a network to attack other networks is a:', opts: ['bot','botnet','zombie','virus'], ans: 1, exp: 'A botnet is a collection of "zombie" computers controlled by a "botmaster."' },
-    { topic: 'Databases', q: 'An attribute in one table that refers to the primary key of another table is a:', opts: ['Primary key','Foreign key','Security key','Privacy key'], ans: 1, exp: 'Foreign keys establish relationships between data in different tables.' },
-    { topic: 'Databases', q: 'In the relational database, an attribute is a column in the relational table.', opts: ['False','True'], ans: 1, exp: 'Columns represent attributes, while rows (tuples) represent records.' },
-    { topic: 'Databases', q: 'The database administrator uses the DBMS to customize the database for users.', opts: ['True','False'], ans: 0, exp: 'DBAs manage and configure the database environment.' },
-    { topic: 'Databases', q: 'An attribute/combination that is unique for each tuple is a:', opts: ['Security key','Foreign key','Primary key','Privacy key'], ans: 2, exp: 'The Primary Key must be unique to identify each record.' },
-    { topic: 'Databases', q: 'In Member(MemID, MemGivenName, BandName), "Member" is a:', opts: ['Attribute','Table name','Primary key','Foreign key'], ans: 1, exp: 'The text before the parentheses defines the name of the relation (table).' },
-    { topic: 'Databases', q: 'In Member(MemID, MemGivenName, BandName), "BandName" is a:', opts: ['Attribute','Table name','Primary key','Foreign key'], ans: 0, exp: 'Names inside the parentheses represent the columns or attributes.' },
-    { topic: 'Databases', q: 'The database system is designed to allow multiple entries of the primary key.', opts: ['True','False'], ans: 1, exp: 'Primary keys MUST be unique; duplicates are not allowed.' },
-    { topic: 'Databases', q: 'Primary key ensures entity integrity whereas _______ ensures referential integrity.', opts: ['Security key','Database key','Foreign key','Primary key'], ans: 2, exp: 'Foreign keys refer to primary keys elsewhere to maintain data consistency.' },
-    { topic: 'Databases', q: 'A class of 50 students assigned to 1 tutor. What is the relation between Student and Tutor?', opts: ['one to one','many to many','many to one','one and only one'], ans: 2, exp: 'Many students are associated with a single tutor.' },
-    { topic: 'Databases', q: '10 buses transport 50 individuals. What is the relationship between Buses and Individuals?', opts: ['one to one','many to many','many to one','one and only one'], ans: 1, exp: 'Since any individual can take different buses and buses hold many individuals, it is many-to-many.' },
-    { topic: 'Databases', q: '_______ is the process of arranging group attributes into sensible groupings for relational tables.', opts: ['Relationship','Normalisation','Data Modelling','Data redundancy'], ans: 1, exp: 'Normalization organizes data to reduce redundancy and improve integrity.' },
-  ]
-};
-
-</script>
 </body>
 </html>

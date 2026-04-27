@@ -361,10 +361,21 @@
   <!-- ══ SCREEN 6: LEADERBOARD ══ -->
   <div class="screen" id="screen-leaderboard">
     <div class="glass" style="padding:32px;">
-      <div class="lb-header">
+     <div class="lb-header">
         <span class="lb-title">🏆 LEADERBOARD</span>
         <button class="btn btn-ghost btn-sm" id="lb-back-btn">← BACK</button>
       </div>
+
+      <!-- ── CATEGORY FILTER PILLS ── -->
+      <div class="lb-filters" id="lb-filters">
+        <button class="lb-filter-btn active" data-cat="all">ALL</button>
+        <button class="lb-filter-btn" data-cat="2022">2022</button>
+        <button class="lb-filter-btn" data-cat="2021">2021</button>
+        <button class="lb-filter-btn" data-cat="2023">2023</button>
+        <button class="lb-filter-btn" data-cat="Scenario Cases">SCENARIO</button>
+        <button class="lb-filter-btn" data-cat="SpeedQuiz">⚡ SPEED</button>
+      </div>
+
       <div class="lb-list" id="lb-list">
         <div class="lb-empty">
           <div class="spinner"></div>

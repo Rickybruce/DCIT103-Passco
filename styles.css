@@ -805,6 +805,39 @@ body::before {
 
 /* ── LOADING STATES ── */
 .lb-empty { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 14px; }
+
+/* ── LEADERBOARD CATEGORY FILTER PILLS ── */
+.lb-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.lb-filter-btn {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.lb-filter-btn:hover {
+  border-color: rgba(255,255,255,0.25);
+  color: var(--text);
+  background: var(--glass-hover);
+}
+.lb-filter-btn.active {
+  background: linear-gradient(135deg, var(--cyan-dim), var(--purple-dim));
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0,212,255,0.2);
+}
 .spinner  { width: 30px; height: 30px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 

@@ -855,3 +855,23 @@ body::before {
   .year-card    { padding: 20px; }
   .sc-item      { padding: 16px 18px; }
 }
+/* ── DEVELOPER SIGNATURE ── */
+.dev-signature {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  opacity: 0.6;
+  letter-spacing: 1px;
+  pointer-events: none;
+  z-index: 9999;
+  text-shadow: 0 0 8px var(--cyan-dim);
+  animation: pulseOpacity 3s infinite ease-in-out;
+}
+
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}

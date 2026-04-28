@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS — Scenario Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+  /* ══════════════════════════════════════════════
+     CSS VARIABLES — mirrored from styles.css
+  ══════════════════════════════════════════════ */
+  :root {
+    --glass:        rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --glass-hover:  rgba(255,255,255,0.1);
+    --blur:         blur(20px);
+    --gold:         #f5c842;
+    --gold-glow:    #f5c84260;
+    --cyan:         #00d4ff;
+    --cyan-dim:     #00d4ff30;
+    --purple:       #9b59ff;
+    --purple-dim:   #9b59ff30;
+    --green:        #00ff9d;
+    --green-dim:    #00ff9d25;
+    --red:          #ff4757;
+    --red-dim:      #ff475730;
+    --orange:       #ff6b35;
+    --orange-dim:   #ff6b3530;
+    --bg1:          #050810;
+    --bg2:          #0a0f1e;
+    --text:         #e8ecf4;
+    --text-dim:     #7a8499;
+    --radius:       16px;
+    --radius-sm:    10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg1); color: var(--text);
+    font-family: 'Rajdhani', sans-serif; min-height: 100vh; overflow-x: hidden;
+  }
+
+  /* ── ANIMATED BACKGROUND ── */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, #0a1a4020 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, #1a0a3020 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 50%, #00102820 0%, transparent 70%);
+  }
+  .stars {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 20%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 50%, rgba(255,255,255,0.2) 0%, transparent 100%);
+    animation: twinkle 6s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { 0%{opacity:0.5;} 100%{opacity:1;} }
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none; animation: float 20s ease-in-out infinite; }
+  .orb1 { width:400px; height:400px; background:rgba(0,212,255,0.05); top:-100px; left:-100px; }
+  .orb2 { width:300px; height:300px; background:rgba(155,89,255,0.06); bottom:-80px; right:-80px; animation-delay:-7s; }
+  .orb3 { width:250px; height:250px; background:rgba(0,255,157,0.04); top:40%; left:60%; animation-delay:-14s; }
+  @keyframes float {
+    0%,100%{transform:translate(0,0) scale(1);}
+    33%{transform:translate(30px,-40px) scale(1.05);}
+    66%{transform:translate(-20px,20px) scale(0.95);}
+  }
+
+  /* ── SCROLL PROGRESS BAR ── */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 999;
+    background: linear-gradient(90deg, var(--cyan), var(--purple), var(--gold));
+    transform-origin: left; transform: scaleX(0);
+    transition: transform 0.08s linear;
+    box-shadow: 0 0 12px var(--cyan-dim);
+  }
+
+  /* ── PAGE WRAPPER ── */
+  .page-wrap { position: relative; z-index: 1; max-width: 880px; margin: 0 auto; padding: 82px 20px 140px; }
+
+  /* ── STICKY NAV ── */
+  .top-nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 22px; margin-bottom: 52px;
+    background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--glass-border); border-radius: var(--radius);
+    position: sticky; top: 16px; z-index: 200;
+  }
+  .nav-brand {
+    font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 900; letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; flex-shrink: 0;
+  }
+  .nav-module { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
+  .btn-return {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--cyan); background: var(--cyan-dim); border: 1px solid rgba(0,212,255,0.4);
+    border-radius: 20px; padding: 8px 18px; cursor: pointer; text-decoration: none;
+    transition: all 0.25s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-return:hover { background: rgba(0,212,255,0.15); box-shadow: 0 0 24px var(--cyan-dim); border-color: var(--cyan); }
+
+  /* ── PAGE HEADER ── */
+  .page-header { text-align: center; margin-bottom: 48px; }
+  .page-header .tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 4px;
+    color: var(--purple); text-transform: uppercase; margin-bottom: 14px; display: block;
+  }
+  .page-header h1 {
+    font-family: 'Orbitron', sans-serif; font-size: clamp(28px, 5.5vw, 46px); font-weight: 900;
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 50%, var(--gold) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 4px; line-height: 1.1;
+  }
+  .page-header p { margin-top: 12px; font-size: 14px; color: var(--text-dim); letter-spacing: 1px; }
+
+  /* ── DOUBLE-CLICK BADGE ── */
+  .dbl-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(155,89,255,0.08); border: 1px solid rgba(155,89,255,0.3);
+    border-radius: 20px; padding: 10px 22px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--purple);
+    margin-bottom: 52px;
+  }
+  .dbl-badge .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--purple); animation: blink 1.2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.15;} }
+
+  /* ── SCENARIO CARD ── */
+  .scenario-card {
+    background: var(--glass); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--glass-border); border-radius: var(--radius);
+    padding: 36px; margin-bottom: 28px;
+    transition: border-color 0.4s, box-shadow 0.4s;
+  }
+  .scenario-card:hover { border-color: rgba(0,212,255,0.18); box-shadow: 0 0 40px rgba(0,212,255,0.04); }
+  .scenario-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--purple); margin-bottom: 8px; display: block;
+  }
+  .scenario-title { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; color: var(--cyan); margin-bottom: 18px; letter-spacing: 1px; }
+  .scenario-body { font-size: 14px; line-height: 1.8; color: var(--text-dim); margin-bottom: 24px; }
+  .scenario-body strong { color: var(--text); }
+
+  /* ── QUESTION ITEMS ── */
+  .q-list { display: flex; flex-direction: column; gap: 14px; }
+  .q-item {
+    background: rgba(255,255,255,0.025); border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm); padding: 18px 20px;
+    cursor: pointer; user-select: none; transition: all 0.25s; position: relative;
+  }
+  .q-item:hover { border-color: rgba(155,89,255,0.45); background: rgba(155,89,255,0.04); transform: translateX(2px); }
+  .q-item.revealed { border-color: var(--green); background: rgba(0,255,157,0.035); box-shadow: 0 0 24px rgba(0,255,157,0.07); }
+  .q-num { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--purple); letter-spacing: 2px; margin-bottom: 6px; display: block; }
+  .q-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; line-height: 1.55; }
+  .q-options { display: flex; flex-direction: column; gap: 5px; }
+  .q-opt {
+    font-size: 12px; color: var(--text-dim); padding: 5px 10px; border-radius: 6px;
+    border: 1px solid transparent; transition: all 0.25s; font-family: 'JetBrains Mono', monospace;
+  }
+  .q-item.revealed .q-opt.correct-ans {
+    color: var(--green); background: var(--green-dim); border-color: rgba(0,255,157,0.3);
+    font-weight: 700; animation: pop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes pop { 0%{transform:scale(0.97);} 60%{transform:scale(1.02);} 100%{transform:scale(1);} }
+  .q-answer {
+    display: none; margin-top: 14px; padding: 14px 16px;
+    background: rgba(0,255,157,0.06); border: 1px solid rgba(0,255,157,0.22); border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.9; letter-spacing: 0.5px; color: var(--green);
+  }
+  .q-item.revealed .q-answer { display: block; animation: slideDown 0.3s ease; }
+  @keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+  .q-hint {
+    position: absolute; top: 12px; right: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    color: var(--text-dim); opacity: 0.4; transition: opacity 0.3s; text-transform: uppercase;
+  }
+  .q-item:hover .q-hint { opacity: 0.7; }
+  .q-item.revealed .q-hint { opacity: 0; }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: rgba(155,89,255,0.06); border: 1px solid rgba(155,89,255,0.22);
+    border-radius: var(--radius-sm); padding: 18px 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--purple);
+    text-align: center; margin: 18px 0; letter-spacing: 1px; line-height: 1.7;
+  }
+
+  /* ══════════════════════════════════════════════
+     SVG GATE DIAGRAM STYLES (new — add to styles.css too)
+  ══════════════════════════════════════════════ */
+  .gate-lab {
+    display: flex; flex-wrap: wrap; gap: 32px;
+    justify-content: flex-start; align-items: flex-start;
+    margin: 20px 0 24px; padding: 28px 24px;
+    background: rgba(0,212,255,0.02); border: 1px solid rgba(0,212,255,0.08); border-radius: var(--radius-sm);
+  }
+  .gate-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .gate-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
+  .gate-svg-wrap svg {
+    filter: drop-shadow(0 0 6px rgba(0,212,255,0.5)) drop-shadow(0 0 18px rgba(0,212,255,0.2));
+    overflow: visible; transition: filter 0.3s;
+  }
+  .gate-item:hover .gate-svg-wrap svg {
+    filter: drop-shadow(0 0 12px rgba(0,212,255,0.75)) drop-shadow(0 0 30px rgba(0,212,255,0.35));
+  }
+  .gate-badge {
+    font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 700; color: var(--cyan);
+    background: var(--cyan-dim); border: 1px solid rgba(0,212,255,0.35);
+    border-radius: 8px; padding: 4px 12px; letter-spacing: 1px;
+  }
+  .gate-expr { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); }
+
+  /* ── TRUTH TABLE ── */
+  .truth-table-wrap { overflow-x: auto; margin: 14px 0; }
+  .truth-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .truth-table th { background: rgba(0,212,255,0.09); color: var(--cyan); border: 1px solid rgba(0,212,255,0.18); padding: 8px 16px; letter-spacing: 2px; }
+  .truth-table td { border: 1px solid var(--glass-border); padding: 7px 16px; color: var(--text-dim); text-align: center; }
+  .truth-table tr:hover td { background: rgba(255,255,255,0.025); color: var(--text); }
+  .truth-table td.out1 { color: var(--green); font-weight: 700; }
+  .truth-table td.out0 { color: rgba(255,71,87,0.55); }
+  .tt-pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 14px 0; }
+  @media(max-width:540px) { .tt-pair-grid { grid-template-columns: 1fr; } }
+  .tt-pair-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+
+  /* ── SIGNAL TABLE ── */
+  .signal-table-wrap { overflow-x: auto; margin: 18px 0; }
+  .signal-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .signal-table th { background: rgba(155,89,255,0.09); color: var(--purple); border: 1px solid rgba(155,89,255,0.2); padding: 9px 16px; letter-spacing: 2px; }
+  .signal-table td { border: 1px solid var(--glass-border); padding: 8px 16px; color: var(--text-dim); }
+  .signal-table .sig-name { color: var(--gold); font-weight: 700; text-align: center; }
+  .signal-table .sig-val { color: var(--cyan); text-align: center; font-weight: 700; }
+
+  /* ── ASSEMBLY GRID ── */
+  .asm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 18px 0; }
+  @media(max-width:560px) { .asm-grid { grid-template-columns: 1fr; } }
+  .asm-block-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 3px; color: var(--cyan); text-transform: uppercase; margin-bottom: 10px; }
+  .asm-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .asm-table th { background: rgba(0,212,255,0.06); color: var(--cyan); border: 1px solid rgba(0,212,255,0.14); padding: 7px 12px; }
+  .asm-table td { border: 1px solid var(--glass-border); padding: 7px 12px; color: var(--text-dim); }
+  .asm-table .cmd { color: var(--orange); }
+  .asm-table .addr { color: var(--purple); }
+  .asm-table .val { color: var(--text); font-weight: 600; }
+
+  /* ── TRACE TABLE ── */
+  .trace-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-top: 10px; overflow-x: auto; display: block; }
+  .trace-table th { background: rgba(245,200,66,0.08); color: var(--gold); border: 1px solid rgba(245,200,66,0.18); padding: 8px 10px; letter-spacing: 1px; white-space: nowrap; }
+  .trace-table td { border: 1px solid var(--glass-border); padding: 7px 10px; color: var(--text-dim); text-align: center; white-space: nowrap; }
+  .trace-table .step { color: var(--purple); font-weight: 700; }
+  .trace-table .instr { color: var(--orange); }
+  .trace-table .changed { color: var(--green); font-weight: 700; background: rgba(0,255,157,0.07); }
+
+  /* ── SORT VISUAL ── */
+  .sort-grid { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+  .sort-array { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .sort-array-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; }
+  .sort-cell {
+    width: 50px; height: 32px; background: rgba(255,255,255,0.035);
+    border: 1px solid var(--glass-border); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); transition: all 0.4s;
+  }
+  .sort-cell.placed { border-color: var(--green); color: var(--green); background: var(--green-dim); box-shadow: 0 0 8px rgba(0,255,157,0.15); }
+
+  /* ── BLOCK DIAGRAM ── */
+  .block-diagram-wrap { display: flex; justify-content: center; margin: 22px 0; overflow-x: auto; }
+
+  /* ── HELPERS ── */
+  .hl-cyan{color:var(--cyan);} .hl-green{color:var(--green);} .hl-gold{color:var(--gold);} .hl-purple{color:var(--purple);} .hl-orange{color:var(--orange);}
+  .info-note { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); line-height: 1.9; }
+
+  /* ── FOOTER ── */
+  .footer-credit { text-align: center; margin-top: 64px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 2px; padding-bottom: 20px; }
+  .footer-credit span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+
+  /* ══════════════════════════════════════════════
+     FIXED HUD
+  ══════════════════════════════════════════════ */
+  .hud {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 0 22px; height: 62px;
+    background: rgba(5,8,16,0.78);
+    backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+    border-bottom: 1px solid var(--glass-border);
+    transition: border-color 0.4s, box-shadow 0.4s;
+  }
+  .hud.scrolled  { box-shadow: 0 4px 40px rgba(0,0,0,0.65); }
+  .hud.elite-hud { border-bottom-color: var(--gold); box-shadow: 0 0 32px var(--gold-glow); }
+
+  .hud-user { display: flex; align-items: center; gap: 10px; min-width: 0; flex-shrink: 0; }
+  .hud-avatar { font-size: 22px; flex-shrink: 0; }
+  .hud-nick {
+    font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700;
+    color: var(--cyan); letter-spacing: 1.5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;
+  }
+  .hud.elite-hud .hud-nick { color: var(--gold); text-shadow: 0 0 12px var(--gold-glow); }
+
+  .hud-center {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; text-align: center;
+  }
+  .hud-center strong {
+    display: block; font-size: 8px; color: var(--purple); margin-top: 3px; letter-spacing: 4px;
+  }
+
+  .hud-stats { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+  .hud-stat  { display: flex; flex-direction: column; align-items: flex-end; font-family: 'JetBrains Mono', monospace; }
+  .hud-stat-label { font-size: 8px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
+  .hud-stat-val   { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.1; }
+  #hud-score-val  { color: var(--cyan); }
+  #hud-streak-val { color: var(--orange); }
+
+  .hud-return {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    color: var(--cyan); background: var(--cyan-dim); border: 1px solid rgba(0,212,255,0.4);
+    border-radius: 20px; padding: 6px 14px; text-decoration: none;
+    transition: all 0.25s; white-space: nowrap; margin-left: 8px;
+  }
+  .hud-return:hover { background: rgba(0,212,255,0.18); border-color: var(--cyan); }
+
+  /* ── WATERMARK ── */
+  .watermark {
+    position: fixed; bottom: 18px; right: 18px; z-index: 400;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    color: rgba(255,255,255,0.08); pointer-events: none;
+    text-align: right; line-height: 1.7; text-transform: uppercase;
+    transition: color 0.4s;
+  }
+  .watermark:hover { color: rgba(0,212,255,0.3); }
+  .watermark span  { color: rgba(0,212,255,0.15); display: block; }
+
+  /* ── QUIZ MODE — option interaction ── */
+  .q-opt { cursor: pointer; }
+  .q-opt:hover:not(.sel-correct):not(.sel-wrong) {
+    border-color: rgba(155,89,255,0.5);
+    color: var(--text); background: rgba(155,89,255,0.06);
+  }
+  .q-item.locked { pointer-events: none; }
+  .q-item.locked .q-hint { opacity: 0 !important; }
+
+  .q-opt.sel-correct {
+    color: var(--green) !important; background: var(--green-dim) !important;
+    border-color: rgba(0,255,157,0.45) !important; font-weight: 700;
+    animation: pop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .q-opt.sel-wrong {
+    color: var(--red) !important; background: var(--red-dim) !important;
+    border-color: rgba(255,71,87,0.45) !important;
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0);}
+    20%{transform:translateX(-7px);}
+    40%{transform:translateX(7px);}
+    60%{transform:translateX(-4px);}
+    80%{transform:translateX(4px);}
+  }
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-wrap { text-align: center; margin: 44px 0 24px; display: none; }
+  .submit-wrap.visible { display: block; animation: slideDown 0.5s ease; }
+  .btn-submit {
+    font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 900;
+    letter-spacing: 3px; padding: 17px 48px; border-radius: 12px; cursor: pointer;
+    border: 2px solid var(--gold); color: var(--gold);
+    background: rgba(245,200,66,0.07);
+    box-shadow: 0 0 32px var(--gold-glow);
+    transition: all 0.3s; text-transform: uppercase;
+  }
+  .btn-submit:hover:not(:disabled) {
+    background: rgba(245,200,66,0.18);
+    box-shadow: 0 0 55px var(--gold-glow);
+    transform: translateY(-2px);
+  }
+  .btn-submit:disabled { opacity: 0.35; cursor: not-allowed; }
+  .submit-note {
+    margin-top: 10px; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-dim); letter-spacing: 2px;
+  }
+
+  /* ── LAB TOAST ── */
+  .lab-toast {
+    position: fixed; bottom: 64px; left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    z-index: 600; opacity: 0;
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px;
+    padding: 10px 28px; border-radius: 24px; white-space: nowrap; pointer-events: none;
+  }
+  .lab-toast.show   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .lab-toast.success{ background: var(--green-dim); border: 1px solid rgba(0,255,157,0.3); color: var(--green); }
+  .lab-toast.error  { background: var(--red-dim);   border: 1px solid rgba(255,71,87,0.3);  color: var(--red);   }
+  .lab-toast.info   { background: var(--cyan-dim);  border: 1px solid rgba(0,212,255,0.3);  color: var(--cyan);  }
+
+  @media (max-width: 600px) {
+    .hud { padding: 0 14px; }
+    .hud-center { display: none; }
+    .hud-nick { max-width: 88px; font-size: 10px; }
+    .hud-stats { gap: 12px; }
+    .hud-stat-val { font-size: 14px; }
+  }
+  </style>
+</head>
+<body>
+
+<body>
+
+<!-- ══════════════════════════════════════════════
+     FIXED HUD — always visible
+══════════════════════════════════════════════ -->
+<header class="hud" id="hud">
+  <div class="hud-user">
+    <div class="hud-avatar" id="hud-avatar">👤</div>
+    <div class="hud-nick"   id="hud-nick">AGENT</div>
+  </div>
+
+  <div class="hud-center">
+    SCENARIO LAB
+    <strong>MODE: ACCURACY</strong>
+  </div>
+
+  <div class="hud-stats">
+    <div class="hud-stat">
+      <span class="hud-stat-label">Score</span>
+      <span class="hud-stat-val" id="hud-score-val">0/<span id="hud-total">—</span></span>
+    </div>
+    <div class="hud-stat">
+      <span class="hud-stat-label">Streak</span>
+      <span class="hud-stat-val" id="hud-streak-val">🔥 0</span>
+    </div>
+    <a href="index1.0.html" class="hud-return">← Base</a>
+  </div>
+</header>
+
+<!-- ── DEVELOPER WATERMARK ── -->
+<div class="watermark">
+  Nexus Portal
+  <span>Created by Nexus Dev</span>
+</div>
+
+<!-- ── LAB TOAST ── -->
+<div class="lab-toast" id="lab-toast"></div>
+
+<div class="stars"></div>
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="scroll-progress" id="scroll-bar"></div>
+
+<div class="page-wrap">
+
+ 
+
+  <!-- ── PAGE HEADER ── -->
+  <header class="page-header">
+    <span class="tag">// DCIT 101 — Advanced Study Module</span>
+    <h1>SCENARIO LAB</h1>
+    <p>Seven deep-dive case studies · Logic · Algorithms · Control Systems</p>
+  </header>
+
+  <div style="text-align:center; margin-bottom:52px;">
+    <div class="dbl-badge">
+      <div class="pulse"></div>
+      Double-click an MCQ option to lock it in · Free-text cards reveal on double-click
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENARIO 01 — FIBRE OPTIC MODES
+  ═══════════════════════════════════════════════════════ -->
+  <div class="scenario-card">
+    <span class="scenario-tag">// Scenario 01 — Data Transmission</span>
+    <div class="scenario-title">⚡ Fibre Optic — Mode Number Calculation</div>
+    <div class="scenario-body">
+      A fibre optic cable supports multiple transmission modes. The approximate number of
+      modes <strong>N</strong> is given by the formula below, where <strong>d</strong> is
+      core diameter, <strong>n₁</strong> is core refractive index, <strong>n₂</strong> is
+      cladding refractive index, and <strong>λ</strong> is the wavelength of light.
+    </div>
+    <div class="formula-box">N &nbsp;=&nbsp; [ (π · d · √(n₁² − n₂²)) / λ ]² &nbsp;÷&nbsp; 2</div>
+
+    <div class="q-list">
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q01</span>
+        <div class="q-text">
+          Compute the number of modes for a fibre with:<br>
+          core diameter d = 20 μm &nbsp;|&nbsp; n₁ = 1.5 &nbsp;|&nbsp; n₂ = 1.48 &nbsp;|&nbsp;
+          wavelength λ = 1300 nm (typical single-mode laser).
+        </div>
+        <div class="q-answer">
+          ✦ Step 1 — Numerical Aperture (NA):<br>
+          &nbsp;&nbsp; NA = √(n₁² − n₂²) = √(2.25 − 2.1904) = √0.0596 ≈ <span class="hl-cyan">0.2441</span><br><br>
+          ✦ Step 2 — V-number (normalised frequency):<br>
+          &nbsp;&nbsp; V = (π · d · NA) / λ = (π × 20×10⁻⁶ × 0.2441) / (1300×10⁻⁹)<br>
+          &nbsp;&nbsp; V ≈ (3.1416 × 0.000020 × 0.2441) / 0.0000013 ≈ <span class="hl-cyan">11.77</span><br><br>
+          ✦ Step 3 — Number of modes:<br>
+          &nbsp;&nbsp; N = V² / 2 = (11.77)² / 2 ≈ 138.5 / 2 ≈ <span class="hl-green">~69 modes</span><br><br>
+          ✦ Key insight: For single-mode operation, V &lt; 2.405. At V ≈ 11.77 this fibre
+          is <span class="hl-gold">multi-mode</span>. To achieve single-mode, reduce d or increase λ.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENARIO 02 — LOGIC GATE IDENTIFICATION
+  ═══════════════════════════════════════════════════════ -->
+  <div class="scenario-card">
+    <span class="scenario-tag">// Scenario 02 — Digital Logic</span>
+    <div class="scenario-title">🔲 Logic Gate Identification (Q2–5 &amp; Q28–31)</div>
+    <div class="scenario-body">
+      The four diagrams A–D below represent ANSI standard logic gate symbols.
+      Each gate's shape encodes its truth table. Hover over any gate to intensify its glow.
+    </div>
+
+    <div class="gate-lab" id="gate-lab"></div>
+
+    <div class="q-list">
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q02 &amp; Q31</span>
+        <div class="q-text">Which diagram represents a NOT gate (Inverter)?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Diagram A — flat left, D-shaped right</div>
+          <div class="q-opt">b. Diagram B — curved input, pointed output</div>
+          <div class="q-opt">c. Diagram C — D-shape with output bubble</div>
+          <div class="q-opt correct-ans">d. Diagram D — triangle with output bubble ✓</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: D — The NOT gate is a right-pointing triangle with a small circle
+          (bubble) at the output. Single input only.<br>
+          Boolean: F = Ā &nbsp;(F = NOT A)
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q03 &amp; Q28</span>
+        <div class="q-text">Which diagram represents a NAND gate?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Diagram A — flat left, D-shaped right (no bubble)</div>
+          <div class="q-opt">b. Diagram B — curved input, pointed front</div>
+          <div class="q-opt correct-ans">c. Diagram C — D-shape body with output bubble ✓</div>
+          <div class="q-opt">d. Diagram D — triangle with bubble</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: C — NAND gate = AND body + bubble at output.<br>
+          Output is HIGH for ALL combinations EXCEPT when A=1 AND B=1.<br>
+          Boolean: F = (A·B)' = Ā + B̄ &nbsp; (by De Morgan's theorem)
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q04 &amp; Q29</span>
+        <div class="q-text">Which diagram represents an AND gate?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">a. Diagram A — flat left, semicircular (D-shaped) right ✓</div>
+          <div class="q-opt">b. Diagram B — curved input side, pointed output</div>
+          <div class="q-opt">c. Diagram C — D-shape with bubble</div>
+          <div class="q-opt">d. Diagram D — triangle with bubble</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: A — AND gate: flat left edge + semicircular right side.<br>
+          Output HIGH only when ALL inputs are HIGH (A=1 AND B=1).<br>
+          Boolean: F = A · B
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q05 &amp; Q30</span>
+        <div class="q-text">Which diagram represents an OR gate?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Diagram A — flat left, D-shaped right</div>
+          <div class="q-opt correct-ans">b. Diagram B — concave curved input, pointed bullet output ✓</div>
+          <div class="q-opt">c. Diagram C — D-shape with bubble</div>
+          <div class="q-opt">d. Diagram D — triangle with bubble</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: B — OR gate: concave (inward) curve on input side, convex pointed output.<br>
+          Output HIGH when AT LEAST ONE input is HIGH.<br>
+          Boolean: F = A + B
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENARIO 03 — TRAVEL BOOLEAN ALGEBRA
+  ═══════════════════════════════════════════════════════ -->
+  <div class="scenario-card">
+    <span class="scenario-tag">// Scenario 03 — Boolean Algebra</span>
+    <div class="scenario-title">🚆 Travel Decision System (Q6–12)</div>
+    <div class="scenario-body">
+      A decision system selects transport mode based on day-of-week and journey distance.<br><br>
+      <strong>Rules:</strong>
+      Car if day = Weekend &nbsp;|&nbsp;
+      Train if Weekday AND distance ≤ 200 km &nbsp;|&nbsp;
+      Air if Weekday AND distance &gt; 200 km<br><br>
+      <strong>Boolean variables:</strong> A = Weekday (A=1) &nbsp;·&nbsp; B = distance ≤ 200 km (B=1)<br>
+      <strong>Outcomes:</strong> X = Car_travel &nbsp;·&nbsp; Y = Train_travel &nbsp;·&nbsp; Z = Air_travel
+    </div>
+
+    <div class="q-list">
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q06</span>
+        <div class="q-text">Car_travel = _______ when day = weekend.</div>
+        <div class="q-answer">✦ ANSWER: <span class="hl-green">TRUE</span> — Car is taken on weekends, condition fully satisfied.</div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q07</span>
+        <div class="q-text">Train_travel = _______ when day = weekday AND distance ≤ 200 km.</div>
+        <div class="q-answer">✦ ANSWER: <span class="hl-green">TRUE</span> — Both conditions satisfied (A=1, B=1).</div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q08</span>
+        <div class="q-text">Air_travel = _______ when day = weekday AND distance &gt; 200 km.</div>
+        <div class="q-answer">✦ ANSWER: <span class="hl-green">TRUE</span> — Weekday + long distance → air travel.</div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q09</span>
+        <div class="q-text">Which Boolean expression represents Car_travel (X)?</div>
+        <div class="q-options">
+          <div class="q-opt">a. X = A AND B</div>
+          <div class="q-opt correct-ans">b. X = NOT A ✓</div>
+          <div class="q-opt">c. X = A AND NOT B</div>
+          <div class="q-opt">d. X = NOT A AND B</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: b — X = NOT A<br>
+          A = weekday → NOT A = weekend. Car is used on weekends regardless of distance.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q10</span>
+        <div class="q-text">Which Boolean expression represents Train_travel (Y)?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">a. Y = A AND B ✓</div>
+          <div class="q-opt">b. Y = NOT A</div>
+          <div class="q-opt">c. Y = A AND NOT B</div>
+          <div class="q-opt">d. Y = NOT A AND B</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: a — Y = A AND B &nbsp;(weekday AND short distance)</div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q11 &amp; Q12</span>
+        <div class="q-text">Which Boolean expression represents Air_travel (Z)?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Z = A AND B</div>
+          <div class="q-opt">b. Z = NOT A</div>
+          <div class="q-opt correct-ans">c. Z = A AND NOT B ✓</div>
+          <div class="q-opt">d. Z = NOT A AND B</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: c — Z = A AND NOT B<br>
+          Air = Weekday (A=1) AND distance &gt; 200 km (NOT B, because B = dist ≤ 200)
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENARIO 04 — WATER HEATING SYSTEM
+  ═══════════════════════════════════════════════════════ -->
+  <div class="scenario-card">
+    <span class="scenario-tag">// Scenario 04 — Control Systems &amp; Truth Tables</span>
+    <div class="scenario-title">🌡️ Domestic Water Heating System (Q13–16)</div>
+    <div class="scenario-body">
+      A computerised management system monitors three sensor signals.
+      F1 = 1 means the system outputs a <strong>switch-off signal</strong>.
+    </div>
+
+    <div class="signal-table-wrap">
+      <table class="signal-table">
+        <thead><tr><th>SIGNAL</th><th>VALUE</th><th>COMPONENT STATUS</th></tr></thead>
+        <tbody>
+          <tr><td class="sig-name">A</td><td class="sig-val">0</td><td style="color:var(--red)">Radiator water flow — TOO LOW</td></tr>
+          <tr><td></td><td class="sig-val">1</td><td style="color:var(--green)">Radiator water flow — within limits</td></tr>
+          <tr><td class="sig-name">B</td><td class="sig-val">0</td><td style="color:var(--red)">Hot water temperature — TOO HIGH</td></tr>
+          <tr><td></td><td class="sig-val">1</td><td style="color:var(--green)">Hot water temperature — within limits</td></tr>
+          <tr><td class="sig-name">C</td><td class="sig-val">0</td><td style="color:var(--red)">Tank water level — TOO LOW</td></tr>
+          <tr><td></td><td class="sig-val">1</td><td style="color:var(--green)">Tank water level — within limits</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="q-list">
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q13</span>
+        <div class="q-text">
+          Which truth table represents: <em>"Tank level too low AND temperature too high
+          → switch off (F1 = 1)"</em>?
+        </div>
+        <div class="tt-pair-grid">
+          <div>
+            <div class="tt-pair-title">Option A (Correct ✓)</div>
+            <div class="truth-table-wrap"><table class="truth-table" id="tt-q13a"></table></div>
+          </div>
+          <div>
+            <div class="tt-pair-title">Option B</div>
+            <div class="truth-table-wrap"><table class="truth-table" id="tt-q13b"></table></div>
+          </div>
+        </div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">a. Option A — F1=1 when B=0 AND C=0 ✓</div>
+          <div class="q-opt">b. Option B</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: A — Expression: F1 = B̄ · C̄ (NOT B AND NOT C)<br>
+          F1=1 only at rows (A,0,0): (0,0,0)→1 and (1,0,0)→1.<br>
+          Signal A (radiator flow) is irrelevant to this particular fault.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q15</span>
+        <div class="q-text">
+          Which truth table represents: <em>"Radiator flow too low AND temperature too high
+          → switch off (F1 = 1)"</em>?
+        </div>
+        <div class="q-options">
+          <div class="q-opt">a. Option A</div>
+          <div class="q-opt correct-ans">b. Option B — F1=1 when A=0 AND B=0 ✓</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: B — Expression: F1 = Ā · B̄ (NOT A AND NOT B)<br>
+          F1=1 at rows where A=0 AND B=0: (0,0,0)→1 and (0,0,1)→1.<br>
+          Signal C (water level) is irrelevant here.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q16</span>
+        <div class="q-text">
+          Which logic circuit represents: <em>"Temperature within limits BUT
+          radiator flow too low AND water level too low → switch off"</em>?
+        </div>
+        <div class="q-answer">
+          ✦ Condition: B=1 (temp OK) AND A=0 (flow low) AND C=0 (level low)<br>
+          Expression: F1 = Ā · B · C̄<br><br>
+          Circuit required: &nbsp;
+          NOT gate on A → Ā &nbsp;|&nbsp;
+          NOT gate on C → C̄ &nbsp;|&nbsp;
+          3-input AND gate takes (Ā, B, C̄) → F1<br>
+          The correct diagram shows two inverters feeding into a 3-input AND gate.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENARIO 05 — COMPUTER SYSTEMS & SENSORS
+  ═══════════════════════════════════════════════════════ -->
+  <div class="scenario-card">
+    <span class="scenario-tag">// Scenario 05 — Computer Architecture &amp; Input Devices</span>
+    <div class="scenario-title">🖥️ Computer Systems &amp; Sensor Applications (Q17–27)</div>
+    <div class="scenario-body">
+      A sensor is an input device designed to detect physical characteristics of its environment
+      and convert them into electrical signals for a computer to process.
+    </div>
+
+    <div class="block-diagram-wrap"><div id="block-diagram"></div></div>
+
+    <div class="q-list">
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q17 · Q18 · Q19</span>
+        <div class="q-text">
+          Fill in the blanks: "A ___[Q17]___ works under stored programs, automatically
+          accepting, storing and processing ___[Q18]___ to produce ___[Q19]___."<br><br>
+          Options: &nbsp; a. Data &nbsp; b. Machine &nbsp; c. Information &nbsp; d. Computer
+        </div>
+        <div class="q-answer">
+          ✦ Q17: <span class="hl-cyan">d. Computer</span><br>
+          ✦ Q18: <span class="hl-cyan">a. Data</span><br>
+          ✦ Q19: <span class="hl-cyan">c. Information</span><br><br>
+          A Computer processes raw Data → outputs meaningful Information.
+          This is the classic Input → Process → Output model.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q20 — PRESSURE Sensor</span>
+        <div class="q-text">Which application best matches a PRESSURE sensor?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Computer-controlled oven (switch on/off)</div>
+          <div class="q-opt">b. Greenhouse — open or close windows automatically</div>
+          <div class="q-opt correct-ans">c. Access control — vehicle barriers / traffic lights ✓</div>
+          <div class="q-opt">d. Control the illumination of an enclosed space</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: c — Pressure sensors detect physical weight/force.<br>
+          Road-embedded pressure pads detect approaching vehicles at barriers and trigger traffic light cycles.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q21 — LIGHT Sensor</span>
+        <div class="q-text">Which application best matches a LIGHT sensor?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Computer-controlled oven</div>
+          <div class="q-opt">b. Greenhouse — open/close windows</div>
+          <div class="q-opt">c. Access control — vehicle barriers</div>
+          <div class="q-opt correct-ans">d. Control the illumination of an enclosed space ✓</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: d — LDRs (light-dependent resistors) measure ambient brightness.<br>
+          They automatically switch lights ON when dark and OFF when bright enough.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q22 — TEMPERATURE Sensor</span>
+        <div class="q-text">Which application best matches a TEMPERATURE sensor?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">a. Computer-controlled oven — switch on and off ✓</div>
+          <div class="q-opt">b. Greenhouse — open/close windows</div>
+          <div class="q-opt">c. Access control — vehicle barriers</div>
+          <div class="q-opt">d. Control illumination</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: a — Thermistors/thermocouples measure heat.<br>
+          Ovens require precise thermal control — the sensor triggers actuators to maintain target temperature.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q23 — WIND SPEED Sensor</span>
+        <div class="q-text">Which application best matches a WIND SPEED sensor?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Computer-controlled oven</div>
+          <div class="q-opt correct-ans">b. Greenhouse — automatically open or close windows ✓</div>
+          <div class="q-opt">c. Access control — vehicle barriers</div>
+          <div class="q-opt">d. Control illumination</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: b — Anemometers measure wind speed.<br>
+          Greenhouse vents auto-close when wind exceeds a safe limit to protect crops.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q24–Q27 — Block Diagram Labels</span>
+        <div class="q-text">
+          Using the block diagram above, correctly label parts Q24–Q27.<br>
+          Options: &nbsp; a. Output Device &nbsp; b. Auxiliary Storage &nbsp; c. CPU &nbsp; d. Control Unit
+        </div>
+        <div class="q-answer">
+          ✦ Q24: <span class="hl-purple">c. CPU</span> — Central Processing Unit. Executes all instructions.<br>
+          ✦ Q25: <span class="hl-purple">d. Control Unit</span> — Sub-unit of the CPU. Directs data flow &amp; instruction fetch/decode.<br>
+          ✦ Q26: <span class="hl-green">a. Output Device</span> — Monitor, printer, speaker, etc.<br>
+          ✦ Q27: <span class="hl-gold">b. Auxiliary Storage</span> — HDD, SSD, USB flash — persistent secondary storage.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENARIO 06 — ASSEMBLY LANGUAGE TRACE
+  ═══════════════════════════════════════════════════════ -->
+  <div class="scenario-card">
+    <span class="scenario-tag">// Scenario 06 — Low-Level Programming</span>
+    <div class="scenario-title">⚙️ Assembly Language Trace Table (Q32–39)</div>
+    <div class="scenario-body">
+      Trace the program step by step. Each instruction modifies the Accumulator (ACC)
+      and/or a memory location.<br><br>
+      <strong>LDD addr</strong> — Load ACC with value <em>at</em> address (direct addressing)<br>
+      <strong>LDI addr</strong> — Load ACC with value at the address <em>pointed to by</em> addr (indirect)<br>
+      <strong>INC ACC</strong> — ACC = ACC + 1 &nbsp;|&nbsp;
+      <strong>DEC ACC</strong> — ACC = ACC − 1<br>
+      <strong>ADD addr</strong> — ACC = ACC + value at address &nbsp;|&nbsp;
+      <strong>STO addr</strong> — Store ACC value into address
+    </div>
+
+    <div class="asm-grid">
+      <div>
+        <div class="asm-block-title">// Assembly Program</div>
+        <table class="asm-table">
+          <thead><tr><th>Line</th><th>Instruction</th></tr></thead>
+          <tbody>
+            <tr><td class="addr">100</td><td class="cmd">LDD 201</td></tr>
+            <tr><td class="addr">101</td><td class="cmd">INC ACC</td></tr>
+            <tr><td class="addr">102</td><td class="cmd">STO 202</td></tr>
+            <tr><td class="addr">103</td><td class="cmd">LDI 203</td></tr>
+            <tr><td class="addr">104</td><td class="cmd">DEC ACC</td></tr>
+            <tr><td class="addr">105</td><td class="cmd">STO 201</td></tr>
+            <tr><td class="addr">106</td><td class="cmd">ADD 204</td></tr>
+            <tr><td class="addr">107</td><td class="cmd">STO 201</td></tr>
+            <tr><td class="addr">108</td><td class="cmd">END</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="asm-block-title">// Initial Memory State</div>
+        <table class="asm-table">
+          <thead><tr><th>Address</th><th>Initial Value</th></tr></thead>
+          <tbody>
+            <tr><td class="addr">201</td><td class="val">10</td></tr>
+            <tr><td class="addr">202</td><td class="val">0</td></tr>
+            <tr><td class="addr">203</td><td class="val">204</td></tr>
+            <tr><td class="addr">204</td><td class="val">5</td></tr>
+          </tbody>
+        </table>
+        <div class="info-note">
+          Initial ACC = 0<br>
+          M[203] = 204 → an <span class="hl-cyan">address pointer</span><br>
+          LDI 203 follows the pointer to M[204]
+        </div>
+      </div>
+    </div>
+
+    <div class="q-list">
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q32–Q39 — Full Trace</span>
+        <div class="q-text">Execute each instruction. Fill in the correct values for ACC and
+          memory locations at each step Q32 through Q39.</div>
+        <div class="q-answer" id="trace-answer">
+          <div style="overflow-x:auto;">
+            <table class="trace-table" id="trace-table"></table>
+          </div>
+          <div class="info-note" style="margin-top:12px;">
+            ✦ Q35 (LDI 203): M[203]=204 → follow pointer → M[204]=5 → ACC = <span class="hl-green">5</span><br>
+            ✦ Q38 (ADD 204): ACC = 4 + M[204] = 4 + 5 = <span class="hl-green">9</span><br>
+            ✦ Green cells = values changed by that instruction.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENARIO 07 — BUBBLE SORT
+  ═══════════════════════════════════════════════════════ -->
+  <div class="scenario-card">
+    <span class="scenario-tag">// Scenario 07 — Sorting Algorithms</span>
+    <div class="scenario-title">🔄 Bubble Sort — Pass-by-Pass Analysis (Q40–46)</div>
+    <div class="scenario-body">
+      Bubble sort repeatedly steps through the list, compares adjacent elements and swaps
+      them if in the wrong order. Each full pass "bubbles" the largest remaining unsorted
+      element to its correct position at the end.<br><br>
+      <strong>Initial Array:</strong> &nbsp;[ 25, 34, 98, 7, 41, 19, 5 ]
+    </div>
+
+    <div class="sort-grid" id="sort-visual"></div>
+
+    <div class="q-list">
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q40</span>
+        <div class="q-text">The algorithm described (adjacent compare + swap + repeat) is:</div>
+        <div class="q-options">
+          <div class="q-opt">a. Quicksort</div>
+          <div class="q-opt">b. Insertion Sort</div>
+          <div class="q-opt">c. Selection Sort</div>
+          <div class="q-opt correct-ans">d. Bubble Sort ✓</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: d — Bubble Sort.<br>
+          Named because larger values "bubble up" to the end with each pass.
+          Time complexity: O(n²) worst/average — simple but inefficient for large n.
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q41</span>
+        <div class="q-text">After completing the FIRST pass, which element is in its final correct position?</div>
+        <div class="q-options">
+          <div class="q-opt">a. Smallest value (5)</div>
+          <div class="q-opt">b. Middle value (25)</div>
+          <div class="q-opt correct-ans">c. Largest value (98) ✓</div>
+          <div class="q-opt">d. No element is placed yet</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: c — 98 (the largest value) bubbles all the way to index 6 after Pass 1.<br>
+          Result: [ 25, 34, 7, 41, 19, 5, <span class="hl-green">98</span> ]
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q42 — After Pass 1</span>
+        <div class="q-text">Which correctly shows the array after the FIRST pass?</div>
+        <div class="q-answer">
+          ✦ Initial: [ 25, 34, 98, 7, 41, 19, 5 ]<br>
+          Swaps: 98↔7 → 98↔41 → 98↔19 → 98↔5<br>
+          ✦ <span class="hl-green">After Pass 1: [ 25, 34, 7, 41, 19, 5, 98 ]</span>
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q43 — After Pass 2</span>
+        <div class="q-text">Which correctly shows the array after the SECOND pass?</div>
+        <div class="q-answer">
+          ✦ Working on: [ 25, 34, 7, 41, 19, 5 | 98 ]<br>
+          Swaps: 34↔7 → 41↔19 → 41↔5<br>
+          ✦ <span class="hl-green">After Pass 2: [ 25, 7, 34, 19, 5, 41, 98 ]</span>
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q44 — After Pass 3</span>
+        <div class="q-text">Which correctly shows the array after the THIRD pass?</div>
+        <div class="q-answer">
+          ✦ Working on: [ 25, 7, 34, 19, 5 | 41, 98 ]<br>
+          Swaps: 25↔7 → 34↔19 → 34↔5<br>
+          ✦ <span class="hl-green">After Pass 3: [ 7, 25, 19, 5, 34, 41, 98 ]</span>
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q45 — After Pass 4</span>
+        <div class="q-text">Which correctly shows the array after the FOURTH pass?</div>
+        <div class="q-answer">
+          ✦ Working on: [ 7, 25, 19, 5 | 34, 41, 98 ]<br>
+          Swaps: 25↔19 → 25↔5<br>
+          ✦ <span class="hl-green">After Pass 4: [ 7, 19, 5, 25, 34, 41, 98 ]</span>
+        </div>
+      </div>
+
+      <div class="q-item" ondblclick="revealAnswer(this)">
+        <span class="q-hint">dbl-click</span>
+        <span class="q-num">// Q46</span>
+        <div class="q-text">How many passes are required to FULLY sort the 7-element array?</div>
+        <div class="q-options">
+          <div class="q-opt">a. 5</div>
+          <div class="q-opt">b. 7</div>
+          <div class="q-opt">c. 8</div>
+          <div class="q-opt correct-ans">d. 6 ✓</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: d — 6 passes (worst case = n−1 for n=7 elements).<br><br>
+          Pass 5: 19↔5 → [ 7, 5, 19, 25, 34, 41, 98 ]<br>
+          Pass 6: 7↔5 → [ <span class="hl-green">5, 7, 19, 25, 34, 41, 98</span> ] ← FULLY SORTED ✓
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SUBMIT MISSION DATA ── -->
+  <div class="submit-wrap" id="submit-wrap">
+    <button class="btn-submit" id="submit-btn" onclick="submitMission()">
+      🚀 SUBMIT MISSION DATA
+    </button>
+    <div class="submit-note">Uploads your final score to the Nexus Leaderboard</div>
+  </div>
+
+  <div class="footer-credit">
+    NEXUS SCENARIO LAB &nbsp;·&nbsp; DCIT 101 &nbsp;·&nbsp; Powered by <span>Nexus Dev</span>
+  </div>
+
+</div><!-- /page-wrap -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     FIREBASE BRIDGE  (module — exposes window._fbPush)
+════════════════════════════════════════════════════════ -->
+<script type="module">
+  import { initializeApp }           from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, push }  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  import { firebaseConfig }          from "./config.js";
+
+  const db = getDatabase(initializeApp(firebaseConfig));
+
+  /** Exposed so the non-module script can push to Firebase */
+  window._fbPush = (path, data) => push(ref(db, path), data);
+</script>
+
+<!-- ════════════════════════════════════════════════════════
+     MAIN GAME SCRIPT
+════════════════════════════════════════════════════════ -->
+<script>
+/* ═══════════════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════════════ */
+const ELITE_NAMES = [
+  "dii", "naa naa", "away", "nhyira", "kylie",
+  "wagwan", "jesse", "bongolokwekwe", "chantelle", "suabira"
+];
+const ELITE_EMOJI  = "⭐";
+const POINTS_MCQ   = 2;   // points for a correct MCQ answer
+const POINTS_FREE  = 1;   // points awarded on free-text reveal
+
+/* ═══════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════ */
+let score         = 0;
+let currentStreak = 0;
+let maxStreak     = 0;
+let answeredCount = 0;
+let totalQuestions= 0;
+
+// ── Pull identity from localStorage (set by main app on login) ──
+const _raw      = localStorage.getItem("nexus_user") || "{}";
+const _user     = (() => { try { return JSON.parse(_raw); } catch(e) { return {}; } })();
+const nickname  = _user.nickname  || localStorage.getItem("nexus_nickname") || "AGENT";
+const avatar    = _user.avatar    || localStorage.getItem("nexus_avatar")   || "👤";
+const isElite   = ELITE_NAMES.includes(nickname.toLowerCase().trim());
+const displayName = isElite ? `${nickname} ${ELITE_EMOJI}` : nickname;
+
+/* ═══════════════════════════════════════════════════
+   SCENARIO DATA  (local const — source of truth)
+═══════════════════════════════════════════════════ */
+const SCENARIO_DATA = [
+  {
+    id: 'sc-01', topic: 'Data Transmission',
+    title: 'Fibre Optic Mode Calculation',
+    formula: 'N = [(π·d·√(n₁²−n₂²))/λ]² / 2',
+    questions: [{ num: 'Q01', answer: '~69 modes (multi-mode fibre at λ=1300nm, d=20μm)' }]
+  },
+  {
+    id: 'sc-02', topic: 'Digital Logic',
+    title: 'Logic Gate Identification',
+    gates: ['AND', 'OR', 'NAND', 'NOT'],
+    questions: [
+      { num: 'Q02/Q31', answer: 'D — Triangle with output bubble (NOT gate)' },
+      { num: 'Q03/Q28', answer: 'C — D-shape with output bubble (NAND gate)' },
+      { num: 'Q04/Q29', answer: 'A — Flat left, semicircular right (AND gate)' },
+      { num: 'Q05/Q30', answer: 'B — Concave input, pointed output (OR gate)' }
+    ]
+  },
+  {
+    id: 'sc-03', topic: 'Boolean Algebra',
+    title: 'Travel Decision System',
+    variables: { A: 'weekday', B: 'dist≤200', X: 'Car', Y: 'Train', Z: 'Air' },
+    questions: [
+      { num: 'Q06', answer: 'TRUE' },
+      { num: 'Q07', answer: 'TRUE' },
+      { num: 'Q08', answer: 'TRUE' },
+      { num: 'Q09', answer: 'b — X = NOT A' },
+      { num: 'Q10', answer: 'a — Y = A AND B' },
+      { num: 'Q11/Q12', answer: 'c — Z = A AND NOT B' }
+    ]
+  },
+  {
+    id: 'sc-04', topic: 'Control Systems',
+    title: 'Water Heating Management System',
+    signals: [
+      { sig: 'A', v0: 'Radiator flow TOO LOW',  v1: 'Flow within limits' },
+      { sig: 'B', v0: 'Temperature TOO HIGH',    v1: 'Temp within limits' },
+      { sig: 'C', v0: 'Tank level TOO LOW',      v1: 'Level within limits' }
+    ],
+    questions: [
+      { num: 'Q13', answer: 'A — F1=1 when B=0 AND C=0  ⟹  F1 = B̄·C̄' },
+      { num: 'Q15', answer: 'B — F1=1 when A=0 AND B=0  ⟹  F1 = Ā·B̄' },
+      { num: 'Q16', answer: 'Circuit: NOT(A), B, NOT(C) → 3-input AND gate  ⟹  F1 = Ā·B·C̄' }
+    ]
+  },
+  {
+    id: 'sc-05', topic: 'Computer Architecture',
+    title: 'Computer Systems & Sensors',
+    questions: [
+      { num: 'Q17-Q19', answer: 'Q17:Computer  Q18:Data  Q19:Information' },
+      { num: 'Q20', answer: 'c — Pressure → vehicle access control / traffic lights' },
+      { num: 'Q21', answer: 'd — Light → control illumination' },
+      { num: 'Q22', answer: 'a — Temperature → oven control' },
+      { num: 'Q23', answer: 'b — Wind speed → greenhouse windows' },
+      { num: 'Q24-Q27', answer: 'Q24:CPU  Q25:Control Unit  Q26:Output Device  Q27:Auxiliary Storage' }
+    ]
+  },
+  {
+    id: 'sc-06', topic: 'Assembly Language',
+    title: 'Trace Table Q32–Q39',
+    program: [
+      { addr:100, instr:'LDD 201' }, { addr:101, instr:'INC ACC' },
+      { addr:102, instr:'STO 202' }, { addr:103, instr:'LDI 203' },
+      { addr:104, instr:'DEC ACC' }, { addr:105, instr:'STO 201' },
+      { addr:106, instr:'ADD 204' }, { addr:107, instr:'STO 201' },
+      { addr:108, instr:'END'     }
+    ],
+    memInit: { 201:10, 202:0, 203:204, 204:5 },
+    trace: [
+      { step:'INIT',  instr:'—',        acc:0,  m201:10, m202:0,  m203:204, m204:5, changed:[] },
+      { step:'Q32',   instr:'LDD 201',  acc:10, m201:10, m202:0,  m203:204, m204:5, changed:['acc'] },
+      { step:'Q33',   instr:'INC ACC',  acc:11, m201:10, m202:0,  m203:204, m204:5, changed:['acc'] },
+      { step:'Q34',   instr:'STO 202',  acc:11, m201:10, m202:11, m203:204, m204:5, changed:['m202'] },
+      { step:'Q35',   instr:'LDI 203',  acc:5,  m201:10, m202:11, m203:204, m204:5, changed:['acc'] },
+      { step:'Q36',   instr:'DEC ACC',  acc:4,  m201:10, m202:11, m203:204, m204:5, changed:['acc'] },
+      { step:'Q37',   instr:'STO 201',  acc:4,  m201:4,  m202:11, m203:204, m204:5, changed:['m201'] },
+      { step:'Q38',   instr:'ADD 204',  acc:9,  m201:4,  m202:11, m203:204, m204:5, changed:['acc'] },
+      { step:'Q39',   instr:'STO 201',  acc:9,  m201:9,  m202:11, m203:204, m204:5, changed:['m201'] }
+    ]
+  },
+  {
+    id: 'sc-07', topic: 'Algorithms',
+    title: 'Bubble Sort',
+    initial: [25, 34, 98, 7, 41, 19, 5],
+    passes: [
+      [25, 34,  7, 41, 19,  5, 98],
+      [25,  7, 34, 19,  5, 41, 98],
+      [ 7, 25, 19,  5, 34, 41, 98],
+      [ 7, 19,  5, 25, 34, 41, 98],
+      [ 7,  5, 19, 25, 34, 41, 98],
+      [ 5,  7, 19, 25, 34, 41, 98]
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════════════
+   AUDIO ENGINE (Web Audio API — no external files)
+═══════════════════════════════════════════════════ */
+let _audioCtx = null;
+function getAudio() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _audioCtx;
+}
+function playTone(freq, duration, type = 'sine', gainVal = 0.18) {
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain= ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type; osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + duration);
+  } catch(e) { /* audio blocked — silent */ }
+}
+function soundCorrect() {
+  playTone(523, 0.1); // C5
+  setTimeout(() => playTone(659, 0.12), 90);  // E5
+  setTimeout(() => playTone(784, 0.18), 180); // G5
+}
+function soundWrong() {
+  playTone(220, 0.08, 'sawtooth', 0.12);
+  setTimeout(() => playTone(180, 0.22, 'sawtooth', 0.10), 80);
+}
+
+/* ═══════════════════════════════════════════════════
+   HUD
+═══════════════════════════════════════════════════ */
+function updateHUD() {
+  const scoreEl  = document.getElementById('hud-score-val');
+  const streakEl = document.getElementById('hud-streak-val');
+  const totalEl  = document.getElementById('hud-total');
+  if (scoreEl)  scoreEl.innerHTML = `${score}/<span id="hud-total">${totalEl ? totalEl.textContent : totalQuestions}</span>`;
+  if (streakEl) streakEl.textContent = `🔥 ${currentStreak}`;
+  // Re-sync total span after innerHTML replacement
+  const t2 = document.getElementById('hud-total');
+  if (t2) t2.textContent = totalQuestions;
+}
+
+/* ═══════════════════════════════════════════════════
+   LAB TOAST
+═══════════════════════════════════════════════════ */
+let _toastTimer = null;
+function labToast(msg, type = 'info', duration = 2800) {
+  const el = document.getElementById('lab-toast');
+  if (!el) return;
+  clearTimeout(_toastTimer);
+  el.textContent = msg;
+  el.className   = `lab-toast ${type} show`;
+  _toastTimer = setTimeout(() => el.classList.remove('show'), duration);
+}
+
+/* ═══════════════════════════════════════════════════
+   QUIZ LOGIC — lock MCQ option on double-click
+═══════════════════════════════════════════════════ */
+function lockOption(cardEl, optEl) {
+  if (cardEl.classList.contains('locked')) return;
+
+  const isCorrect = optEl.classList.contains('correct-ans');
+  const answerBox = cardEl.querySelector('.q-answer');
+
+  // Visually mark selection
+  optEl.classList.add(isCorrect ? 'sel-correct' : 'sel-wrong');
+
+  // Always show the correct answer too (so user learns even on wrong)
+  if (!isCorrect) {
+    const correctOpt = cardEl.querySelector('.q-opt.correct-ans');
+    if (correctOpt) correctOpt.classList.add('sel-correct');
+  }
+
+  // Reveal explanation box
+  if (answerBox) { answerBox.style.display = 'block'; }
+
+  // Lock card
+  cardEl.classList.add('locked', 'revealed');
+
+  // Score & streak
+  if (isCorrect) {
+    score++;
+    currentStreak++;
+    maxStreak = Math.max(maxStreak, currentStreak);
+    soundCorrect();
+    labToast('✓ Correct! +' + POINTS_MCQ + ' pts', 'success');
+  } else {
+    currentStreak = 0;
+    soundWrong();
+    labToast('✗ Wrong — study the explanation', 'error');
+  }
+
+  answeredCount++;
+  updateHUD();
+  checkMissionComplete();
+  scrollToNextQuestion(cardEl);
+}
+
+/* ═══════════════════════════════════════════════════
+   QUIZ LOGIC — free-text reveal on double-click card
+═══════════════════════════════════════════════════ */
+function revealFreeText(cardEl) {
+  if (cardEl.classList.contains('locked')) return;
+  cardEl.classList.add('revealed', 'locked');
+
+  const answerBox = cardEl.querySelector('.q-answer');
+  if (answerBox) { answerBox.style.display = 'block'; }
+
+  score++;
+  currentStreak++;
+  maxStreak = Math.max(maxStreak, currentStreak);
+  soundCorrect();
+  labToast('📖 Revealed · +1 pt', 'info', 1800);
+
+  answeredCount++;
+  updateHUD();
+  checkMissionComplete();
+  scrollToNextQuestion(cardEl);
+}
+
+/* ═══════════════════════════════════════════════════
+   AUTO-SCROLL to next unanswered question
+═══════════════════════════════════════════════════ */
+function scrollToNextQuestion(currentCard) {
+  const allCards = Array.from(document.querySelectorAll('.q-item'));
+  const idx      = allCards.indexOf(currentCard);
+  const next     = allCards.slice(idx + 1).find(c => !c.classList.contains('locked'));
+  if (next) {
+    setTimeout(() => {
+      next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 420);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SUBMIT MISSION DATA → Firebase
+═══════════════════════════════════════════════════ */
+function checkMissionComplete() {
+  if (answeredCount >= totalQuestions) {
+    const wrap = document.getElementById('submit-wrap');
+    if (wrap) wrap.classList.add('visible');
+  }
+}
+
+window.submitMission = async function () {
+  const btn = document.getElementById('submit-btn');
+  if (btn) btn.disabled = true;
+
+  const pct = Math.round(score / (totalQuestions * POINTS_MCQ) * 100);
+
+  try {
+    if (!window._fbPush) throw new Error("Firebase bridge not ready");
+    await window._fbPush("dcit101_scores", {
+      nickname:     nickname,
+      displayName:  displayName,
+      avatar:       avatar,
+      isElite:      isElite,
+      score:        score,
+      total:        totalQuestions,
+      percentage:   pct,
+      maxStreak:    maxStreak,
+      yearCategory: "Scenario Cases",
+      timestamp:    Date.now(),
+    });
+    labToast('🚀 Mission data uploaded to Nexus Leaderboard!', 'success', 4000);
+    if (btn) { btn.textContent = '✅ SUBMITTED'; btn.disabled = true; }
+  } catch (err) {
+    console.error("Firebase submit error:", err);
+    labToast('⚠️ Upload failed — check connection', 'error', 4000);
+    if (btn) btn.disabled = false;
+  }
+};
+
+/* ═══════════════════════════════════════════════════
+   DRAWING ENGINE — generateGate(type)
+   Returns an inline SVG string for AND, OR, NAND, NOT
+═══════════════════════════════════════════════════ */
+function generateGate(type) {
+  const W = 120, H = 80;
+  const CYAN = '#00d4ff', FILL = 'rgba(0,25,40,0.82)', SW = 2;
+  const uid  = type + '_' + Math.random().toString(36).slice(2, 7);
+
+  const defs = `<defs>
+    <filter id="g${uid}" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>`;
+  const gA = `filter="url(#g${uid})" stroke="${CYAN}" stroke-width="${SW}"
+    fill="${FILL}" stroke-linejoin="round" stroke-linecap="round"`;
+  const lA = `stroke="${CYAN}" stroke-width="${SW}" stroke-linecap="round"`;
+  const tA = `fill="#7a8499" font-size="10" font-family="JetBrains Mono,monospace"`;
+  const bA = `filter="url(#g${uid})" stroke="${CYAN}" stroke-width="${SW}"
+    fill="rgba(0,212,255,0.12)" stroke-linecap="round"`;
+
+  let body = '';
+  switch (type.toUpperCase()) {
+    case 'AND':
+      body = `<path d="M16,14 L56,14 A26,26 0 0 1 56,66 L16,66 Z" ${gA}/>
+        <line x1="0" y1="28" x2="16" y2="28" ${lA}/><line x1="0" y1="52" x2="16" y2="52" ${lA}/>
+        <line x1="82" y1="40" x2="100" y2="40" ${lA}/>
+        <text x="2" y="24" ${tA}>A</text><text x="2" y="58" ${tA}>B</text><text x="85" y="37" ${tA}>Q</text>`;
+      break;
+    case 'OR':
+      body = `<path d="M16,14 Q30,14 72,40 Q30,66 16,66 Q28,40 16,14 Z" ${gA}/>
+        <line x1="0" y1="28" x2="24" y2="28" ${lA}/><line x1="0" y1="52" x2="24" y2="52" ${lA}/>
+        <line x1="72" y1="40" x2="100" y2="40" ${lA}/>
+        <text x="2" y="24" ${tA}>A</text><text x="2" y="58" ${tA}>B</text><text x="85" y="37" ${tA}>Q</text>`;
+      break;
+    case 'NAND':
+      body = `<path d="M16,14 L52,14 A24,24 0 0 1 52,66 L16,66 Z" ${gA}/>
+        <circle cx="83" cy="40" r="7" ${bA}/>
+        <line x1="0" y1="28" x2="16" y2="28" ${lA}/><line x1="0" y1="52" x2="16" y2="52" ${lA}/>
+        <line x1="90" y1="40" x2="100" y2="40" ${lA}/>
+        <text x="2" y="24" ${tA}>A</text><text x="2" y="58" ${tA}>B</text><text x="90" y="37" ${tA}>Q̄</text>`;
+      break;
+    case 'NOT':
+      body = `<polygon points="12,12 12,68 64,40" ${gA}/>
+        <circle cx="74" cy="40" r="9" ${bA}/>
+        <line x1="0" y1="40" x2="12" y2="40" ${lA}/><line x1="83" y1="40" x2="100" y2="40" ${lA}/>
+        <text x="2" y="37" ${tA}>A</text><text x="87" y="37" ${tA}>Ā</text>`;
+      break;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"
+    xmlns="http://www.w3.org/2000/svg" overflow="visible">${defs}${body}</svg>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER: Gate Lab (Scenario 02)
+═══════════════════════════════════════════════════ */
+function renderGateLab() {
+  const el = document.getElementById('gate-lab');
+  if (!el) return;
+  const config = [
+    { type:'AND',  label:'Diagram A', badge:'AND Gate',  expr:'F = A · B'  },
+    { type:'OR',   label:'Diagram B', badge:'OR Gate',   expr:'F = A + B'  },
+    { type:'NAND', label:'Diagram C', badge:'NAND Gate', expr:"F = (A·B)'" },
+    { type:'NOT',  label:'Diagram D', badge:'NOT Gate',  expr:'F = Ā'      },
+  ];
+  el.innerHTML = config.map(g => `
+    <div class="gate-item">
+      <div class="gate-label">${g.label}</div>
+      <div class="gate-svg-wrap">${generateGate(g.type)}</div>
+      <div class="gate-badge">${g.badge}</div>
+      <div class="gate-expr">${g.expr}</div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER: Truth Tables (Scenario 04)
+═══════════════════════════════════════════════════ */
+function renderTruthTables() {
+  const ttA = [
+    [0,0,0,1],[0,0,1,0],[0,1,0,0],[0,1,1,0],
+    [1,0,0,1],[1,0,1,0],[1,1,0,0],[1,1,1,0]
+  ];
+  const ttB = [
+    [0,0,0,1],[0,0,1,1],[0,1,0,0],[0,1,1,0],
+    [1,0,0,0],[1,0,1,0],[1,1,0,0],[1,1,1,0]
+  ];
+  const build = (id, data) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = `<thead><tr><th>A</th><th>B</th><th>C</th><th>F1</th></tr></thead>
+      <tbody>${data.map(r => `<tr>
+        <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>
+        <td class="${r[3] ? 'out1' : 'out0'}">${r[3]}</td>
+      </tr>`).join('')}</tbody>`;
+  };
+  build('tt-q13a', ttA);
+  build('tt-q13b', ttB);
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER: Computer Block Diagram (Scenario 05)
+═══════════════════════════════════════════════════ */
+function renderBlockDiagram() {
+  const el = document.getElementById('block-diagram');
+  if (!el) return;
+  const C = '#00d4ff', P = '#9b59ff', G = '#00ff9d', Y = '#f5c842', O = '#ff6b35';
+  el.innerHTML = `<svg viewBox="0 0 560 260" width="100%" style="max-width:560px;" xmlns="http://www.w3.org/2000/svg">
+    <defs><filter id="bx-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter></defs>
+    <rect x="200" y="10" width="160" height="52" rx="9" fill="rgba(0,212,255,0.07)" stroke="${C}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="280" y="31" text-anchor="middle" fill="${C}" font-family="JetBrains Mono,monospace" font-size="11" letter-spacing="1" font-weight="700">MAIN MEMORY</text>
+    <text x="280" y="50" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="9">RAM / ROM</text>
+    <rect x="200" y="100" width="160" height="64" rx="9" fill="rgba(155,89,255,0.08)" stroke="${P}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="280" y="126" text-anchor="middle" fill="${P}" font-family="Orbitron,sans-serif" font-size="14" font-weight="900">CPU</text>
+    <text x="280" y="148" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="9">Q24 — Central Processing Unit</text>
+    <rect x="210" y="106" width="62" height="22" rx="4" fill="rgba(155,89,255,0.2)" stroke="rgba(155,89,255,0.5)" stroke-width="1"/>
+    <text x="241" y="121" text-anchor="middle" fill="${P}" font-family="JetBrains Mono,monospace" font-size="8" letter-spacing="0.5">CU · Q25</text>
+    <rect x="392" y="100" width="140" height="64" rx="9" fill="rgba(0,255,157,0.06)" stroke="${G}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="462" y="126" text-anchor="middle" fill="${G}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">OUTPUT</text>
+    <text x="462" y="143" text-anchor="middle" fill="${G}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">DEVICE</text>
+    <text x="462" y="158" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="8">Q26</text>
+    <rect x="28" y="100" width="140" height="64" rx="9" fill="rgba(245,200,66,0.06)" stroke="${Y}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="98" y="126" text-anchor="middle" fill="${Y}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">AUXILIARY</text>
+    <text x="98" y="143" text-anchor="middle" fill="${Y}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">STORAGE</text>
+    <text x="98" y="158" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="8">Q27</text>
+    <rect x="200" y="198" width="160" height="52" rx="9" fill="rgba(255,107,53,0.06)" stroke="${O}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="280" y="220" text-anchor="middle" fill="${O}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">INPUT DEVICE</text>
+    <text x="280" y="239" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="8">Keyboard / Mouse / Sensors</text>
+    <line x1="280" y1="62" x2="280" y2="100" stroke="${C}" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <polygon points="280,99 274,88 286,88" fill="${C}"/>
+    <line x1="360" y1="132" x2="392" y2="132" stroke="${G}" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <polygon points="394,132 384,127 384,137" fill="${G}"/>
+    <line x1="168" y1="132" x2="200" y2="132" stroke="${Y}" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <polygon points="202,132 192,127 192,137" fill="${Y}"/>
+    <line x1="280" y1="198" x2="280" y2="164" stroke="${O}" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <polygon points="280,165 274,175 286,175" fill="${O}"/>
+  </svg>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER: Assembly Trace Table (Scenario 06)
+═══════════════════════════════════════════════════ */
+function renderTraceTable() {
+  const el = document.getElementById('trace-table');
+  if (!el) return;
+  const sc = SCENARIO_DATA.find(s => s.id === 'sc-06');
+  if (!sc) return;
+  const cc = (row, field) => row.changed.includes(field) ? ' class="changed"' : '';
+  el.innerHTML = `<thead><tr>
+    <th>Step</th><th>Instruction</th>
+    <th>ACC</th><th>M[201]</th><th>M[202]</th><th>M[203]</th><th>M[204]</th>
+  </tr></thead>
+  <tbody>${sc.trace.map(row => `<tr>
+    <td class="step">${row.step}</td><td class="instr">${row.instr}</td>
+    <td${cc(row,'acc')}>${row.acc}</td>
+    <td${cc(row,'m201')}>${row.m201}</td>
+    <td${cc(row,'m202')}>${row.m202}</td>
+    <td${cc(row,'m203')}>${row.m203}</td>
+    <td${cc(row,'m204')}>${row.m204}</td>
+  </tr>`).join('')}</tbody>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER: Bubble Sort Visual (Scenario 07)
+═══════════════════════════════════════════════════ */
+function renderSortVisual() {
+  const el = document.getElementById('sort-visual');
+  if (!el) return;
+  const sc = SCENARIO_DATA.find(s => s.id === 'sc-07');
+  if (!sc) return;
+  const snapshots = [sc.initial, ...sc.passes.slice(0, 3)];
+  const labels    = ['Initial', 'After Pass 1', 'After Pass 2', 'After Pass 3'];
+  el.innerHTML = snapshots.map((arr, pi) => {
+    const cells = arr.map((v, i) => {
+      const placed = pi > 0 && i >= arr.length - pi;
+      return `<div class="sort-cell${placed ? ' placed' : ''}">${v}</div>`;
+    }).join('');
+    return `<div class="sort-array"><div class="sort-array-label">${labels[pi]}</div>${cells}</div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════
+   SCROLL PROGRESS + HUD backdrop blur on scroll
+═══════════════════════════════════════════════════ */
+function updateScrollBar() {
+  const bar     = document.getElementById('scroll-bar');
+  const hud     = document.getElementById('hud');
+  const scrolled= document.documentElement.scrollTop || document.body.scrollTop;
+  const total   = document.documentElement.scrollHeight - window.innerHeight;
+  if (bar) bar.style.transform = `scaleX(${total > 0 ? scrolled / total : 0})`;
+  if (hud) hud.classList.toggle('scrolled', scrolled > 20);
+}
+
+/* ═══════════════════════════════════════════════════
+   INTERSECTION OBSERVER — fade-in cards on scroll
+═══════════════════════════════════════════════════ */
+function observeCards() {
+  if (!('IntersectionObserver' in window)) return;
+  const cards = document.querySelectorAll('.scenario-card');
+  const obs   = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity   = '1';
+        e.target.style.transform = 'translateY(0)';
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06 });
+  cards.forEach((c, i) => {
+    c.style.opacity   = '0';
+    c.style.transform = 'translateY(30px)';
+    c.style.transition= `opacity 0.5s ${i*0.08}s ease, transform 0.5s ${i*0.08}s cubic-bezier(0.34,1.56,0.64,1)`;
+    obs.observe(c);
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   WIRE QUIZ INTERACTIONS
+   — removes all inline ondblclick attributes
+   — MCQ items: dblclick on each .q-opt
+   — Free-text items: dblclick on the card itself
+═══════════════════════════════════════════════════ */
+function wireQuizInteractions() {
+  const items = document.querySelectorAll('.q-item');
+  totalQuestions = items.length;
+  document.getElementById('hud-total').textContent = totalQuestions;
+
+  items.forEach(item => {
+    item.removeAttribute('ondblclick');
+    const opts = item.querySelectorAll('.q-opt');
+    if (opts.length > 0) {
+      // MCQ — wire each option
+      opts.forEach(opt => {
+        opt.addEventListener('dblclick', (e) => {
+          e.stopPropagation();
+          lockOption(item, opt);
+        });
+      });
+    } else {
+      // Free-text — wire the card
+      item.style.cursor = 'pointer';
+      item.addEventListener('dblclick', () => revealFreeText(item));
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   INIT HUD — populate nickname / avatar / elite state
+═══════════════════════════════════════════════════ */
+function initHUD() {
+  const hud       = document.getElementById('hud');
+  const nickEl    = document.getElementById('hud-nick');
+  const avatarEl  = document.getElementById('hud-avatar');
+
+  if (nickEl)   nickEl.textContent   = displayName;
+  if (avatarEl) avatarEl.textContent = avatar;
+  if (hud && isElite) hud.classList.add('elite-hud');
+}
+
+/* ═══════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initHUD();
+  renderGateLab();
+  renderTruthTables();
+  renderBlockDiagram();
+  renderTraceTable();
+  renderSortVisual();
+  wireQuizInteractions();
+  observeCards();
+  updateHUD();
+  window.addEventListener('scroll', updateScrollBar, { passive: true });
+});
+</script>
+</body>
+</html>
+</body>
+</html>

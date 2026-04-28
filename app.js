@@ -1119,6 +1119,34 @@ const QUESTIONS = {
     { topic: "File Management",         q: "File management system facilities?",                                                                           opts: ["Delete a file","Copy a file","Save a file","All of the above"],               ans: 3, exp: "All of the above." },
     { topic: "Databases",               q: "Link between two tables is?",                                                                                  opts: ["Attribute","Relationship","Tuple","Entity"],                                  ans: 1, exp: "Relationship." },
     { topic: "Databases",               q: "Process to lower data redundancy?",                                                                            opts: ["Normalization","Rationalization","Abnormality elimination","Reduction"],      ans: 0, exp: "Normalization." },
+     { 
+    topic: "Digital Logic", 
+    q: "A transistor in digital circuits functions primarily as a:", 
+    opts: ["Oscillator", "Storage cell", "Amplifier only", "Switch"], 
+    ans: 3, 
+    exp: "In digital circuits, transistors act as electronic switches — they are either ON or OFF." 
+  },
+  { 
+    topic: "Architecture", 
+    q: "Which of the following is an output device?", 
+    opts: ["Keyboard", "Mouse", "Scanner", "Monitor"], 
+    ans: 3, 
+    exp: "A monitor displays information from the computer to the user — it is an output device." 
+  },
+  { 
+    topic: "CPU", 
+    q: "An 'interrupt' signal is sent to the CPU to:", 
+    opts: ["Request immediate attention for an event", "Power off the computer", "Increase the clock speed", "Clear the RAM"], 
+    ans: 0, 
+    exp: "Interrupts allow I/O devices and timers to signal the CPU that they need service." 
+  },
+  { 
+    topic: "Digital Logic", 
+    q: "(A · B) + (A · B') simplifies to:", 
+    opts: ["A + B", "B", "AB", "A"], 
+    ans: 3, 
+    exp: "Factor out A: A(B + B'). Since B + B' = 1 (Complement Law), the result is A · 1 = A." 
+  }
   ],
   2023: [
     { topic: "Databases",               q: "A collection of data designed to be used by different people?",                                               opts: ["Organization","Database","Relationship","Schema"],                            ans: 1, exp: "Database — structured, shared data collection." },
@@ -1221,5 +1249,6 @@ const QUESTIONS = {
     { topic: "Databases",               q: "50 students assigned to 1 tutor — Student to Tutor relationship?",                                           opts: ["One to one","Many to many","Many to one","One and only one"],                 ans: 2, exp: "Many students to one tutor." },
     { topic: "Databases",               q: "10 buses transport 50 people — Buses to Individuals relationship?",                                          opts: ["One to one","Many to many","Many to one","One and only one"],                 ans: 1, exp: "Many-to-many." },
     { topic: "Databases",               q: "Process of arranging attributes into sensible groupings for relational tables?",                              opts: ["Relationship","Normalisation","Data Modelling","Data redundancy"],             ans: 1, exp: "Normalisation." },
+     
   ],
 };

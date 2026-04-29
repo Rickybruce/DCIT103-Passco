@@ -131,6 +131,22 @@
       <!-- Bottom row: FIX 4 — Scenario Cases card was missing (only Diagram was there).
            Diagram Challenge renamed to Scenario Cases per task requirements.
            Scenario Cases now calls openScenarioCases() instead of showing a locked alert. -->
+     <!-- Row 2: 2024 + IA -->
+      <div class="year-grid">
+        <div class="year-card y2024" onclick="startQuiz('2024')">
+          <span class="year-num">2024</span>
+          <span class="year-sub">First Semester</span>
+          <span class="year-count">40 questions</span>
+        </div>
+        <div class="year-card ia" onclick="startQuiz('IA')">
+          <span class="year-lock-icon">⚡</span>
+          <span class="year-num">IA</span>
+          <span class="year-sub">Interim Assessment</span>
+          <span class="year-count" style="color:var(--orange)">15s / Question</span>
+        </div>
+      </div>
+
+      <!-- Row 3: Scenario + Speed -->
       <div class="year-grid-bottom">
         <div class="year-card scenario" onclick="goToScenarios()">
           <span class="year-lock-icon">📋</span>
@@ -282,7 +298,14 @@
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill" style="width:0%"></div>
     </div>
-
+<!-- IA per-question countdown (hidden for non-IA modes) -->
+        <div class="ia-timer-wrap" id="ia-timer-wrap">
+          <span class="ia-timer-label">⚡ TIME</span>
+          <div class="ia-timer-bar-track">
+            <div class="ia-timer-bar-fill" id="ia-timer-bar"></div>
+          </div>
+          <span class="ia-timer-val" id="ia-timer-val">15</span>
+        </div>
     <div class="glass q-card" id="q-card">
       <div class="topic-badge">
         <span class="topic-dot"></span>
@@ -368,13 +391,15 @@
       </div>
 
       <!-- ── CATEGORY FILTER PILLS ── -->
-      <div class="lb-filters" id="lb-filters">
+     <div class="lb-filters" id="lb-filters">
         <button class="lb-filter-btn active" data-cat="all">ALL</button>
+        <button class="lb-filter-btn" data-cat="2024">2024</button>
+        <button class="lb-filter-btn" data-cat="2023">2023</button>
         <button class="lb-filter-btn" data-cat="2022">2022</button>
         <button class="lb-filter-btn" data-cat="2021">2021</button>
-        <button class="lb-filter-btn" data-cat="2023">2023</button>
+        <button class="lb-filter-btn" data-cat="IA">⚡ IA</button>
         <button class="lb-filter-btn" data-cat="Scenario Cases">SCENARIO</button>
-        <button class="lb-filter-btn" data-cat="SpeedQuiz">⚡ SPEED</button>
+        <button class="lb-filter-btn" data-cat="SpeedQuiz">SPEED</button>
       </div>
 
       <div class="lb-list" id="lb-list">

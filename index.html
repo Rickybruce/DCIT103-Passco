@@ -133,11 +133,16 @@
            Scenario Cases now calls openScenarioCases() instead of showing a locked alert. -->
      <!-- Row 2: 2024 + IA -->
       <div class="year-grid">
-        <div class="year-card y2024" onclick="startQuiz('2024')">
-          <span class="year-num">2024</span>
-          <span class="year-sub">First Semester</span>
-          <span class="year-count">40 questions</span>
-        </div>
+        <div class="glass year-card locked"> 
+  <div class="year-header">
+    <div class="year-val">2024</div>
+    <button class="year-btn" disabled>LOCKED</button>
+  </div>
+  <div class="year-body">
+    <span class="year-sub">Access Restricted</span>
+    <span class="year-count">Coming Soon</span>
+  </div>
+</div>
         <div class="year-card ia" onclick="startQuiz('IA')">
           <span class="year-lock-icon">⚡</span>
           <span class="year-num">IA</span>

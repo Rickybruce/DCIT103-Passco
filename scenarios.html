@@ -570,42 +570,76 @@
         </div>
       </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q04 &amp; Q29</span>
-        <div class="q-text">Which diagram represents an AND gate?</div>
+      <div class="q-list">
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q02</span>
+        <div class="q-text">Diagram D uses a triangle body with a small circle at its output. Which gate does Diagram D represent?</div>
         <div class="q-options">
-          <div class="q-opt correct-ans">a. Diagram A — flat left, semicircular (D-shaped) right ✓</div>
-          <div class="q-opt">b. Diagram B — curved input side, pointed output</div>
-          <div class="q-opt">c. Diagram C — D-shape with bubble</div>
-          <div class="q-opt">d. Diagram D — triangle with bubble</div>
+          <div class="q-opt">AND</div>
+          <div class="q-opt">OR</div>
+          <div class="q-opt">NAND</div>
+          <div class="q-opt correct-ans">NOT</div>
+          <div class="q-opt">XOR</div>
         </div>
         <div class="q-answer">
-          ✦ ANSWER: A — AND gate: flat left edge + semicircular right side.<br>
-          Output HIGH only when ALL inputs are HIGH (A=1 AND B=1).<br>
-          Boolean: F = A · B
+          ✦ ANSWER: NOT — A triangle with an output bubble (inverter circle) is the NOT gate.<br>
+          Single input. Output = complement of input. Boolean: F = Ā
         </div>
       </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q05 &amp; Q30</span>
-        <div class="q-text">Which diagram represents an OR gate?</div>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q03</span>
+        <div class="q-text">Diagram C has a D-shaped body identical to Diagram A, but adds a small circle at its output terminal. Which gate does Diagram C represent?</div>
         <div class="q-options">
-          <div class="q-opt">a. Diagram A — flat left, D-shaped right</div>
-          <div class="q-opt correct-ans">b. Diagram B — concave curved input, pointed bullet output ✓</div>
-          <div class="q-opt">c. Diagram C — D-shape with bubble</div>
-          <div class="q-opt">d. Diagram D — triangle with bubble</div>
+          <div class="q-opt">AND</div>
+          <div class="q-opt">OR</div>
+          <div class="q-opt correct-ans">NAND</div>
+          <div class="q-opt">NOT</div>
+          <div class="q-opt">XOR</div>
         </div>
         <div class="q-answer">
-          ✦ ANSWER: B — OR gate: concave (inward) curve on input side, convex pointed output.<br>
-          Output HIGH when AT LEAST ONE input is HIGH.<br>
-          Boolean: F = A + B
+          ✦ ANSWER: NAND — AND body + output bubble = NAND gate.<br>
+          F = (A·B)' = Ā + B̄ &nbsp;(De Morgan). Output is HIGH unless ALL inputs are HIGH.
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q04</span>
+        <div class="q-text">Diagram A has a flat left edge (where inputs enter) and a semicircular right edge (where the output exits). No bubble is present. Which gate does Diagram A represent?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">AND</div>
+          <div class="q-opt">OR</div>
+          <div class="q-opt">NAND</div>
+          <div class="q-opt">NOT</div>
+          <div class="q-opt">XOR</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: AND — Flat input edge + D-shaped output, no bubble = AND gate.<br>
+          F = A · B. Output HIGH only when ALL inputs are HIGH.
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q05</span>
+        <div class="q-text">Diagram B has a concave (inward-curved) left edge for inputs and a convex, pointed right edge for its output — like a shield or bullet shape. Which gate does Diagram B represent?</div>
+        <div class="q-options">
+          <div class="q-opt">AND</div>
+          <div class="q-opt correct-ans">OR</div>
+          <div class="q-opt">NAND</div>
+          <div class="q-opt">NOT</div>
+          <div class="q-opt">XOR</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: OR — Concave input side + pointed output = OR gate.<br>
+          F = A + B. Output HIGH when AT LEAST ONE input is HIGH.
         </div>
       </div>
     </div>
   </div>
-
 
   <!-- ═══════════════════════════════════════════════════════
        SCENARIO 03 — TRAVEL BOOLEAN ALGEBRA
@@ -623,28 +657,41 @@
       <strong>Outcomes:</strong> X = Car_travel &nbsp;·&nbsp; Y = Train_travel &nbsp;·&nbsp; Z = Air_travel
     </div>
 
-    <div class="q-list">
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
+    <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
         <span class="q-num">// Q06</span>
-        <div class="q-text">Car_travel = _______ when day = weekend.</div>
-        <div class="q-answer">✦ ANSWER: <span class="hl-green">TRUE</span> — Car is taken on weekends, condition fully satisfied.</div>
+        <div class="q-text">Car_travel = _______ when day = Weekend.<br>
+          <small style="color:var(--text-dim)">(A=Weekday, so Weekend = NOT A)</small></div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">True</div>
+          <div class="q-opt">False</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: True — Car is taken on weekends. Condition fully satisfied: NOT A = Weekend = 1.</div>
       </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
         <span class="q-num">// Q07</span>
-        <div class="q-text">Train_travel = _______ when day = weekday AND distance ≤ 200 km.</div>
-        <div class="q-answer">✦ ANSWER: <span class="hl-green">TRUE</span> — Both conditions satisfied (A=1, B=1).</div>
+        <div class="q-text">Train_travel = _______ when day = Weekday AND distance ≤ 200 km.<br>
+          <small style="color:var(--text-dim)">(Weekday = A=1, short distance = B=1)</small></div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">True</div>
+          <div class="q-opt">False</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: True — Both conditions met (A=1 AND B=1). Y = A AND B = 1.</div>
       </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
         <span class="q-num">// Q08</span>
-        <div class="q-text">Air_travel = _______ when day = weekday AND distance &gt; 200 km.</div>
-        <div class="q-answer">✦ ANSWER: <span class="hl-green">TRUE</span> — Weekday + long distance → air travel.</div>
+        <div class="q-text">Air_travel = _______ when day = Weekday AND distance &gt; 200 km.<br>
+          <small style="color:var(--text-dim)">(distance &gt; 200 means B=0, so NOT B = 1)</small></div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">True</div>
+          <div class="q-opt">False</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: True — Weekday (A=1) AND long distance (NOT B=1). Z = A AND NOT B = 1.</div>
       </div>
-
       <div class="q-item" ondblclick="revealAnswer(this)">
         <span class="q-hint">dbl-click</span>
         <span class="q-num">// Q09</span>
@@ -726,25 +773,30 @@
           Which truth table represents: <em>"Tank level too low AND temperature too high
           → switch off (F1 = 1)"</em>?
         </div>
-        <div class="tt-pair-grid">
+        <div class="tt-pair-grid" style="grid-template-columns:1fr 1fr 1fr;">
           <div>
-            <div class="tt-pair-title">Option A (Correct ✓)</div>
+            <div class="tt-pair-title">Option A</div>
             <div class="truth-table-wrap"><table class="truth-table" id="tt-q13a"></table></div>
           </div>
           <div>
             <div class="tt-pair-title">Option B</div>
             <div class="truth-table-wrap"><table class="truth-table" id="tt-q13b"></table></div>
           </div>
+          <div>
+            <div class="tt-pair-title">Option C</div>
+            <div class="truth-table-wrap"><table class="truth-table" id="tt-q13c"></table></div>
+          </div>
         </div>
         <div class="q-options">
-          <div class="q-opt correct-ans">a. Option A — F1=1 when B=0 AND C=0 ✓</div>
-          <div class="q-opt">b. Option B</div>
+          <div class="q-opt correct-ans">Option A</div>
+          <div class="q-opt">Option B</div>
+          <div class="q-opt">Option C</div>
         </div>
         <div class="q-answer">
-          ✦ ANSWER: A — Expression: F1 = B̄ · C̄ (NOT B AND NOT C)<br>
-          F1=1 only at rows (A,0,0): (0,0,0)→1 and (1,0,0)→1.<br>
+          ✦ ANSWER: Option A — Expression: F1 = B̄ · C̄ (NOT B AND NOT C)<br>
+          F1=1 only when B=0 AND C=0: rows (0,0,0)→1 and (1,0,0)→1.<br>
           Signal A (radiator flow) is irrelevant to this particular fault.
-        </div>
+        </div>     
       </div>
 
       <div class="q-item" ondblclick="revealAnswer(this)">
@@ -755,34 +807,37 @@
           → switch off (F1 = 1)"</em>?
         </div>
         <div class="q-options">
-          <div class="q-opt">a. Option A</div>
-          <div class="q-opt correct-ans">b. Option B — F1=1 when A=0 AND B=0 ✓</div>
+          <div class="q-opt">Option A</div>
+          <div class="q-opt correct-ans">Option B</div>
+          <div class="q-opt">Option C</div>
         </div>
         <div class="q-answer">
-          ✦ ANSWER: B — Expression: F1 = Ā · B̄ (NOT A AND NOT B)<br>
+          ✦ ANSWER: Option B — Expression: F1 = Ā · B̄ (NOT A AND NOT B)<br>
           F1=1 at rows where A=0 AND B=0: (0,0,0)→1 and (0,0,1)→1.<br>
           Signal C (water level) is irrelevant here.
         </div>
-      </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
         <span class="q-num">// Q16</span>
         <div class="q-text">
-          Which logic circuit represents: <em>"Temperature within limits BUT
-          radiator flow too low AND water level too low → switch off"</em>?
+          Which Boolean expression correctly implements: <em>"Temperature within limits BUT
+          radiator flow too low AND water level too low → switch off (F1=1)"</em>?<br>
+          <small style="color:var(--text-dim)">A=flow, B=temp, C=level · Each signal = 1 means "within limits"</small>
+        </div>
+        <div class="q-options">
+          <div class="q-opt">F1 = A · B · C</div>
+          <div class="q-opt">F1 = Ā · B̄ · C̄</div>
+          <div class="q-opt correct-ans">F1 = Ā · B · C̄</div>
+          <div class="q-opt">F1 = A · B̄ · C</div>
         </div>
         <div class="q-answer">
-          ✦ Condition: B=1 (temp OK) AND A=0 (flow low) AND C=0 (level low)<br>
-          Expression: F1 = Ā · B · C̄<br><br>
-          Circuit required: &nbsp;
-          NOT gate on A → Ā &nbsp;|&nbsp;
-          NOT gate on C → C̄ &nbsp;|&nbsp;
-          3-input AND gate takes (Ā, B, C̄) → F1<br>
-          The correct diagram shows two inverters feeding into a 3-input AND gate.
+          ✦ ANSWER: F1 = Ā · B · C̄<br>
+          A=0 (flow low) → Ā=1 &nbsp;|&nbsp; B=1 (temp OK) &nbsp;|&nbsp; C=0 (level low) → C̄=1<br>
+          Circuit: NOT(A) → NOT(C) → 3-input AND gate with inputs (Ā, B, C̄) → F1
         </div>
       </div>
-    </div>
+      </div>
   </div>
 
 
@@ -799,24 +854,44 @@
 
     <div class="block-diagram-wrap"><div id="block-diagram"></div></div>
 
-    <div class="q-list">
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q17 · Q18 · Q19</span>
-        <div class="q-text">
-          Fill in the blanks: "A ___[Q17]___ works under stored programs, automatically
-          accepting, storing and processing ___[Q18]___ to produce ___[Q19]___."<br><br>
-          Options: &nbsp; a. Data &nbsp; b. Machine &nbsp; c. Information &nbsp; d. Computer
+    <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q17</span>
+        <div class="q-text">Complete the sentence: "A ___[Q17]___ works under the control of stored programs, automatically accepting, storing and processing data to produce information."</div>
+        <div class="q-options">
+          <div class="q-opt">Data</div>
+          <div class="q-opt">Machine</div>
+          <div class="q-opt">Information</div>
+          <div class="q-opt correct-ans">Computer</div>
         </div>
-        <div class="q-answer">
-          ✦ Q17: <span class="hl-cyan">d. Computer</span><br>
-          ✦ Q18: <span class="hl-cyan">a. Data</span><br>
-          ✦ Q19: <span class="hl-cyan">c. Information</span><br><br>
-          A Computer processes raw Data → outputs meaningful Information.
-          This is the classic Input → Process → Output model.
-        </div>
+        <div class="q-answer">✦ ANSWER: D — Computer. A Computer is the device that executes stored programs and processes data.</div>
       </div>
 
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q18</span>
+        <div class="q-text">Complete the sentence: "A computer automatically accepts, stores and processes ___[Q18]___ to produce a result."</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">Data</div>
+          <div class="q-opt">Machine</div>
+          <div class="q-opt">Information</div>
+          <div class="q-opt">Computer</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: A — Data. Raw, unprocessed facts fed into the computer are called Data.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q19</span>
+        <div class="q-text">Complete the sentence: "A computer processes data to produce ___[Q19]___."</div>
+        <div class="q-options">
+          <div class="q-opt">Data</div>
+          <div class="q-opt">Machine</div>
+          <div class="q-opt correct-ans">Information</div>
+          <div class="q-opt">Computer</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: C — Information. Processed, meaningful output is called Information.</div>
+      </div>
       <div class="q-item" ondblclick="revealAnswer(this)">
         <span class="q-hint">dbl-click</span>
         <span class="q-num">// Q20 — PRESSURE Sensor</span>
@@ -881,19 +956,56 @@
         </div>
       </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q24–Q27 — Block Diagram Labels</span>
-        <div class="q-text">
-          Using the block diagram above, correctly label parts Q24–Q27.<br>
-          Options: &nbsp; a. Output Device &nbsp; b. Auxiliary Storage &nbsp; c. CPU &nbsp; d. Control Unit
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q24</span>
+        <div class="q-text">In the block diagram, BOX 2 is the central processing component that executes all program instructions. What is BOX 2?</div>
+        <div class="q-options">
+          <div class="q-opt">Output Device</div>
+          <div class="q-opt">Auxiliary Storage</div>
+          <div class="q-opt correct-ans">CPU</div>
+          <div class="q-opt">Control Unit</div>
         </div>
-        <div class="q-answer">
-          ✦ Q24: <span class="hl-purple">c. CPU</span> — Central Processing Unit. Executes all instructions.<br>
-          ✦ Q25: <span class="hl-purple">d. Control Unit</span> — Sub-unit of the CPU. Directs data flow &amp; instruction fetch/decode.<br>
-          ✦ Q26: <span class="hl-green">a. Output Device</span> — Monitor, printer, speaker, etc.<br>
-          ✦ Q27: <span class="hl-gold">b. Auxiliary Storage</span> — HDD, SSD, USB flash — persistent secondary storage.
+        <div class="q-answer">✦ ANSWER: CPU — The Central Processing Unit executes all instructions and sits at the heart of the system.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q25</span>
+        <div class="q-text">SUB-2 is a sub-unit inside BOX 2. It directs the flow of data and manages the fetch-decode-execute cycle. What is SUB-2?</div>
+        <div class="q-options">
+          <div class="q-opt">Output Device</div>
+          <div class="q-opt">Auxiliary Storage</div>
+          <div class="q-opt">CPU</div>
+          <div class="q-opt correct-ans">Control Unit</div>
         </div>
+        <div class="q-answer">✦ ANSWER: Control Unit — The CU coordinates all CPU operations, directing data flow and managing the instruction cycle.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q26</span>
+        <div class="q-text">BOX 3 is connected to the right of BOX 2. It receives processed results and presents them to the user (e.g. monitor, printer). What is BOX 3?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">Output Device</div>
+          <div class="q-opt">Auxiliary Storage</div>
+          <div class="q-opt">CPU</div>
+          <div class="q-opt">Control Unit</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: Output Device — Receives processed data and presents it to the user (monitor, printer, speakers).</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q27</span>
+        <div class="q-text">BOX 4 is connected to the left of BOX 2. It provides long-term, non-volatile storage (e.g. HDD, SSD, USB). What is BOX 4?</div>
+        <div class="q-options">
+          <div class="q-opt">Output Device</div>
+          <div class="q-opt correct-ans">Auxiliary Storage</div>
+          <div class="q-opt">CPU</div>
+          <div class="q-opt">Control Unit</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: Auxiliary Storage — Non-volatile secondary storage (HDD, SSD, USB flash drive) that persists data after power-off.</div>
       </div>
     </div>
   </div>
@@ -953,139 +1065,242 @@
       </div>
     </div>
 
+   <!-- Reference trace table (always visible for context) -->
+    <div style="overflow-x:auto; margin-bottom:24px;">
+      <table class="trace-table" id="trace-table"></table>
+    </div>
+
     <div class="q-list">
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q32–Q39 — Full Trace</span>
-        <div class="q-text">Execute each instruction. Fill in the correct values for ACC and
-          memory locations at each step Q32 through Q39.</div>
-        <div class="q-answer" id="trace-answer">
-          <div style="overflow-x:auto;">
-            <table class="trace-table" id="trace-table"></table>
-          </div>
-          <div class="info-note" style="margin-top:12px;">
-            ✦ Q35 (LDI 203): M[203]=204 → follow pointer → M[204]=5 → ACC = <span class="hl-green">5</span><br>
-            ✦ Q38 (ADD 204): ACC = 4 + M[204] = 4 + 5 = <span class="hl-green">9</span><br>
-            ✦ Green cells = values changed by that instruction.
-          </div>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q32 — After LDD 201</span>
+        <div class="q-text">Instruction at line 100: <code style="color:var(--orange)">LDD 201</code><br>
+          Load ACC directly with the value stored at address 201.<br>
+          What is the value of ACC after this instruction?</div>
+        <div class="q-options">
+          <div class="q-opt">0</div>
+          <div class="q-opt">5</div>
+          <div class="q-opt correct-ans">10</div>
+          <div class="q-opt">204</div>
         </div>
+        <div class="q-answer">✦ ACC = <span class="hl-green">10</span> — M[201] = 10. LDD loads the value AT address 201 directly into ACC.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q33 — After INC ACC</span>
+        <div class="q-text">Instruction at line 101: <code style="color:var(--orange)">INC ACC</code><br>
+          ACC was 10 after Q32. INC adds 1. What is ACC now?</div>
+        <div class="q-options">
+          <div class="q-opt">9</div>
+          <div class="q-opt">10</div>
+          <div class="q-opt correct-ans">11</div>
+          <div class="q-opt">12</div>
+        </div>
+        <div class="q-answer">✦ ACC = <span class="hl-green">11</span> — INC ACC adds 1: 10 + 1 = 11.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q34 — After STO 202</span>
+        <div class="q-text">Instruction at line 102: <code style="color:var(--orange)">STO 202</code><br>
+          ACC = 11. STO stores ACC's value into the given address. What is M[202] after this?</div>
+        <div class="q-options">
+          <div class="q-opt">0</div>
+          <div class="q-opt">10</div>
+          <div class="q-opt correct-ans">11</div>
+          <div class="q-opt">204</div>
+        </div>
+        <div class="q-answer">✦ M[202] = <span class="hl-green">11</span> — STO 202 copies ACC (11) into address 202.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q35 — After LDI 203</span>
+        <div class="q-text">Instruction at line 103: <code style="color:var(--orange)">LDI 203</code><br>
+          LDI is <em>indirect</em> addressing: M[203] = 204 (a pointer). So go to M[204] = 5.<br>
+          What is ACC after this instruction?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">5</div>
+          <div class="q-opt">11</div>
+          <div class="q-opt">204</div>
+          <div class="q-opt">203</div>
+        </div>
+        <div class="q-answer">✦ ACC = <span class="hl-green">5</span> — LDI 203: M[203]=204 → follow pointer → M[204]=5 → ACC=5.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q36 — After DEC ACC</span>
+        <div class="q-text">Instruction at line 104: <code style="color:var(--orange)">DEC ACC</code><br>
+          ACC = 5 after Q35. DEC subtracts 1. What is ACC now?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">4</div>
+          <div class="q-opt">5</div>
+          <div class="q-opt">6</div>
+          <div class="q-opt">10</div>
+        </div>
+        <div class="q-answer">✦ ACC = <span class="hl-green">4</span> — DEC ACC subtracts 1: 5 − 1 = 4.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q37 — After STO 201</span>
+        <div class="q-text">Instruction at line 105: <code style="color:var(--orange)">STO 201</code><br>
+          ACC = 4. What is M[201] after this store operation?</div>
+        <div class="q-options">
+          <div class="q-opt correct-ans">4</div>
+          <div class="q-opt">5</div>
+          <div class="q-opt">10</div>
+          <div class="q-opt">11</div>
+        </div>
+        <div class="q-answer">✦ M[201] = <span class="hl-green">4</span> — STO 201 writes ACC (4) into address 201, overwriting the original 10.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q38 — After ADD 204</span>
+        <div class="q-text">Instruction at line 106: <code style="color:var(--orange)">ADD 204</code><br>
+          ACC = 4, M[204] = 5. ADD adds M[204] to ACC. What is ACC now?</div>
+        <div class="q-options">
+          <div class="q-opt">4</div>
+          <div class="q-opt">5</div>
+          <div class="q-opt">8</div>
+          <div class="q-opt correct-ans">9</div>
+        </div>
+        <div class="q-answer">✦ ACC = <span class="hl-green">9</span> — ADD 204: ACC = 4 + M[204] = 4 + 5 = 9.</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q39 — After final STO 201</span>
+        <div class="q-text">Instruction at line 107: <code style="color:var(--orange)">STO 201</code><br>
+          ACC = 9. What is the FINAL value stored at M[201] when the program ends?</div>
+        <div class="q-options">
+          <div class="q-opt">4</div>
+          <div class="q-opt">5</div>
+          <div class="q-opt correct-ans">9</div>
+          <div class="q-opt">11</div>
+        </div>
+        <div class="q-answer">✦ M[201] = <span class="hl-green">9</span> — Final STO 201 writes ACC (9) into address 201. Program ends.</div>
       </div>
     </div>
   </div>
 
-
-  <!-- ═══════════════════════════════════════════════════════
+ <!-- ═══════════════════════════════════════════════════════
        SCENARIO 07 — BUBBLE SORT
   ═══════════════════════════════════════════════════════ -->
   <div class="scenario-card">
     <span class="scenario-tag">// Scenario 07 — Sorting Algorithms</span>
-    <div class="scenario-title">🔄 Bubble Sort — Pass-by-Pass Analysis (Q40–46)</div>
+    <div class="scenario-title">🔄 Bubble Sort — Pass-by-Pass Analysis (Q40–45)</div>
     <div class="scenario-body">
-      Bubble sort repeatedly steps through the list, compares adjacent elements and swaps
-      them if in the wrong order. Each full pass "bubbles" the largest remaining unsorted
-      element to its correct position at the end.<br><br>
+      Bubble sort repeatedly compares adjacent elements and swaps them if out of order.
+      Each full pass "bubbles" the largest unsorted value to its final position at the end.<br><br>
       <strong>Initial Array:</strong> &nbsp;[ 25, 34, 98, 7, 41, 19, 5 ]
     </div>
 
+    <!-- Q40 and Q41 appear BEFORE the visual diagrams -->
+    <div class="q-list" style="margin-bottom:28px;">
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q40</span>
+        <div class="q-text">The sorting method described above (compare adjacent pairs, swap if out of order, repeat) is called:</div>
+        <div class="q-options">
+          <div class="q-opt">Quicksort</div>
+          <div class="q-opt">Insertion Sort</div>
+          <div class="q-opt">Selection Sort</div>
+          <div class="q-opt correct-ans">Bubble Sort</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: Bubble Sort — Named because larger values "bubble up" to the end each pass. Time complexity: O(n²).</div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q41</span>
+        <div class="q-text">After completing the FIRST pass on [ 25, 34, 98, 7, 41, 19, 5 ], which element is now guaranteed to be in its correct final position?</div>
+        <div class="q-options">
+          <div class="q-opt">Smallest value (5)</div>
+          <div class="q-opt">Middle value (25)</div>
+          <div class="q-opt correct-ans">Largest value (98)</div>
+          <div class="q-opt">No element is placed yet</div>
+        </div>
+        <div class="q-answer">✦ ANSWER: Largest value (98) — It bubbles all the way to index 6. Result: [ 25, 34, 7, 41, 19, 5, <span class="hl-green">98</span> ]</div>
+      </div>
+    </div>
+
+    <!-- Array state diagrams labelled B1–B4 -->
     <div class="sort-grid" id="sort-visual"></div>
 
     <div class="q-list">
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q40</span>
-        <div class="q-text">The algorithm described (adjacent compare + swap + repeat) is:</div>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q42</span>
+        <div class="q-text">Which array state diagram (B1, B2, B3, or B4) shows the result after the <strong>FIRST</strong> pass?<br>
+          <small style="color:var(--text-dim)">Hint: 98 is swapped past 7, 41, 19 and 5 — one element is placed.</small></div>
         <div class="q-options">
-          <div class="q-opt">a. Quicksort</div>
-          <div class="q-opt">b. Insertion Sort</div>
-          <div class="q-opt">c. Selection Sort</div>
-          <div class="q-opt correct-ans">d. Bubble Sort ✓</div>
+          <div class="q-opt correct-ans">B1</div>
+          <div class="q-opt">B2</div>
+          <div class="q-opt">B3</div>
+          <div class="q-opt">B4</div>
         </div>
         <div class="q-answer">
-          ✦ ANSWER: d — Bubble Sort.<br>
-          Named because larger values "bubble up" to the end with each pass.
-          Time complexity: O(n²) worst/average — simple but inefficient for large n.
+          ✦ ANSWER: B1 — After Pass 1: [ 25, 34, 7, 41, 19, 5, <span class="hl-green">98</span> ]<br>
+          Swaps: 98↔7 → 98↔41 → 98↔19 → 98↔5. One element (98) is now placed.
         </div>
       </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q41</span>
-        <div class="q-text">After completing the FIRST pass, which element is in its final correct position?</div>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q43</span>
+        <div class="q-text">Which array state diagram shows the result after the <strong>SECOND</strong> pass?<br>
+          <small style="color:var(--text-dim)">Hint: Two elements are now in their final positions.</small></div>
         <div class="q-options">
-          <div class="q-opt">a. Smallest value (5)</div>
-          <div class="q-opt">b. Middle value (25)</div>
-          <div class="q-opt correct-ans">c. Largest value (98) ✓</div>
-          <div class="q-opt">d. No element is placed yet</div>
+          <div class="q-opt">B1</div>
+          <div class="q-opt correct-ans">B2</div>
+          <div class="q-opt">B3</div>
+          <div class="q-opt">B4</div>
         </div>
         <div class="q-answer">
-          ✦ ANSWER: c — 98 (the largest value) bubbles all the way to index 6 after Pass 1.<br>
-          Result: [ 25, 34, 7, 41, 19, 5, <span class="hl-green">98</span> ]
+          ✦ ANSWER: B2 — After Pass 2: [ 25, 7, 34, 19, 5, <span class="hl-green">41, 98</span> ]<br>
+          Swaps: 34↔7 → 41↔19 → 41↔5. Two elements placed.
         </div>
       </div>
 
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q42 — After Pass 1</span>
-        <div class="q-text">Which correctly shows the array after the FIRST pass?</div>
-        <div class="q-answer">
-          ✦ Initial: [ 25, 34, 98, 7, 41, 19, 5 ]<br>
-          Swaps: 98↔7 → 98↔41 → 98↔19 → 98↔5<br>
-          ✦ <span class="hl-green">After Pass 1: [ 25, 34, 7, 41, 19, 5, 98 ]</span>
-        </div>
-      </div>
-
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q43 — After Pass 2</span>
-        <div class="q-text">Which correctly shows the array after the SECOND pass?</div>
-        <div class="q-answer">
-          ✦ Working on: [ 25, 34, 7, 41, 19, 5 | 98 ]<br>
-          Swaps: 34↔7 → 41↔19 → 41↔5<br>
-          ✦ <span class="hl-green">After Pass 2: [ 25, 7, 34, 19, 5, 41, 98 ]</span>
-        </div>
-      </div>
-
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q44 — After Pass 3</span>
-        <div class="q-text">Which correctly shows the array after the THIRD pass?</div>
-        <div class="q-answer">
-          ✦ Working on: [ 25, 7, 34, 19, 5 | 41, 98 ]<br>
-          Swaps: 25↔7 → 34↔19 → 34↔5<br>
-          ✦ <span class="hl-green">After Pass 3: [ 7, 25, 19, 5, 34, 41, 98 ]</span>
-        </div>
-      </div>
-
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q45 — After Pass 4</span>
-        <div class="q-text">Which correctly shows the array after the FOURTH pass?</div>
-        <div class="q-answer">
-          ✦ Working on: [ 7, 25, 19, 5 | 34, 41, 98 ]<br>
-          Swaps: 25↔19 → 25↔5<br>
-          ✦ <span class="hl-green">After Pass 4: [ 7, 19, 5, 25, 34, 41, 98 ]</span>
-        </div>
-      </div>
-
-      <div class="q-item" ondblclick="revealAnswer(this)">
-        <span class="q-hint">dbl-click</span>
-        <span class="q-num">// Q46</span>
-        <div class="q-text">How many passes are required to FULLY sort the 7-element array?</div>
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q44</span>
+        <div class="q-text">Which array state diagram shows the result after the <strong>THIRD</strong> pass?<br>
+          <small style="color:var(--text-dim)">Hint: Three elements are now in their final positions.</small></div>
         <div class="q-options">
-          <div class="q-opt">a. 5</div>
-          <div class="q-opt">b. 7</div>
-          <div class="q-opt">c. 8</div>
-          <div class="q-opt correct-ans">d. 6 ✓</div>
+          <div class="q-opt">B1</div>
+          <div class="q-opt">B2</div>
+          <div class="q-opt correct-ans">B3</div>
+          <div class="q-opt">B4</div>
         </div>
         <div class="q-answer">
-          ✦ ANSWER: d — 6 passes (worst case = n−1 for n=7 elements).<br><br>
+          ✦ ANSWER: B3 — After Pass 3: [ 7, 25, 19, 5, <span class="hl-green">34, 41, 98</span> ]<br>
+          Swaps: 25↔7 → 34↔19 → 34↔5. Three elements placed.
+        </div>
+      </div>
+
+      <div class="q-item">
+        <span class="q-hint">dbl-click option</span>
+        <span class="q-num">// Q45</span>
+        <div class="q-text">How many total passes are required to FULLY sort the 7-element array [ 25, 34, 98, 7, 41, 19, 5 ]?</div>
+        <div class="q-options">
+          <div class="q-opt">4</div>
+          <div class="q-opt">5</div>
+          <div class="q-opt correct-ans">6</div>
+          <div class="q-opt">7</div>
+        </div>
+        <div class="q-answer">
+          ✦ ANSWER: 6 passes — worst case = n−1 = 7−1 = 6.<br>
           Pass 5: 19↔5 → [ 7, 5, 19, 25, 34, 41, 98 ]<br>
           Pass 6: 7↔5 → [ <span class="hl-green">5, 7, 19, 25, 34, 41, 98</span> ] ← FULLY SORTED ✓
         </div>
       </div>
     </div>
   </div>
-
   <!-- ── SUBMIT MISSION DATA ── -->
   <div class="submit-wrap" id="submit-wrap">
     <button class="btn-submit" id="submit-btn" onclick="submitMission()">
@@ -1490,7 +1705,7 @@ window.submitMission = async function () {
 
 /* ═══════════════════════════════════════════════════
    DRAWING ENGINE — generateGate(type)
-   Returns an inline SVG string for AND, OR, NAND, NOT
+   Full-label version used internally / post-reveal
 ═══════════════════════════════════════════════════ */
 function generateGate(type) {
   const W = 120, H = 80;
@@ -1543,23 +1758,79 @@ function generateGate(type) {
 }
 
 /* ═══════════════════════════════════════════════════
+   DRAWING ENGINE — generateGateBlind(type, label)
+   Blinded version: no gate-name text, no pre-glow.
+   Input/Output wire lines are plain; shape only.
+═══════════════════════════════════════════════════ */
+function generateGateBlind(type, label) {
+  const W = 120, H = 80;
+  const CYAN = '#00d4ff', FILL = 'rgba(0,25,40,0.82)', SW = 2;
+  const uid  = 'blind_' + type + '_' + Math.random().toString(36).slice(2, 6);
+  const defs = `<defs>
+    <filter id="g${uid}" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>`;
+  const gA = `stroke="${CYAN}" stroke-width="${SW}" fill="${FILL}"
+    stroke-linejoin="round" stroke-linecap="round"`;
+  const lA = `stroke="${CYAN}" stroke-width="${SW}" stroke-linecap="round"`;
+  const bA = `stroke="${CYAN}" stroke-width="${SW}" fill="rgba(0,212,255,0.08)"`;
+  let body = '';
+  switch (type.toUpperCase()) {
+    case 'AND':
+      body = `<path d="M16,14 L56,14 A26,26 0 0 1 56,66 L16,66 Z" ${gA}/>
+        <line x1="0" y1="28" x2="16" y2="28" ${lA}/>
+        <line x1="0" y1="52" x2="16" y2="52" ${lA}/>
+        <line x1="82" y1="40" x2="100" y2="40" ${lA}/>`;
+      break;
+    case 'OR':
+      body = `<path d="M16,14 Q30,14 72,40 Q30,66 16,66 Q28,40 16,14 Z" ${gA}/>
+        <line x1="0" y1="28" x2="24" y2="28" ${lA}/>
+        <line x1="0" y1="52" x2="24" y2="52" ${lA}/>
+        <line x1="72" y1="40" x2="100" y2="40" ${lA}/>`;
+      break;
+    case 'NAND':
+      body = `<path d="M16,14 L52,14 A24,24 0 0 1 52,66 L16,66 Z" ${gA}/>
+        <circle cx="83" cy="40" r="7" ${bA}/>
+        <line x1="0" y1="28" x2="16" y2="28" ${lA}/>
+        <line x1="0" y1="52" x2="16" y2="52" ${lA}/>
+        <line x1="90" y1="40" x2="100" y2="40" ${lA}/>`;
+      break;
+    case 'NOT':
+      body = `<polygon points="12,12 12,68 64,40" ${gA}/>
+        <circle cx="74" cy="40" r="9" ${bA}/>
+        <line x1="0"  y1="40" x2="12"  y2="40" ${lA}/>
+        <line x1="83" y1="40" x2="100" y2="40" ${lA}/>`;
+      break;
+    case 'XOR':
+      body = `<path d="M22,14 Q36,14 76,40 Q36,66 22,66 Q34,40 22,14 Z" ${gA}/>
+        <path d="M10,14 Q18,40 10,66" ${gA} fill="none"/>
+        <line x1="0" y1="28" x2="28" y2="28" ${lA}/>
+        <line x1="0" y1="52" x2="28" y2="52" ${lA}/>
+        <line x1="76" y1="40" x2="100" y2="40" ${lA}/>`;
+      break;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"
+    xmlns="http://www.w3.org/2000/svg" overflow="visible">${defs}${body}</svg>`;
+}
+
+/* ═══════════════════════════════════════════════════
    RENDER: Gate Lab (Scenario 02)
 ═══════════════════════════════════════════════════ */
 function renderGateLab() {
   const el = document.getElementById('gate-lab');
   if (!el) return;
   const config = [
-    { type:'AND',  label:'Diagram A', badge:'AND Gate',  expr:'F = A · B'  },
-    { type:'OR',   label:'Diagram B', badge:'OR Gate',   expr:'F = A + B'  },
-    { type:'NAND', label:'Diagram C', badge:'NAND Gate', expr:"F = (A·B)'" },
-    { type:'NOT',  label:'Diagram D', badge:'NOT Gate',  expr:'F = Ā'      },
+    { type:'AND',  label:'Diagram A' },
+    { type:'OR',   label:'Diagram B' },
+    { type:'NAND', label:'Diagram C' },
+    { type:'NOT',  label:'Diagram D' },
   ];
-  el.innerHTML = config.map(g => `
+ el.innerHTML = config.map(g => `
     <div class="gate-item">
       <div class="gate-label">${g.label}</div>
-      <div class="gate-svg-wrap">${generateGate(g.type)}</div>
-      <div class="gate-badge">${g.badge}</div>
-      <div class="gate-expr">${g.expr}</div>
+      <div class="gate-svg-wrap">${generateGateBlind(g.type, g.label)}</div>
     </div>`).join('');
 }
 
@@ -1575,6 +1846,11 @@ function renderTruthTables() {
     [0,0,0,1],[0,0,1,1],[0,1,0,0],[0,1,1,0],
     [1,0,0,0],[1,0,1,0],[1,1,0,0],[1,1,1,0]
   ];
+ // Option C: F1 = Ā·B̄·C̄  — all three low
+  const ttC = [
+    [0,0,0,1],[0,0,1,0],[0,1,0,0],[0,1,1,0],
+    [1,0,0,0],[1,0,1,0],[1,1,0,0],[1,1,1,0]
+  ];
   const build = (id, data) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1586,6 +1862,7 @@ function renderTruthTables() {
   };
   build('tt-q13a', ttA);
   build('tt-q13b', ttB);
+  build('tt-q13c', ttC);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1595,30 +1872,49 @@ function renderBlockDiagram() {
   const el = document.getElementById('block-diagram');
   if (!el) return;
   const C = '#00d4ff', P = '#9b59ff', G = '#00ff9d', Y = '#f5c842', O = '#ff6b35';
+ // Blinded block diagram — numbered boxes only, no text labels revealed
   el.innerHTML = `<svg viewBox="0 0 560 260" width="100%" style="max-width:560px;" xmlns="http://www.w3.org/2000/svg">
     <defs><filter id="bx-glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="2.5" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter></defs>
-    <rect x="200" y="10" width="160" height="52" rx="9" fill="rgba(0,212,255,0.07)" stroke="${C}" stroke-width="1.5" filter="url(#bx-glow)"/>
-    <text x="280" y="31" text-anchor="middle" fill="${C}" font-family="JetBrains Mono,monospace" font-size="11" letter-spacing="1" font-weight="700">MAIN MEMORY</text>
-    <text x="280" y="50" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="9">RAM / ROM</text>
-    <rect x="200" y="100" width="160" height="64" rx="9" fill="rgba(155,89,255,0.08)" stroke="${P}" stroke-width="1.5" filter="url(#bx-glow)"/>
-    <text x="280" y="126" text-anchor="middle" fill="${P}" font-family="Orbitron,sans-serif" font-size="14" font-weight="900">CPU</text>
-    <text x="280" y="148" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="9">Q24 — Central Processing Unit</text>
-    <rect x="210" y="106" width="62" height="22" rx="4" fill="rgba(155,89,255,0.2)" stroke="rgba(155,89,255,0.5)" stroke-width="1"/>
-    <text x="241" y="121" text-anchor="middle" fill="${P}" font-family="JetBrains Mono,monospace" font-size="8" letter-spacing="0.5">CU · Q25</text>
-    <rect x="392" y="100" width="140" height="64" rx="9" fill="rgba(0,255,157,0.06)" stroke="${G}" stroke-width="1.5" filter="url(#bx-glow)"/>
-    <text x="462" y="126" text-anchor="middle" fill="${G}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">OUTPUT</text>
-    <text x="462" y="143" text-anchor="middle" fill="${G}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">DEVICE</text>
-    <text x="462" y="158" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="8">Q26</text>
-    <rect x="28" y="100" width="140" height="64" rx="9" fill="rgba(245,200,66,0.06)" stroke="${Y}" stroke-width="1.5" filter="url(#bx-glow)"/>
-    <text x="98" y="126" text-anchor="middle" fill="${Y}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">AUXILIARY</text>
-    <text x="98" y="143" text-anchor="middle" fill="${Y}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">STORAGE</text>
-    <text x="98" y="158" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="8">Q27</text>
-    <rect x="200" y="198" width="160" height="52" rx="9" fill="rgba(255,107,53,0.06)" stroke="${O}" stroke-width="1.5" filter="url(#bx-glow)"/>
-    <text x="280" y="220" text-anchor="middle" fill="${O}" font-family="JetBrains Mono,monospace" font-size="10" letter-spacing="1" font-weight="700">INPUT DEVICE</text>
-    <text x="280" y="239" text-anchor="middle" fill="#7a8499" font-family="JetBrains Mono,monospace" font-size="8">Keyboard / Mouse / Sensors</text>
+
+    <!-- Box 1: top-centre -->
+    <rect x="200" y="10" width="160" height="52" rx="9"
+      fill="rgba(0,212,255,0.07)" stroke="${C}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="280" y="42" text-anchor="middle" fill="${C}"
+      font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" letter-spacing="1">BOX 1</text>
+
+    <!-- Box 2: centre — Q24 question target -->
+    <rect x="200" y="100" width="160" height="64" rx="9"
+      fill="rgba(155,89,255,0.08)" stroke="${P}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="280" y="136" text-anchor="middle" fill="${P}"
+      font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" letter-spacing="1">BOX 2</text>
+    <!-- Inner sub-box — Q25 question target -->
+    <rect x="210" y="106" width="62" height="24" rx="4"
+      fill="rgba(155,89,255,0.2)" stroke="rgba(155,89,255,0.5)" stroke-width="1"/>
+    <text x="241" y="123" text-anchor="middle" fill="${P}"
+      font-family="JetBrains Mono,monospace" font-size="8" letter-spacing="0.5">SUB-2</text>
+
+    <!-- Box 3: right — Q26 question target -->
+    <rect x="392" y="100" width="140" height="64" rx="9"
+      fill="rgba(0,255,157,0.06)" stroke="${G}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="462" y="136" text-anchor="middle" fill="${G}"
+      font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" letter-spacing="1">BOX 3</text>
+
+    <!-- Box 4: left — Q27 question target -->
+    <rect x="28" y="100" width="140" height="64" rx="9"
+      fill="rgba(245,200,66,0.06)" stroke="${Y}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="98" y="136" text-anchor="middle" fill="${Y}"
+      font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" letter-spacing="1">BOX 4</text>
+
+    <!-- Box 5: bottom-centre -->
+    <rect x="200" y="198" width="160" height="52" rx="9"
+      fill="rgba(255,107,53,0.06)" stroke="${O}" stroke-width="1.5" filter="url(#bx-glow)"/>
+    <text x="280" y="229" text-anchor="middle" fill="${O}"
+      font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" letter-spacing="1">BOX 5</text>
+
+    <!-- Arrows -->
     <line x1="280" y1="62" x2="280" y2="100" stroke="${C}" stroke-width="1.5" stroke-dasharray="5,3"/>
     <polygon points="280,99 274,88 286,88" fill="${C}"/>
     <line x1="360" y1="132" x2="392" y2="132" stroke="${G}" stroke-width="1.5" stroke-dasharray="5,3"/>
@@ -1627,8 +1923,7 @@ function renderBlockDiagram() {
     <polygon points="202,132 192,127 192,137" fill="${Y}"/>
     <line x1="280" y1="198" x2="280" y2="164" stroke="${O}" stroke-width="1.5" stroke-dasharray="5,3"/>
     <polygon points="280,165 274,175 286,175" fill="${O}"/>
-  </svg>`;
-}
+  </svg>`;}
 
 /* ═══════════════════════════════════════════════════
    RENDER: Assembly Trace Table (Scenario 06)
@@ -1663,10 +1958,13 @@ function renderSortVisual() {
   if (!sc) return;
   const snapshots = [sc.initial, ...sc.passes.slice(0, 3)];
   const labels    = ['Initial', 'After Pass 1', 'After Pass 2', 'After Pass 3'];
+  const snapshots = sc.passes.slice(0, 4);
+  const labels    = ['B1 — After Pass 1', 'B2 — After Pass 2', 'B3 — After Pass 3', 'B4 — After Pass 4'];
   el.innerHTML = snapshots.map((arr, pi) => {
+    const placed = pi + 1; // elements placed at end after this pass
     const cells = arr.map((v, i) => {
-      const placed = pi > 0 && i >= arr.length - pi;
-      return `<div class="sort-cell${placed ? ' placed' : ''}">${v}</div>`;
+      const isPlaced = i >= arr.length - placed;
+      return `<div class="sort-cell${isPlaced ? ' placed' : ''}">${v}</div>`;
     }).join('');
     return `<div class="sort-array"><div class="sort-array-label">${labels[pi]}</div>${cells}</div>`;
   }).join('');

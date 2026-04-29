@@ -1139,14 +1139,81 @@ let maxStreak     = 0;
 let answeredCount = 0;
 let totalQuestions= 0;
 
-// ── Pull identity from localStorage (set by main app on login) ──
-const _raw      = localStorage.getItem("nexus_user") || "{}";
-const _user     = (() => { try { return JSON.parse(_raw); } catch(e) { return {}; } })();
-const nickname  = _user.nickname  || localStorage.getItem("nexus_nickname") || "AGENT";
-const avatar    = _user.avatar    || localStorage.getItem("nexus_avatar")   || "👤";
-const isElite   = ELITE_NAMES.includes(nickname.toLowerCase().trim());
+// ── Pull identity from localStorage — redirect if missing ──
+const _raw  = localStorage.getItem("nexus_user") || "{}";
+const _user = (() => { try { return JSON.parse(_raw); } catch(e) { return {}; } })();
+const nickname    = _user.nickname || localStorage.getItem("nexus_nickname") || "";
+const avatar      = _user.avatar   || localStorage.getItem("nexus_avatar")   || "👤";
+const isElite     = ELITE_NAMES.includes(nickname.toLowerCase().trim());
 const displayName = isElite ? `${nickname} ${ELITE_EMOJI}` : nickname;
 
+// Guard: if no identity, redirect to login
+if (!nickname) {
+  window.location.replace("index1.0.html");
+}
+
+/* ══════════════════════════════════════════════════
+   PERSISTENCE — "Resume" feature
+   Key: nexus_scenario_progress
+   Saves: { score, currentStreak, maxStreak, answeredCount, lockedIds[] }
+══════════════════════════════════════════════════ */
+const PROGRESS_KEY = "nexus_scenario_progress";
+
+function saveProgress(lockedIds) {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify({
+      score, currentStreak, maxStreak, answeredCount,
+      lockedIds: lockedIds || getLockedIds(),
+      savedAt: Date.now(),
+    }));
+  } catch(e) {}
+}
+
+function getLockedIds() {
+  return Array.from(document.querySelectorAll('.q-item.locked'))
+    .map((el, i) => el.dataset.qid || String(i));
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+function clearProgress() {
+  try { localStorage.removeItem(PROGRESS_KEY); } catch(e) {}
+}
+
+function applyProgress(saved) {
+  if (!saved) return;
+  score         = saved.score         || 0;
+  currentStreak = saved.currentStreak || 0;
+  maxStreak     = saved.maxStreak     || 0;
+  answeredCount = saved.answeredCount || 0;
+
+  // Lock all previously answered cards
+  if (Array.isArray(saved.lockedIds)) {
+    saved.lockedIds.forEach(qid => {
+      const el = document.querySelector(`.q-item[data-qid="${qid}"]`) ||
+                 document.querySelectorAll('.q-item')[parseInt(qid)];
+      if (el) {
+        el.classList.add('locked', 'revealed');
+        const ans = el.querySelector('.q-answer');
+        if (ans) ans.style.display = 'block';
+        const correct = el.querySelector('.q-opt.correct-ans');
+        if (correct) correct.classList.add('sel-correct');
+      }
+    });
+  }
+
+  updateHUD();
+  if (answeredCount >= totalQuestions && totalQuestions > 0) {
+    const wrap = document.getElementById('submit-wrap');
+    if (wrap) wrap.classList.add('visible');
+  }
+}
 /* ═══════════════════════════════════════════════════
    SCENARIO DATA  (local const — source of truth)
 ═══════════════════════════════════════════════════ */
@@ -1307,7 +1374,8 @@ function labToast(msg, type = 'info', duration = 2800) {
 ═══════════════════════════════════════════════════ */
 function lockOption(cardEl, optEl) {
   if (cardEl.classList.contains('locked')) return;
-
+  // Persist progress after lock
+  const doSave = () => saveProgress(getLockedIds());
   const isCorrect = optEl.classList.contains('correct-ans');
   const answerBox = cardEl.querySelector('.q-answer');
 
@@ -1342,6 +1410,7 @@ function lockOption(cardEl, optEl) {
   answeredCount++;
   updateHUD();
   checkMissionComplete();
+  saveProgress(getLockedIds());
   scrollToNextQuestion(cardEl);
 }
 
@@ -1351,7 +1420,6 @@ function lockOption(cardEl, optEl) {
 function revealFreeText(cardEl) {
   if (cardEl.classList.contains('locked')) return;
   cardEl.classList.add('revealed', 'locked');
-
   const answerBox = cardEl.querySelector('.q-answer');
   if (answerBox) { answerBox.style.display = 'block'; }
 
@@ -1650,6 +1718,11 @@ function wireQuizInteractions() {
   totalQuestions = items.length;
   document.getElementById('hud-total').textContent = totalQuestions;
 
+  // Stamp a stable ID on each card for persistence
+  items.forEach((item, idx) => {
+    item.dataset.qid = String(idx);
+  });
+
   items.forEach(item => {
     item.removeAttribute('ondblclick');
     const opts = item.querySelectorAll('.q-opt');
@@ -1694,6 +1767,20 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSortVisual();
   wireQuizInteractions();
   observeCards();
+
+  // ── Resume feature: restore previous session if it exists ──
+  const saved = loadProgress();
+  if (saved && saved.answeredCount > 0) {
+    applyProgress(saved);
+    labToast(`▶ Session restored — ${saved.answeredCount} answered`, 'info', 3500);
+    // Scroll to first unanswered question
+    setTimeout(() => {
+      const nextCard = Array.from(document.querySelectorAll('.q-item'))
+        .find(el => !el.classList.contains('locked'));
+      if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 800);
+  }
+
   updateHUD();
   window.addEventListener('scroll', updateScrollBar, { passive: true });
 });

@@ -1163,6 +1163,704 @@ const QUESTIONS = {
     { topic: "Hardware",              q: "Moore's Law states that transistor count doubles approximately every?",                                 opts: ["6 months","1 year","2 years","5 years"],                                                ans: 2, exp: "Moore's Law: transistor count ~doubles every 2 years." },
     { topic: "Software",              q: "Open source software means the source code is?",                                                       opts: ["Expensive","Publicly available","Encrypted","Only on Linux"],                           ans: 1, exp: "Open source: source code is freely available to view and modify." },
     { topic: "Software",              q: "A compiler translates?",                                                                               opts: ["Binary to source","High-level to machine code","Assembly to hex","Machine code to C"], ans: 1, exp: "Compiler: translates entire high-level program to machine code." },
+    const IA_QUESTIONS = [
+  // SECTION 1 — Digital Logic & Boolean Algebra [cite: 6]
+  { 
+    topic: "Digital Logic", 
+    q: "A transistor in digital circuits functions primarily as a:", 
+    opts: ["Oscillator", "Storage cell", "Amplifier only", "Switch"], 
+    ans: 3, 
+    exp: "In digital circuits, transistors act as electronic switches — they are either ON (conducting) or OFF (not conducting), representing binary 1 and 0." 
+  }, // [cite: 7]
+  { 
+    topic: "Digital Logic", 
+    q: "(A · B) + (A · B') simplifies to:", 
+    opts: ["A + B", "B", "AB", "A"], 
+    ans: 3, 
+    exp: "Factor out A: A(B + B'). Since B + B' = 1 (Complement Law), the result is A · 1 = A." 
+  }, // [cite: 8]
+  { 
+    topic: "Digital Logic", 
+    q: "A + AB simplifies to:", 
+    opts: ["AB", "A", "B", "A + B"], 
+    ans: 1, 
+    exp: "This is the Absorption Law: A + AB = A. A already 'contains' AB, so AB is redundant." 
+  }, // [cite: 9]
+  { 
+    topic: "Digital Logic", 
+    q: "If a function simplifies to a single variable, it indicates:", 
+    opts: ["Gate expansion", "Loss of correctness", "Redundant terms existed", "Memory reduction"], 
+    ans: 2, 
+    exp: "Simplification to a single variable means the original expression contained redundant terms that were eliminated." 
+  }, // [cite: 10]
+  { 
+    topic: "Digital Logic", 
+    q: "If a circuit simplifies from 3 levels to 2 levels, the most direct benefit is:", 
+    opts: ["Reduced propagation delay", "Wider bus", "Lower memory", "Larger word size"], 
+    ans: 0, 
+    exp: "Fewer gate levels means signals pass through fewer gates, directly reducing cumulative propagation delay." 
+  }, // [cite: 11]
+  { 
+    topic: "Digital Logic", 
+    q: "If a circuit simplifies from 4 gates to 2 gates, propagation delay likely:", 
+    opts: ["Stays same", "Decreases", "Increases", "Doubles"], 
+    ans: 1, 
+    exp: "Fewer gates means fewer delays in the signal path, so propagation delay decreases." 
+  }, // [cite: 12]
+  { 
+    topic: "Digital Logic", 
+    q: "In the expression A + B, the '+' operator represents:", 
+    opts: ["AND", "OR", "NOT", "XOR"], 
+    ans: 1, 
+    exp: "In Boolean algebra, '+' denotes the logical OR operation." 
+  }, // [cite: 13]
+  { 
+    topic: "Digital Logic", 
+    q: "In Boolean algebra, the '.' operator represents:", 
+    opts: ["AND", "OR", "NOT", "NAND"], 
+    ans: 0, 
+    exp: "The dot '.' denotes the logical AND operation in Boolean algebra." 
+  }, // [cite: 14]
+  { 
+    topic: "Digital Logic", 
+    q: "The Boolean expression AB + AC can be factored as:", 
+    opts: ["A(B + C)", "AB + C", "A + BC", "(A+B)(A+C)"], 
+    ans: 0, 
+    exp: "Applying the Distributive Law: AB + AC = A(B + C)." 
+  }, // [cite: 15]
+  { 
+    topic: "Digital Logic", 
+    q: "In logic simplification, A · 1 equals:", 
+    opts: ["A", "1", "0", "A'"], 
+    ans: 0, 
+    exp: "Identity Law for AND: A · 1 = A. Multiplying any value by 1 leaves it unchanged." 
+  }, // [cite: 16]
+  { 
+    topic: "Digital Logic", 
+    q: "In logic simplification, A + 0 equals:", 
+    opts: ["A", "0", "1", "A'"], 
+    ans: 0, 
+    exp: "Identity Law for OR: A + 0 = A. Adding 0 to any value leaves it unchanged." 
+  }, // [cite: 17]
+  { 
+    topic: "Digital Logic", 
+    q: "Double negation (A'') is equal to:", 
+    opts: ["A", "A'", "1", "0"], 
+    ans: 0, 
+    exp: "Double Negation Law: NOT(NOT A) = A. Inverting a signal twice returns the original." 
+  }, // [cite: 18]
+  { 
+    topic: "Digital Logic", 
+    q: "The identity A + A simplifies to:", 
+    opts: ["A", "A²", "2A", "1"], 
+    ans: 0, 
+    exp: "Idempotent Law for OR: A + A = A. A signal OR'd with itself remains A." 
+  }, // [cite: 19]
+  { 
+    topic: "Digital Logic", 
+    q: "A · (A + B) simplifies to:", 
+    opts: ["AB", "A", "A + B", "B"], 
+    ans: 1, 
+    exp: "Absorption Law: A · (A + B) = A. Distributing: A·A + A·B = A + AB = A." 
+  }, // [cite: 20]
+  { 
+    topic: "Digital Logic", 
+    q: "A + A'B simplifies to:", 
+    opts: ["A", "B", "A + B", "AB"], 
+    ans: 2, 
+    exp: "By the Redundancy/Consensus Law: A + A'B = (A + A')(A + B) = 1·(A + B) = A + B." 
+  }, // [cite: 21]
+  { 
+    topic: "Digital Logic", 
+    q: "A(B + C) expands/simplifies using the Distributive Law to:", 
+    opts: ["AB + AC", "A + BC", "ABC", "(A+B)(A+C)"], 
+    ans: 0, 
+    exp: "Distributive Law of AND over OR: A(B + C) = AB + AC." 
+  }, // [cite: 22]
+  { 
+    topic: "Digital Logic", 
+    q: "De Morgan's first law states that (A + B)' equals:", 
+    opts: ["A' + B'", "A' · B'", "A + B", "AB"], 
+    ans: 1, 
+    exp: "De Morgan's First Law: NOT(A OR B) = (NOT A) AND (NOT B). The NOR gate output equals AND of complements." 
+  }, // [cite: 23]
+  { 
+    topic: "Digital Logic", 
+    q: "De Morgan's second law states that (A · B)' equals:", 
+    opts: ["A' + B'", "A' · B'", "AB", "A + B"], 
+    ans: 0, 
+    exp: "De Morgan's Second Law: NOT(A AND B) = (NOT A) OR (NOT B). The NAND gate output equals OR of complements." 
+  }, // [cite: 24]
+  { 
+    topic: "Digital Logic", 
+    q: "A · A simplifies to:", 
+    opts: ["A²", "A", "1", "0"], 
+    ans: 1, 
+    exp: "Idempotent Law for AND: A · A = A." 
+  }, // [cite: 25]
+  { 
+    topic: "Digital Logic", 
+    q: "A · A' simplifies to:", 
+    opts: ["A", "1", "0", "A'"], 
+    ans: 2, 
+    exp: "Complement Law for AND: A · A' = 0. A variable AND'd with its complement is always 0." 
+  }, // [cite: 26]
+  { 
+    topic: "Digital Logic", 
+    q: "In Boolean algebra, 1 + A equals:", 
+    opts: ["A", "1", "0", "A'"], 
+    ans: 1, 
+    exp: "Annihilator/Domination Law for OR: 1 + A = 1. Once you have a 1, OR with anything remains 1." 
+  }, // [cite: 27]
+  { 
+    topic: "Digital Logic", 
+    q: "The expression A · A' equals:", 
+    opts: ["A", "1", "0", "A'"], 
+    ans: 2, 
+    exp: "Complement Law: A AND NOT-A is always 0 — a contradiction." 
+  }, // [cite: 28]
+  { 
+    topic: "Digital Logic", 
+    q: "A Karnaugh map (K-map) is used primarily for:", 
+    opts: ["Data storage", "Logic simplification", "Circuit simulation", "Network mapping"], 
+    ans: 1, 
+    exp: "K-maps provide a visual method for minimising Boolean expressions by grouping adjacent 1s to eliminate variables." 
+  }, // [cite: 29]
+  { 
+    topic: "Digital Logic", 
+    q: "A logical circuit with many inputs and one output is a:", 
+    opts: ["Multiplexer", "Decoder", "Counter", "Logic gate"], 
+    ans: 3, 
+    exp: "A basic Logic Gate (AND, OR, NAND, etc.) takes multiple inputs and produces a single output based on a Boolean function." 
+  }, // [cite: 30]
+  { 
+    topic: "Digital Logic", 
+    q: "A NAND gate is considered 'universal' because:", 
+    opts: ["It is used in all computers", "It can implement any Boolean function", "It has high speed", "It consumes low power"], 
+    ans: 1, 
+    exp: "NAND (and NOR) gates are universal because any Boolean function — AND, OR, NOT, XOR, etc. — can be built using only NAND gates." 
+  }, // [cite: 31]
+
+  // SECTION 2 — Combinational & Sequential Logic [cite: 32]
+  { 
+    topic: "Combinational Logic", 
+    q: "A circuit that adds two single bits is a:", 
+    opts: ["Half-adder", "Full-adder", "Multiplexer", "Decoder"], 
+    ans: 0, 
+    exp: "A Half-adder takes two 1-bit inputs and produces a Sum and Carry output, with no carry-in." 
+  }, // [cite: 33]
+  { 
+    topic: "Combinational Logic", 
+    q: "To add three bits (including a carry-in), you need a:", 
+    opts: ["Half-adder", "Full-adder", "Subtractor", "Comparator"], 
+    ans: 1, 
+    exp: "A Full-adder adds three bits (A, B, and Carry-in) producing a Sum and Carry-out." 
+  }, // [cite: 34]
+  { 
+    topic: "Sequential Logic", 
+    q: "A flip-flop is a basic element used for:", 
+    opts: ["Arithmetic", "Memory/Storage", "Signal amplification", "Decoding"], 
+    ans: 1, 
+    exp: "A flip-flop is a bistable element that can store 1 bit of information, forming the basis of sequential logic and memory." 
+  }, // [cite: 35]
+  { 
+    topic: "Sequential Logic", 
+    q: "A group of flip-flops used to store multiple bits is a:", 
+    opts: ["Register", "Gate", "Bus", "Decoder"], 
+    ans: 0, 
+    exp: "Registers are collections of flip-flops working together to store a multi-bit value (e.g., the Accumulator, PC, MDR)." 
+  }, // [cite: 36]
+  { 
+    topic: "Combinational Logic", 
+    q: "A multiplexer (MUX) is used to:", 
+    opts: ["Decode instructions", "Select one of several inputs to be the output", "Count clock pulses", "Store permanent data"], 
+    ans: 1, 
+    exp: "A MUX uses select lines to route one of several data inputs to a single output." 
+  }, // [cite: 37]
+  { 
+    topic: "Combinational Logic", 
+    q: "A decoder is used to:", 
+    opts: ["Convert a binary code to a set of output lines", "Add binary numbers", "Store data bits", "Reduce propagation delay"], 
+    ans: 0, 
+    exp: "A decoder activates exactly one of its 2^n output lines based on the n-bit binary input (e.g., a 3-to-8 decoder)." 
+  }, // [cite: 38]
+  { 
+    topic: "Combinational Logic", 
+    q: "A magnitude comparator is used to:", 
+    opts: ["Compare two binary numbers", "Multiply two binary numbers", "Shift data bits", "Invert logic levels"], 
+    ans: 0, 
+    exp: "A magnitude comparator determines whether A > B, A = B, or A < B for two binary numbers." 
+  }, // [cite: 39]
+
+  // SECTION 3 — CPU Registers & Fetch-Decode-Execute Cycle [cite: 40]
+  { 
+    topic: "CPU Registers", 
+    q: "PC (Program Counter) updates during fetch by:", 
+    opts: ["Negating", "Clearing", "Shifting", "Incrementing"], 
+    ans: 3, 
+    exp: "After fetching an instruction, the PC is incremented to point to the next instruction's address in memory." 
+  }, // [cite: 41]
+  { 
+    topic: "CPU Registers", 
+    q: "MAR (Memory Address Register) sends its value to:", 
+    opts: ["Control bus", "Address bus", "ACC", "Data bus"], 
+    ans: 1, 
+    exp: "The MAR holds the memory address to be accessed and places it onto the Address Bus so memory knows where to read/write." 
+  }, // [cite: 42]
+  { 
+    topic: "CPU Registers", 
+    q: "Register-to-register transfer avoids:", 
+    opts: ["PC", "Main memory latency", "ALU", "CU"], 
+    ans: 1, 
+    exp: "Transferring data between CPU registers (e.g., ACC to MDR) bypasses slow main memory access, significantly reducing latency." 
+  }, // [cite: 43]
+  { 
+    topic: "CPU Registers", 
+    q: "During decode, CU (Control Unit) uses information from:", 
+    opts: ["MAR", "CIR (Current Instruction Register)", "ACC", "PC"], 
+    ans: 1, 
+    exp: "The CIR holds the currently fetched instruction. The Control Unit reads the opcode from the CIR during the Decode phase." 
+  }, // [cite: 44]
+  { 
+    topic: "CPU", 
+    q: "Which component is responsible for generating the clock signal?", 
+    opts: ["ALU", "CU", "System Clock", "RAM"], 
+    ans: 2, 
+    exp: "The System Clock (crystal oscillator) generates a regular pulse that synchronises all CPU operations." 
+  }, // [cite: 45]
+  { 
+    topic: "CPU Registers", 
+    q: "A register that stores the memory address of the next instruction is the:", 
+    opts: ["CIR", "MAR", "PC (Program Counter)", "MDR"], 
+    ans: 2, 
+    exp: "The Program Counter always holds the address of the next instruction to be fetched from memory." 
+  }, // [cite: 46]
+  { 
+    topic: "CPU Registers", 
+    q: "Which register holds the instruction currently being executed?", 
+    opts: ["MAR", "PC", "CIR", "MDR"], 
+    ans: 2, 
+    exp: "The Current Instruction Register (CIR) holds the instruction that has been fetched and is being decoded/executed." 
+  }, // [cite: 47]
+  { 
+    topic: "CPU", 
+    q: "Control signals are generated by the:", 
+    opts: ["ALU", "CU", "RAM", "MAR"], 
+    ans: 1, 
+    exp: "The Control Unit (CU) decodes instructions and generates timing and control signals to coordinate all CPU components." 
+  }, // [cite: 48]
+  { 
+    topic: "CPU", 
+    q: "The Fetch-Decode-Execute cycle is managed by the:", 
+    opts: ["ALU", "CU (Control Unit)", "RAM", "SSD"], 
+    ans: 1, 
+    exp: "The Control Unit orchestrates each phase of the FDE cycle: sending fetch signals, decoding the instruction, and issuing execute signals." 
+  }, // [cite: 49]
+  { 
+    topic: "CPU Registers", 
+    q: "A branch instruction modifies the value of the:", 
+    opts: ["ALU", "PC (Program Counter)", "MAR", "CIR"], 
+    ans: 1, 
+    exp: "A branch/jump instruction loads the target address into the PC, causing the next fetch to come from a different memory location." 
+  }, // [cite: 50]
+  { 
+    topic: "CPU Registers", 
+    q: "High-speed storage within the CPU is called:", 
+    opts: ["RAM", "ROM", "Register", "Cache"], 
+    ans: 2, 
+    exp: "Registers are the fastest storage locations, physically located inside the CPU chip itself." 
+  }, // [cite: 51]
+  { 
+    topic: "CPU Registers", 
+    q: "Which register acts as a temporary buffer for data from memory?", 
+    opts: ["PC", "MAR", "MDR (Memory Data Register)", "ACC"], 
+    ans: 2, 
+    exp: "The MDR (also called MBR — Memory Buffer Register) holds the data that has just been read from, or is about to be written to, memory." 
+  }, // [cite: 52]
+  { 
+    topic: "CPU Registers", 
+    q: "The result of an arithmetic operation is typically stored in the:", 
+    opts: ["CIR", "PC", "ACC (Accumulator)", "MAR"], 
+    ans: 2, 
+    exp: "The Accumulator is the primary working register for the ALU — intermediate and final arithmetic/logic results are stored here." 
+  }, // [cite: 53]
+  { 
+    topic: "CPU", 
+    q: "Which component decodes the instruction?", 
+    opts: ["ALU", "Registers", "Control Unit", "RAM"], 
+    ans: 2, 
+    exp: "The Control Unit reads the opcode from the CIR and decodes it to determine what operations to perform." 
+  }, // [cite: 54]
+  { 
+    topic: "CPU", 
+    q: "The process of executing an instruction involves:", 
+    opts: ["Fetch, Decode, Execute", "Read, Write, Delete", "Input, Process, Output", "Load, Store, Move"], 
+    ans: 0, 
+    exp: "The Fetch-Decode-Execute (FDE) cycle is the fundamental operation loop of every CPU." 
+  }, // [cite: 55]
+  { 
+    topic: "CPU Registers", 
+    q: "Which register holds the data being written to or read from memory?", 
+    opts: ["PC", "MAR", "MDR (Memory Data Register)", "ACC"], 
+    ans: 2, 
+    exp: "The MDR serves as a data buffer between the CPU and main memory for both read and write operations." 
+  }, // [cite: 56]
+  { 
+    topic: "CPU", 
+    q: "A 64-bit processor has a word size of:", 
+    opts: ["8 bytes", "64 bits", "32 bits", "128 bits"], 
+    ans: 1, 
+    exp: "A processor's word size equals its bit-architecture. A 64-bit processor has a 64-bit word size (which also equals 8 bytes, but the most precise answer is 64 bits)." 
+  }, // [cite: 57]
+
+  // SECTION 4 — Computer Architecture & Buses [cite: 58]
+  { 
+    topic: "Architecture", 
+    q: "The connection between the CPU and memory is called the:", 
+    opts: ["System Bus", "Network", "Pipeline", "Cache link"], 
+    ans: 0, 
+    exp: "The System Bus is the collective term for the data, address, and control buses that connect the CPU to memory and I/O." 
+  }, // [cite: 59]
+  { 
+    topic: "Architecture", 
+    q: "Which bus is used to specify the memory location to be accessed?", 
+    opts: ["Address bus", "Data bus", "Control bus", "I/O bus"], 
+    ans: 0, 
+    exp: "The Address Bus carries the memory address from the CPU to memory or I/O, indicating the location to be accessed." 
+  }, // [cite: 60]
+  { 
+    topic: "Architecture", 
+    q: "Data moves from memory to CPU via:", 
+    opts: ["Address bus", "Control bus", "Data bus", "PC"], 
+    ans: 2, 
+    exp: "The Data Bus is bidirectional and carries actual data values between the CPU, memory, and I/O devices." 
+  }, // [cite: 61]
+  { 
+    topic: "Architecture", 
+    q: "The ALU performs:", 
+    opts: ["Data storage", "Arithmetic and logical operations", "Instruction decoding", "Clock timing"], 
+    ans: 1, 
+    exp: "The Arithmetic Logic Unit (ALU) performs both arithmetic operations (add, subtract) and logical operations (AND, OR, compare)." 
+  }, // [cite: 62]
+  { 
+    topic: "Architecture", 
+    q: "The width of the data bus determines:", 
+    opts: ["The maximum memory capacity", "How much data can be moved at once", "The CPU clock speed", "The number of registers"], 
+    ans: 1, 
+    exp: "A wider data bus transfers more bits per cycle (e.g., 64-bit bus moves 8 bytes per transfer), determining throughput." 
+  }, // [cite: 63]
+  { 
+    topic: "Architecture", 
+    q: "The address bus is 'unidirectional' because:", 
+    opts: ["Addresses only flow from CPU to memory", "It is faster that way", "It reduces noise", "Data only flows one way"], 
+    ans: 0, 
+    exp: "The CPU always initiates memory accesses by placing an address on the bus. Memory never sends addresses back to the CPU — only data (via the Data Bus)." 
+  }, // [cite: 64]
+  { 
+    topic: "Architecture", 
+    q: "Cache memory is used to bridge the speed gap between:", 
+    opts: ["CPU and RAM", "RAM and Hard Drive", "CPU and GPU", "Input and Output devices"], 
+    ans: 0, 
+    exp: "Cache sits between the fast CPU and slower RAM, storing frequently accessed data to reduce the average memory access time." 
+  }, // [cite: 65]
+  { 
+    topic: "Architecture", 
+    q: "Increasing the number of stages in a pipeline generally:", 
+    opts: ["Decreases latency", "Increases throughput", "Simplifies logic", "Reduces clock speed"], 
+    ans: 1, 
+    exp: "More pipeline stages allow more instructions to be in-flight simultaneously, increasing throughput (instructions completed per unit time). However, it can increase latency per individual instruction." 
+  }, // [cite: 66]
+  { 
+    topic: "Architecture", 
+    q: "The time taken to complete a single instruction is:", 
+    opts: ["Latency", "Throughput", "Clock speed", "Bandwidth"], 
+    ans: 0, 
+    exp: "Latency is the delay from when an operation starts to when it completes. Throughput refers to how many operations complete per unit time." 
+  }, // [cite: 67]
+  { 
+    topic: "Architecture", 
+    q: "Pipelining improves CPU performance primarily by increasing:", 
+    opts: ["Latency", "Throughput", "Word size", "Cache size"], 
+    ans: 1, 
+    exp: "Pipelining overlaps the FDE stages of multiple instructions, completing more instructions per clock cycle (higher throughput) without changing individual instruction latency." 
+  }, // [cite: 68]
+  { 
+    topic: "Architecture", 
+    q: "CISC (Complex Instruction Set Computer) architectures focus on:", 
+    opts: ["Reducing the number of instructions per program", "Increasing clock speed", "Reducing instruction complexity", "Using only simple registers"], 
+    ans: 0, 
+    exp: "CISC aims to accomplish tasks in fewer lines of assembly code by having powerful, complex instructions (e.g., x86). Each instruction may take multiple clock cycles." 
+  }, // [cite: 69]
+  { 
+    topic: "Architecture", 
+    q: "RISC (Reduced Instruction Set Computer) architectures focus on:", 
+    opts: ["Complex instructions", "Simple instructions that execute in one cycle", "Large instruction sets", "Hardware-heavy decoding"], 
+    ans: 1, 
+    exp: "RISC (e.g., ARM) uses simple, uniform instructions that each complete in one clock cycle, relying on the compiler to optimise code." 
+  }, // [cite: 70]
+
+  // SECTION 5 — Memory Systems [cite: 71]
+  { 
+    topic: "Memory", 
+    q: "Static RAM (SRAM) is typically used for:", 
+    opts: ["Cache memory", "Main memory", "Hard drives", "BIOS storage"], 
+    ans: 0, 
+    exp: "SRAM is faster but more expensive and physically larger than DRAM. Its speed makes it ideal for CPU cache (L1, L2, L3)." 
+  }, // [cite: 72]
+  { 
+    topic: "Memory", 
+    q: "Dynamic RAM (DRAM) requires periodic:", 
+    opts: ["Refreshing", "Decoding", "Amplification", "Resetting"], 
+    ans: 0, 
+    exp: "DRAM stores charge in capacitors that leak over time. Periodic refresh cycles re-charge the capacitors to prevent data loss." 
+  }, // [cite: 73]
+  { 
+    topic: "Memory", 
+    q: "Virtual memory is used to:", 
+    opts: ["Allow programs larger than physical RAM to run", "Speed up the CPU clock", "Reduce the number of registers", "Improve network bandwidth"], 
+    ans: 0, 
+    exp: "Virtual memory extends available memory by using disk space as an overflow area, allowing the OS to run programs larger than physical RAM." 
+  }, // [cite: 74]
+  { 
+    topic: "Memory", 
+    q: "The 'Von Neumann bottleneck' refers to the limited speed between:", 
+    opts: ["CPU and memory", "Input and Output", "ALU and Registers", "L1 and L2 cache"], 
+    ans: 0, 
+    exp: "Von Neumann architecture shares a single bus for data and instructions. The slow CPU-to-memory bandwidth relative to CPU speed creates this bottleneck." 
+  }, // [cite: 75]
+  { 
+    topic: "Memory", 
+    q: "Which of the following is a non-volatile memory?", 
+    opts: ["RAM", "ROM", "Cache", "L1 buffer"], 
+    ans: 1, 
+    exp: "ROM (Read-Only Memory) retains its data when power is removed (non-volatile). RAM, Cache, and L1 are all volatile." 
+  }, // [cite: 76]
+  { 
+    topic: "Memory", 
+    q: "The 'BIOS' is stored in:", 
+    opts: ["RAM", "ROM/Flash memory", "Hard drive", "CPU cache"], 
+    ans: 1, 
+    exp: "BIOS/UEFI firmware is stored in non-volatile ROM or Flash memory on the motherboard so it persists without power." 
+  }, // [cite: 77]
+
+  // SECTION 6 — 8051 Microcontroller & Assembly [cite: 78]
+  { 
+    topic: "Microcontrollers", 
+    q: "In an 8051 microcontroller, the internal RAM size is typically:", 
+    opts: ["128 bytes", "256 bytes", "512 bytes", "1 KB"], 
+    ans: 0, 
+    exp: "The standard 8051 has 128 bytes of internal data RAM (addresses 00H–7FH). Some enhanced variants have 256 bytes." 
+  }, // [cite: 79]
+  { 
+    topic: "Microcontrollers", 
+    q: "The register used as a default destination for many arithmetic operations in the 8051 is the:", 
+    opts: ["Accumulator (A)", "B Register", "DPTR", "Stack Pointer"], 
+    ans: 0, 
+    exp: "In the 8051, the Accumulator (register A) is the primary working register for arithmetic and logical operations." 
+  }, // [cite: 80]
+  { 
+    topic: "Microcontrollers", 
+    q: "Which addressing mode uses a constant value within the instruction itself?", 
+    opts: ["Immediate addressing", "Direct addressing", "Indirect addressing", "Register addressing"], 
+    ans: 0, 
+    exp: "Immediate addressing embeds the data constant directly in the instruction (e.g., MOV A, #25H — the value 25H is in the instruction)." 
+  }, // [cite: 81]
+  { 
+    topic: "Microcontrollers", 
+    q: "The file extension for a compiled 8051 assembly program ready to be burned into the microcontroller is:", 
+    opts: [".asm", ".txt", ".hex", ".obj"], 
+    ans: 2, 
+    exp: "An assembler converts .asm source code to a .hex (Intel HEX format) file which programmers use to flash the microcontroller." 
+  }, // [cite: 82]
+  { 
+    topic: "Microcontrollers", 
+    q: "A 'bit-addressable' memory location allows you to:", 
+    opts: ["Access individual bits within a byte", "Store only 1-bit values", "Use only the carry flag", "Increase the speed of the data bus"], 
+    ans: 0, 
+    exp: "The 8051 has a special bit-addressable region (20H–2FH in internal RAM) where individual bits can be set, cleared, or tested directly." 
+  }, // [cite: 83]
+  { 
+    topic: "Microcontrollers", 
+    q: "The instruction CLR A will:", 
+    opts: ["Set the Accumulator to 255", "Clear the Accumulator to 0", "Clear the Carry flag", "Complement the Accumulator"], 
+    ans: 1, 
+    exp: "CLR A zeroes the Accumulator (sets all 8 bits to 0). To clear the Carry flag specifically, use CLR C." 
+  }, // [cite: 84]
+  { 
+    topic: "Microcontrollers", 
+    q: "Which of the following is a data transfer instruction?", 
+    opts: ["MOV", "ADD", "ANL", "SJMP"], 
+    ans: 0, 
+    exp: "MOV is the primary data transfer instruction in 8051 assembly. ADD is arithmetic, ANL is logical, SJMP is a branch." 
+  }, // [cite: 85]
+  { 
+    topic: "Microcontrollers", 
+    q: "In the instruction MOV A, @R0, the symbol @ means:", 
+    opts: ["Add the value", "Use immediate data", "Use the address stored in the register (Indirect addressing)", "Use direct memory"], 
+    ans: 2, 
+    exp: "The @ symbol denotes indirect addressing: R0 contains a memory address, and the CPU reads the data from that address." 
+  }, // [cite: 86]
+
+  // SECTION 7 — General Computer Architecture [cite: 87]
+  { 
+    topic: "Architecture", 
+    q: "If a processor has a 16-bit address bus, the maximum number of addressable memory locations is:", 
+    opts: ["32,768", "16,384", "65,536", "131,072"], 
+    ans: 2, 
+    exp: "With a 16-bit address bus: 2^16 = 65,536 unique addresses (64 KB of addressable space)." 
+  }, // [cite: 88]
+  { 
+    topic: "Microcontrollers", 
+    q: "Which of the following is NOT typically part of a microcontroller?", 
+    opts: ["CPU", "Program memory", "Input/Output ports", "Hard disk drive"], 
+    ans: 3, 
+    exp: "Microcontrollers integrate CPU, memory, and I/O on a single chip. Hard disk drives are external mass storage — too large and power-hungry for embedded use." 
+  }, // [cite: 89]
+  { 
+    topic: "Architecture", 
+    q: "Each machine instruction typically consists of:", 
+    opts: ["Address and Register", "Data and Control", "Opcode and Operand", "Memory and Stack"], 
+    ans: 2, 
+    exp: "An instruction has an Opcode (what operation to perform) and an Operand (the data or address to operate on)." 
+  }, // [cite: 90]
+  { 
+    topic: "Architecture", 
+    q: "The program that translates assembly language into machine code is called an:", 
+    opts: ["Interpreter", "Compiler", "Assembler", "Loader"], 
+    ans: 2, 
+    exp: "An Assembler performs a one-to-one translation of assembly mnemonics (e.g., MOV, ADD) into binary machine code." 
+  }, // [cite: 91]
+  { 
+    topic: "Architecture", 
+    q: "Which type of instruction controls the flow of a program?", 
+    opts: ["Logical instruction", "Arithmetic instruction", "Data transfer instruction", "Branch instruction"], 
+    ans: 3, 
+    exp: "Branch (jump) instructions modify the Program Counter to redirect execution flow (e.g., loops, conditionals, subroutine calls)." 
+  }, // [cite: 92]
+
+  // SECTION 8 — Networking & Operating Systems [cite: 93]
+  { 
+    topic: "Networking", 
+    q: "A set of rules governing data exchange is a:", 
+    opts: ["Topology", "Protocol", "Bandwidth", "Latency"], 
+    ans: 1, 
+    exp: "A network protocol (e.g., TCP/IP, HTTP) defines the rules and formats for communication between devices." 
+  }, // [cite: 94]
+  { 
+    topic: "Networking", 
+    q: "The 'star' topology uses a central:", 
+    opts: ["Hub or Switch", "Bus line", "Ring connection", "Gateway"], 
+    ans: 0, 
+    exp: "In a star topology, all devices connect to a central hub or switch, which manages traffic between nodes." 
+  }, // [cite: 95]
+  { 
+    topic: "Networking", 
+    q: "Which layer of the OSI model is responsible for routing packets?", 
+    opts: ["Physical", "Data Link", "Network", "Transport"], 
+    ans: 2, 
+    exp: "Layer 3 (Network Layer) is responsible for logical addressing (IP) and routing packets across interconnected networks." 
+  }, // [cite: 96]
+  { 
+    topic: "Networking", 
+    q: "An IP address is used to identify a device on a:", 
+    opts: ["Network", "Local bus", "CPU register", "Cache line"], 
+    ans: 0, 
+    exp: "An IP address (IPv4 or IPv6) uniquely identifies a host on a network, enabling routing of packets to the correct destination." 
+  }, // [cite: 97]
+  { 
+    topic: "OS", 
+    q: "The primary function of an Operating System (OS) is:", 
+    opts: ["Word processing", "Resource management", "Internet browsing", "Graphic design"], 
+    ans: 1, 
+    exp: "An OS manages hardware resources (CPU, memory, I/O) and provides a platform for application software to run." 
+  }, // [cite: 98]
+  { 
+    topic: "OS", 
+    q: "Which of the following is an example of system software?", 
+    opts: ["Device driver", "Spreadsheet", "Video player", "Web browser"], 
+    ans: 0, 
+    exp: "Device drivers are system software that allow the OS to communicate with hardware devices." 
+  }, // [cite: 99]
+  { 
+    topic: "OS", 
+    q: "'Multitasking' in an OS refers to:", 
+    opts: ["Running multiple programs simultaneously", "Multiple users on one computer", "Using multiple monitors", "Installing multiple OSs"], 
+    ans: 0, 
+    exp: "Multitasking allows the OS to interleave or parallelise the execution of multiple programs, giving the appearance of simultaneous execution." 
+  }, // [cite: 100]
+  { 
+    topic: "OS", 
+    q: "An interpreter translates code:", 
+    opts: ["All at once before execution", "Line-by-line during execution", "Only into Assembly language", "To improve hardware speed"], 
+    ans: 1, 
+    exp: "An interpreter reads and executes source code line-by-line at runtime (e.g., Python REPL). A compiler translates the entire program before execution." 
+  }, // [cite: 101]
+
+  // SECTION 9 — Storage, Security & I/O [cite: 102]
+  { 
+    topic: "Storage", 
+    q: "A 'sector' is a physical division of a:", 
+    opts: ["Hard drive platter", "CPU register", "RAM chip", "Data bus"], 
+    ans: 0, 
+    exp: "Hard drive platters are divided into concentric tracks, and each track is subdivided into sectors (typically 512 bytes or 4 KB each)." 
+  }, // [cite: 103]
+  { 
+    topic: "Storage", 
+    q: "Solid State Drives (SSDs) are faster than HDDs because they:", 
+    opts: ["Have no moving parts", "Use magnetic platters", "Are larger in size", "Require more power"], 
+    ans: 0, 
+    exp: "SSDs use flash memory with no mechanical components. HDDs require physical disk rotation and read/write head movement, introducing latency." 
+  }, // [cite: 104]
+  { 
+    topic: "Security", 
+    q: "'Encryption' is used to:", 
+    opts: ["Speed up data transfer", "Protect data from unauthorized access", "Compress large files", "Delete old data"], 
+    ans: 1, 
+    exp: "Encryption transforms plaintext data into ciphertext using a key, so only authorised parties with the decryption key can read it." 
+  }, // [cite: 105]
+  { 
+    topic: "Security", 
+    q: "A 'firewall' is used to:", 
+    opts: ["Filter incoming and outgoing network traffic", "Cool down the CPU", "Increase RAM capacity", "Repair hardware damage"], 
+    ans: 0, 
+    exp: "A firewall inspects network packets based on rules and blocks or allows traffic to protect a network from unauthorised access." 
+  }, // [cite: 106]
+  { 
+    topic: "Security", 
+    q: "A 'checksum' is used for:", 
+    opts: ["Error detection", "Data encryption", "Speeding up the clock", "Formatting a drive"], 
+    ans: 0, 
+    exp: "A checksum is a computed value derived from data. Recalculating and comparing checksums detects accidental data corruption during transmission or storage." 
+  }, // [cite: 107]
+  { 
+    topic: "I/O", 
+    q: "Which of the following is an output device?", 
+    opts: ["Keyboard", "Mouse", "Scanner", "Monitor"], 
+    ans: 3, 
+    exp: "A monitor displays information from the computer to the user — it is an output device. Keyboard, mouse, and scanner are input devices." 
+  }, // [cite: 108]
+  { 
+    topic: "I/O", 
+    q: "An 'interrupt' signal is sent to the CPU to:", 
+    opts: ["Request immediate attention for an event", "Power off the computer", "Increase the clock speed", "Clear the RAM"], 
+    ans: 0, 
+    exp: "Interrupts allow I/O devices and timers to signal the CPU that they need service, enabling efficient asynchronous I/O without constant polling." 
+  }, // [cite: 109]
+  { 
+    topic: "I/O", 
+    q: "The 'resolution' of a monitor is measured in:", 
+    opts: ["Pixels", "Inches", "Watts", "Bytes"], 
+    ans: 0, 
+    exp: "Monitor resolution (e.g., 1920×1080) is expressed as horizontal × vertical pixel count, determining image detail and sharpness." 
+  }, // [cite: 110]
+  { 
+    topic: "I/O", 
+    q: "'Plug and Play' refers to the ability to:", 
+    opts: ["Automatically configure new hardware", "Play games without installation", "Connect to the internet without a modem", "Use a computer without an OS"], 
+    ans: 0, 
+    exp: "Plug and Play (PnP) allows the OS to automatically detect, configure, and install drivers for new hardware without manual setup." 
+  } // [cite: 111]
+];
   ],
 
   2022: [

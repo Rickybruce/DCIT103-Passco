@@ -226,10 +226,22 @@ window.startSetup = function () {
     showToast("👤 No avatar selected — Anon profile assigned.", "warn");
   }
 
-  state.nickname    = nick;
+state.nickname    = nick;
   state.isElite     = isEliteName(nick);
-  state.isRicky     = nick.toLowerCase() === "R.B.A";
+  state.isRicky     = nick.toLowerCase() === "ricky";
   state.displayName = state.isElite ? `${nick} ${ELITE_EMOJI}` : nick;
+
+  // ── Persist identity so scenarios.html can read it ──
+  try {
+    localStorage.setItem("nexus_user", JSON.stringify({
+      nickname:    state.nickname,
+      displayName: state.displayName,
+      avatar:      state.avatar,
+      isElite:     state.isElite,
+    }));
+    localStorage.setItem("nexus_nickname", state.nickname);
+    localStorage.setItem("nexus_avatar",   getAvatarEmoji(state.avatar));
+  } catch(e) { console.warn("localStorage unavailable:", e); }
 
   showScreen("screen-year");
 };
@@ -470,12 +482,14 @@ window.startQuiz = function (year) {
   nameEl.textContent = state.displayName;
   nameEl.className   = "player-name" + (state.isElite ? " elite-name" : "");
 
-  document.getElementById("q-year-badge").textContent = year;
+ document.getElementById("q-year-badge").textContent = year;
 
   showScreen("screen-quiz");
   renderQuestion();
-};
 
+  // Start IA countdown if IA mode
+  if (String(year) === "IA") startIATimer();
+};
 /* ─────────────────────────────────────────────
    REGULAR QUIZ — Render question
 ───────────────────────────────────────────── */
@@ -573,8 +587,13 @@ function selectAnswer(chosen) {
 ───────────────────────────────────────────── */
 window.nextQuestion = function () {
   state.currentQ++;
-  if (state.currentQ >= state.questions.length) endQuiz();
-  else renderQuestion();
+  if (state.currentQ >= state.questions.length) {
+    stopIATimer();
+    endQuiz();
+  } else {
+    renderQuestion();
+    if (String(state.selectedYear) === "IA") startIATimer();
+  }
 };
 
 function endQuiz() {
@@ -681,7 +700,7 @@ window.showLeaderboard = function () {
 /**
  * Renders leaderboard rows, optionally filtered by category.
  * @param {Object|null} data  — raw Firebase snapshot value
- * @param {string}      filter — "all" | "2021" | "2022" | "2023" | "Scenario Cases" | "SpeedQuiz"
+* @param {string} filter — "all"|"2021"|"2022"|"2023"|"2024"|"IA"|"Scenario Cases"|"SpeedQuiz"
  */
 function renderLbEntries(data, filter) {
   const list = document.getElementById("lb-list");
@@ -741,9 +760,88 @@ function triggerStreakPopup() {
 /* ─────────────────────────────────────────────
    NAV HELPERS
 ───────────────────────────────────────────── */
-window.quitQuiz   = function () { showScreen("screen-year"); };
-window.playAgain  = function () { showScreen("screen-year"); };
+window.quitQuiz   = function () { stopIATimer(); showScreen("screen-year"); };
+window.playAgain  = function () { stopIATimer(); showScreen("screen-year"); };
 
+/** Navigate to the standalone Scenario Lab page */
+window.goToScenarios = function () {
+  // Ensure identity is saved before leaving
+  if (state.nickname) {
+    try {
+      localStorage.setItem("nexus_user", JSON.stringify({
+        nickname:    state.nickname,
+        displayName: state.displayName,
+        avatar:      state.avatar,
+        isElite:     state.isElite,
+      }));
+      localStorage.setItem("nexus_nickname", state.nickname);
+      localStorage.setItem("nexus_avatar",   getAvatarEmoji(state.avatar));
+    } catch(e) {}
+  }
+  window.location.href = "scenarios.html";
+};
+
+/* ─────────────────────────────────────────────
+   IA MODE — 15-second per-question countdown
+───────────────────────────────────────────── */
+let iaTimerInterval = null;
+const IA_TIMER_SEC  = 15;
+
+function startIATimer() {
+  const wrap  = document.getElementById("ia-timer-wrap");
+  const valEl = document.getElementById("ia-timer-val");
+  const bar   = document.getElementById("ia-timer-bar");
+  if (!wrap) return;
+
+  stopIATimer();
+  wrap.classList.add("active");
+
+  let remaining = IA_TIMER_SEC;
+  valEl.textContent = remaining;
+  valEl.classList.remove("danger");
+  if (bar) bar.style.transform = "scaleX(1)";
+
+  iaTimerInterval = setInterval(() => {
+    remaining--;
+    valEl.textContent = remaining;
+    if (bar) bar.style.transform = `scaleX(${remaining / IA_TIMER_SEC})`;
+
+    if (remaining <= 5) valEl.classList.add("danger");
+
+    if (remaining <= 0) {
+      stopIATimer();
+      // Auto-submit wrong if not already answered
+      if (!state.answered) {
+        showToast("⏱️ Time's up!", "error");
+        // Find any unanswered correct button and mark others wrong
+        const btns = document.querySelectorAll(".option-btn");
+        btns.forEach(b => { b.disabled = true; b.classList.remove("pending"); });
+        const q = state.questions[state.currentQ];
+        if (btns[q.ans]) btns[q.ans].classList.add("correct");
+        state.answered = true;
+        state.wrong++;
+        state.streak = 0;
+        document.getElementById("quiz-score").textContent  = state.score;
+        document.getElementById("quiz-streak").textContent = state.streak;
+        const fb = document.getElementById("feedback-bar");
+        const icon = document.getElementById("feedback-icon");
+        const text = document.getElementById("feedback-text");
+        fb.className     = "feedback-bar wrong show";
+        icon.textContent = "⏱️";
+        text.innerHTML   = `<strong>Time's up!</strong> Correct answer: ${q.opts[q.ans]}. ${q.exp}`;
+        document.getElementById("next-wrap").classList.add("show");
+      }
+    }
+  }, 1000);
+}
+
+function stopIATimer() {
+  if (iaTimerInterval) { clearInterval(iaTimerInterval); iaTimerInterval = null; }
+  const wrap = document.getElementById("ia-timer-wrap");
+  if (wrap) wrap.classList.remove("active");
+  const valEl = document.getElementById("ia-timer-val");
+  if (valEl) valEl.classList.remove("danger");
+}
 /* ════════════════════════════════════════════
    QUESTION BANK
    ════════════════════════════════════════════ */
@@ -989,6 +1087,84 @@ const SCENARIO_QUESTIONS = [
 
 /* ── REGULAR QUIZ QUESTION BANK ── */
 const QUESTIONS = {
+  /** ── 2024 PAPER ── */
+  2024: [
+    { topic: "Operating Systems",     q: "Which scheduling algorithm gives the CPU to the process with the smallest next CPU burst?",          opts: ["FCFS","Round Robin","SJF","Priority"],                                                  ans: 2, exp: "Shortest Job First (SJF) minimises average waiting time." },
+    { topic: "Operating Systems",     q: "A process that is waiting for an event that will never occur is said to be in a ___.",                opts: ["Deadlock","Starvation","Busy wait","Thrashing"],                                        ans: 0, exp: "Deadlock: circular wait where no process can proceed." },
+    { topic: "Operating Systems",     q: "Which is NOT a necessary condition for deadlock?",                                                    opts: ["Mutual exclusion","Hold and wait","Preemption","Circular wait"],                        ans: 2, exp: "Preemption PREVENTS deadlock; the other three are necessary conditions." },
+    { topic: "Memory Management",     q: "Dividing memory into fixed-sized blocks and processes into pages of the same size is called?",        opts: ["Segmentation","Paging","Swapping","Compaction"],                                        ans: 1, exp: "Paging uses fixed-size frames and pages." },
+    { topic: "Memory Management",     q: "The technique of running a program larger than physical memory by using disk space is?",              opts: ["Caching","Paging","Virtual memory","Swapping"],                                         ans: 2, exp: "Virtual memory extends RAM using secondary storage." },
+    { topic: "Memory Management",     q: "A page fault occurs when?",                                                                          opts: ["A page is found in RAM","A page is not in RAM","RAM is full","The OS crashes"],         ans: 1, exp: "Page fault: referenced page is not in main memory." },
+    { topic: "File Systems",          q: "Which file allocation method gives the best random access performance?",                              opts: ["Contiguous","Linked","Indexed","FAT"],                                                  ans: 0, exp: "Contiguous allocation: sequential disk blocks allow direct calculation." },
+    { topic: "File Systems",          q: "An inode stores all file metadata EXCEPT the?",                                                      opts: ["File size","Owner ID","File name","Timestamps"],                                        ans: 2, exp: "Inodes do NOT store the file name — that lives in the directory entry." },
+    { topic: "Networks",              q: "Which layer of the OSI model is responsible for end-to-end error recovery?",                         opts: ["Network","Data Link","Transport","Session"],                                            ans: 2, exp: "Transport layer (TCP) provides end-to-end reliable delivery." },
+    { topic: "Networks",              q: "Which protocol translates domain names to IP addresses?",                                             opts: ["DHCP","FTP","DNS","ARP"],                                                               ans: 2, exp: "DNS — Domain Name System." },
+    { topic: "Networks",              q: "The maximum number of hosts on a /24 subnet is?",                                                     opts: ["254","256","255","512"],                                                                ans: 0, exp: "2⁸ − 2 = 254 (subtract network and broadcast addresses)." },
+    { topic: "Networks",              q: "Which transmission media has the highest bandwidth?",                                                  opts: ["Twisted pair","Coaxial","Fibre optic","Satellite"],                                     ans: 2, exp: "Fibre optic carries the highest bandwidth." },
+    { topic: "Security",              q: "Which attack intercepts communication between two parties without their knowledge?",                   opts: ["DoS","Phishing","Man-in-the-Middle","Brute force"],                                     ans: 2, exp: "Man-in-the-Middle (MitM) attack." },
+    { topic: "Security",              q: "Encrypting data so only authorised parties can read it is called?",                                   opts: ["Hashing","Steganography","Cryptography","Firewall"],                                    ans: 2, exp: "Cryptography provides confidentiality through encryption." },
+    { topic: "Security",              q: "A digital signature provides?",                                                                       opts: ["Encryption","Authentication & integrity","Compression","Anonymity"],                    ans: 1, exp: "Digital signatures verify the sender's identity and data integrity." },
+    { topic: "Databases",             q: "Which SQL command retrieves data from a table?",                                                      opts: ["INSERT","UPDATE","SELECT","DELETE"],                                                    ans: 2, exp: "SELECT is the SQL data retrieval command." },
+    { topic: "Databases",             q: "First Normal Form (1NF) requires that?",                                                              opts: ["No partial dependencies","No transitive dependencies","All attributes are atomic","A foreign key exists"], ans: 2, exp: "1NF: each column holds atomic (indivisible) values." },
+    { topic: "Databases",             q: "Which join returns all records from both tables, with NULLs where no match?",                         opts: ["INNER JOIN","LEFT JOIN","RIGHT JOIN","FULL OUTER JOIN"],                               ans: 3, exp: "FULL OUTER JOIN returns all rows from both tables." },
+    { topic: "Algorithms",            q: "The time complexity of binary search on a sorted list of n elements is?",                             opts: ["O(n)","O(log n)","O(n²)","O(1)"],                                                      ans: 1, exp: "Binary search halves the search space each step → O(log n)." },
+    { topic: "Algorithms",            q: "Which sorting algorithm has the best worst-case time complexity?",                                    opts: ["Bubble sort","Selection sort","Merge sort","Insertion sort"],                           ans: 2, exp: "Merge sort guarantees O(n log n) in all cases." },
+    { topic: "Algorithms",            q: "A stack is a ___ data structure.",                                                                    opts: ["FIFO","LIFO","Random access","Priority-based"],                                         ans: 1, exp: "Stack: Last In, First Out." },
+    { topic: "Algorithms",            q: "Which traversal visits the root node LAST?",                                                          opts: ["Pre-order","In-order","Post-order","Level-order"],                                      ans: 2, exp: "Post-order: left → right → root." },
+    { topic: "Programming",           q: "A function that calls itself is called?",                                                             opts: ["Iteration","Recursion","Polymorphism","Encapsulation"],                                ans: 1, exp: "Recursion: a function that invokes itself with a modified argument." },
+    { topic: "Programming",           q: "Which OOP principle hides internal implementation details?",                                          opts: ["Inheritance","Polymorphism","Encapsulation","Abstraction"],                             ans: 2, exp: "Encapsulation bundles data and restricts direct access." },
+    { topic: "Number Systems",        q: "Convert hex 2F to decimal.",                                                                          opts: ["45","47","48","46"],                                                                    ans: 1, exp: "2×16 + 15 = 32 + 15 = 47." },
+    { topic: "Number Systems",        q: "The one's complement of 10110010 is?",                                                               opts: ["01001110","01001101","01001100","11001101"],                                            ans: 1, exp: "Flip every bit: 01001101." },
+    { topic: "CPU Architecture",      q: "Pipelining improves CPU performance by?",                                                             opts: ["Increasing clock speed","Overlapping instruction stages","Adding more cores","Using larger cache"], ans: 1, exp: "Pipelining overlaps fetch/decode/execute stages of multiple instructions." },
+    { topic: "CPU Architecture",      q: "The program counter (PC) holds the address of?",                                                     opts: ["Current instruction","Next instruction","Last instruction","The stack top"],            ans: 1, exp: "PC always points to the NEXT instruction to be fetched." },
+    { topic: "Software Engineering",  q: "Which software development model follows a strict sequential phase order?",                           opts: ["Agile","Scrum","Waterfall","Spiral"],                                                   ans: 2, exp: "Waterfall: requirements → design → implementation → testing → maintenance." },
+    { topic: "Software Engineering",  q: "Unit testing verifies?",                                                                              opts: ["The whole system","Individual components","User requirements","Network security"],       ans: 1, exp: "Unit tests verify the smallest individual pieces of code." },
+    { topic: "Software Engineering",  q: "Version control systems like Git are used for?",                                                      opts: ["UI design","Tracking code changes","Database management","Server monitoring"],         ans: 1, exp: "Version control tracks changes, enables collaboration and rollback." },
+    { topic: "Software Engineering",  q: "An API (Application Programming Interface) is?",                                                      opts: ["A type of database","A user interface","A set of rules for software communication","An OS kernel module"], ans: 2, exp: "API: defined contracts allowing software components to communicate." },
+    { topic: "Logic",                 q: "De Morgan's law states NOT(A AND B) equals?",                                                         opts: ["NOT A AND NOT B","NOT A OR NOT B","A OR B","NOT A OR B"],                              ans: 1, exp: "NOT(A·B) = Ā + B̄." },
+    { topic: "Logic",                 q: "The Boolean expression A + 0 simplifies to?",                                                         opts: ["0","1","A","NOT A"],                                                                    ans: 2, exp: "A + 0 = A (identity law for OR)." },
+    { topic: "Logic",                 q: "A XOR B is true when?",                                                                               opts: ["Both are 0","Both are 1","Inputs are different","Inputs are equal"],                    ans: 2, exp: "XOR outputs 1 only when inputs differ." },
+    { topic: "Networks",              q: "Which protocol provides reliable, connection-oriented communication?",                                 opts: ["UDP","IP","TCP","ICMP"],                                                                ans: 2, exp: "TCP provides reliability via handshaking and acknowledgements." },
+    { topic: "Networks",              q: "The OSI model has how many layers?",                                                                   opts: ["4","5","6","7"],                                                                        ans: 3, exp: "OSI model: 7 layers (Physical to Application)." },
+    { topic: "Storage",               q: "Which storage technology uses no moving parts and is faster than HDDs?",                              opts: ["Optical disc","Magnetic tape","SSD","Floppy disk"],                                     ans: 2, exp: "SSD (Solid State Drive) uses flash memory." },
+    { topic: "Storage",               q: "RAID 1 provides?",                                                                                    opts: ["Striping","Mirroring","Parity","Compression"],                                          ans: 1, exp: "RAID 1 mirrors data across two drives for redundancy." },
+    { topic: "Storage",               q: "Which file system is native to Linux?",                                                               opts: ["NTFS","FAT32","ext4","HFS+"],                                                           ans: 2, exp: "ext4 is the default Linux file system." },
+  ],
+
+  /** ── INTERIM ASSESSMENT (IA) ── 15s per question pressure mode */
+  IA: [
+    { topic: "OS Fundamentals",       q: "What is the primary role of an Operating System?",                                                   opts: ["Run games","Manage hardware & software resources","Connect to the internet","Store files"], ans: 1, exp: "The OS manages hardware resources and provides services to programs." },
+    { topic: "OS Fundamentals",       q: "Which OS component handles CPU scheduling?",                                                          opts: ["File system","Device driver","Kernel","Shell"],                                         ans: 2, exp: "The kernel manages processes and CPU scheduling." },
+    { topic: "Memory",                q: "RAM stands for?",                                                                                     opts: ["Read Access Memory","Random Access Memory","Rapid Action Memory","Read And Modify"],    ans: 1, exp: "RAM — Random Access Memory." },
+    { topic: "Memory",                q: "Which is faster?",                                                                                    opts: ["Hard disk","RAM","Register","SSD"],                                                     ans: 2, exp: "CPU registers are the fastest storage — inside the CPU itself." },
+    { topic: "Memory",                q: "Cache memory sits between?",                                                                          opts: ["HDD and RAM","CPU and RAM","RAM and ROM","GPU and CPU"],                               ans: 1, exp: "Cache reduces CPU–RAM latency." },
+    { topic: "Number Systems",        q: "Binary 1010 in decimal is?",                                                                          opts: ["8","9","10","12"],                                                                      ans: 2, exp: "8+2 = 10." },
+    { topic: "Number Systems",        q: "Hexadecimal F equals decimal?",                                                                       opts: ["14","15","16","17"],                                                                    ans: 1, exp: "F = 15 in hex." },
+    { topic: "Number Systems",        q: "How many bits in one byte?",                                                                          opts: ["4","8","16","32"],                                                                      ans: 1, exp: "1 byte = 8 bits." },
+    { topic: "Logic Gates",           q: "AND gate output is 1 only when?",                                                                     opts: ["Any input is 1","All inputs are 1","All inputs are 0","Any input is 0"],               ans: 1, exp: "AND: all inputs must be HIGH." },
+    { topic: "Logic Gates",           q: "NOT gate with input 0 outputs?",                                                                      opts: ["0","1","Same","Undefined"],                                                             ans: 1, exp: "NOT inverts: NOT 0 = 1." },
+    { topic: "Logic Gates",           q: "OR gate outputs 0 only when?",                                                                        opts: ["Any input is 1","All inputs are 1","All inputs are 0","First input is 0"],             ans: 2, exp: "OR is 0 only when all inputs are 0." },
+    { topic: "Algorithms",            q: "What does an algorithm require to be valid?",                                                          opts: ["Must be written in Python","Must be finite and unambiguous","Must use a loop","Must use recursion"], ans: 1, exp: "Algorithms must be finite, unambiguous, and produce a result." },
+    { topic: "Algorithms",            q: "Bubble sort time complexity (worst case)?",                                                            opts: ["O(n)","O(log n)","O(n²)","O(n log n)"],                                                ans: 2, exp: "Bubble sort: O(n²) worst case — n passes of up to n comparisons." },
+    { topic: "Data Structures",       q: "A queue operates on which principle?",                                                                 opts: ["LIFO","FIFO","Random","Priority"],                                                      ans: 1, exp: "Queue: First In, First Out." },
+    { topic: "Data Structures",       q: "Which data structure uses push and pop operations?",                                                   opts: ["Queue","Linked list","Stack","Tree"],                                                   ans: 2, exp: "Stack operations: push (add) and pop (remove)." },
+    { topic: "Networks",              q: "IP addresses are used at which OSI layer?",                                                            opts: ["Physical","Data Link","Network","Transport"],                                           ans: 2, exp: "Network layer (Layer 3) uses IP addresses." },
+    { topic: "Networks",              q: "A router operates at which OSI layer?",                                                                opts: ["1","2","3","4"],                                                                        ans: 2, exp: "Routers operate at Layer 3 (Network layer)." },
+    { topic: "Networks",              q: "Which is a private IP range?",                                                                         opts: ["8.8.8.8","192.168.0.0/16","172.32.0.0","1.1.1.1"],                                     ans: 1, exp: "192.168.0.0/16 is a private (RFC 1918) address range." },
+    { topic: "Security",              q: "A password that is easy to guess is a?",                                                               opts: ["Strong password","Weak password","Hash","Token"],                                       ans: 1, exp: "Predictable passwords are weak and vulnerable." },
+    { topic: "Security",              q: "Malware that demands payment to restore files is?",                                                    opts: ["Spyware","Adware","Ransomware","Rootkit"],                                              ans: 2, exp: "Ransomware encrypts files and demands payment." },
+    { topic: "Databases",             q: "SQL stands for?",                                                                                     opts: ["Standard Query Listing","Structured Query Language","Simple Question Logic","Sequential Query List"], ans: 1, exp: "SQL — Structured Query Language." },
+    { topic: "Databases",             q: "A primary key must be?",                                                                              opts: ["Nullable","Unique and not null","Duplicatable","A number"],                             ans: 1, exp: "Primary keys uniquely identify records and cannot be NULL." },
+    { topic: "Programming",           q: "Which symbol denotes a comment in Python?",                                                            opts: ["//","/*","#","--"],                                                                     ans: 2, exp: "Python uses # for single-line comments." },
+    { topic: "Programming",           q: "What does 'def' do in Python?",                                                                       opts: ["Defines a variable","Defines a function","Declares a class","Deletes a file"],         ans: 1, exp: "def keyword defines a function in Python." },
+    { topic: "Programming",           q: "A for loop runs?",                                                                                    opts: ["Once","Forever","A fixed number of times","Until a flag"],                             ans: 2, exp: "A for loop iterates over a sequence a fixed number of times." },
+    { topic: "Hardware",              q: "The ALU performs?",                                                                                   opts: ["Memory management","Arithmetic and logical operations","I/O control","Clock signals"],  ans: 1, exp: "ALU: Arithmetic Logic Unit." },
+    { topic: "Hardware",              q: "Which port is commonly used for displays?",                                                            opts: ["USB-A","HDMI","RJ45","RS-232"],                                                         ans: 1, exp: "HDMI is the standard modern display interface." },
+    { topic: "Hardware",              q: "Moore's Law states that transistor count doubles approximately every?",                                 opts: ["6 months","1 year","2 years","5 years"],                                                ans: 2, exp: "Moore's Law: transistor count ~doubles every 2 years." },
+    { topic: "Software",              q: "Open source software means the source code is?",                                                       opts: ["Expensive","Publicly available","Encrypted","Only on Linux"],                           ans: 1, exp: "Open source: source code is freely available to view and modify." },
+    { topic: "Software",              q: "A compiler translates?",                                                                               opts: ["Binary to source","High-level to machine code","Assembly to hex","Machine code to C"], ans: 1, exp: "Compiler: translates entire high-level program to machine code." },
+  ],
+
   2022: [
     { topic: "Operating Systems",       q: "A/an ___ is a signal from a device that causes the OS to stop and figure out what to do next.",             opts: ["Software","Hardware","Instruction","Interrupt"],                              ans: 3, exp: "An interrupt signals the CPU to stop and handle an event." },
     { topic: "Operating Systems",       q: "A program in a state of execution is called a/an ___",                                                        opts: ["File","Process","Software bug","Interrupt"],                                  ans: 1, exp: "A process is a program currently executing in memory." },

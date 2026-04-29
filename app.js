@@ -186,7 +186,7 @@ window.handleOverlayClick = function (e) {
 ───────────────────────────────────────────── */
 document.getElementById("nickname").addEventListener("input", function () {
   const val     = this.value.trim();
-  const isRicky = val.toLowerCase() === "R.B.A";
+  const isRicky = val.toLowerCase() === "r.b.a" || val === "R.B.A";
   const isElite = isEliteName(val);
 
   state.isRicky = isRicky;
@@ -228,8 +228,8 @@ window.startSetup = function () {
 
 state.nickname    = nick;
   state.isElite     = isEliteName(nick);
-  state.isRicky     = nick.toLowerCase() === "ricky";
-  state.displayName = state.isElite ? `${nick} ${ELITE_EMOJI}` : nick;
+  state.isRicky     = nick.toLowerCase() === "ricky" || nick === "R.B.A";
+   state.displayName = state.isElite ? `${nick} ${ELITE_EMOJI}` : nick;
 
   // ── Persist identity so scenarios.html can read it ──
   try {
@@ -284,13 +284,8 @@ function startCountdown() {
   nexusTimerInterval = setInterval(tick, 1000);
 }
 
-/* ─────────────────────────────────────────────
-   DIAGRAM / SCENARIO LOCK HANDLER
-   Keeps Scenario Cases locked and shows alert/toast
-───────────────────────────────────────────── */
-window.goToScenarios = function () {
-  showToast("📋 Scenario Cases coming soon!", "warn");
-};
+
+
 /* ─────────────────────────────────────────────
    SCENARIO CASES — Scrollable document mode
 ───────────────────────────────────────────── */
@@ -455,11 +450,15 @@ window.backFromScenario = function () { showScreen("screen-year"); };
    REGULAR QUIZ — Start
 ───────────────────────────────────────────── */
 window.startQuiz = function (year) {
-   if (year === '2024') {
+  if (year === '2024') {
     showToast("🔒 2024 Past Questions are currently locked.", "warn");
     return;
-  state.selectedYear = year;
-  state.questions    = shuffle([...QUESTIONS[year]]);
+  }                                   
+  if (!QUESTIONS[year]) {
+    showToast(`⚠️ No questions found for "${year}".`, "error");
+    return;
+  }
+  state.selectedYear = year;  state.questions    = shuffle([...QUESTIONS[year]]);
   state.currentQ     = 0;
   state.score        = 0;
   state.correct      = 0;

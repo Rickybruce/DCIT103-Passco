@@ -843,6 +843,77 @@ body::before {
 
 .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 24px 0; }
 
+/* ══════════════════════════════════════════
+   DEVELOPER SIGNATURE (fixed, all pages)
+══════════════════════════════════════════ */
+.dev-signature {
+  position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+  pointer-events: none; text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; line-height: 1.8;
+  text-transform: uppercase;
+  color: rgba(0, 212, 255, 0.18);
+  animation: sig-pulse 4s ease-in-out infinite;
+}
+.dev-signature strong {
+  display: block; font-size: 10px;
+  color: rgba(0, 212, 255, 0.32);
+  text-shadow:
+    0 0 8px  rgba(0,212,255,0.45),
+    0 0 20px rgba(0,212,255,0.2);
+}
+@keyframes sig-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1;   text-shadow: 0 0 14px rgba(0,212,255,0.7); }
+}
+
+/* ── IA (Interim Assessment) year card ── */
+.year-card.ia {
+  border-color: rgba(255, 107, 53, 0.35);
+  background: linear-gradient(135deg, rgba(255,107,53,0.06), rgba(255,71,87,0.04));
+}
+.year-card.ia:hover { border-color: var(--orange); box-shadow: 0 0 32px rgba(255,107,53,0.2); }
+.year-card.ia .year-num { color: var(--orange); }
+
+/* ── 2024 year card ── */
+.year-card.y2024 {
+  border-color: rgba(0,255,157,0.3);
+  background: linear-gradient(135deg, rgba(0,255,157,0.05), rgba(0,212,255,0.04));
+}
+.year-card.y2024:hover { border-color: var(--green); box-shadow: 0 0 32px rgba(0,255,157,0.2); }
+.year-card.y2024 .year-num { color: var(--green); }
+
+/* ── IA per-question countdown timer ── */
+.ia-timer-wrap {
+  display: none; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+  padding: 8px 16px; border-radius: 20px;
+  background: rgba(255,107,53,0.08);
+  border: 1px solid rgba(255,107,53,0.25);
+}
+.ia-timer-wrap.active { display: flex; }
+.ia-timer-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; color: var(--orange); text-transform: uppercase;
+}
+.ia-timer-val {
+  font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900;
+  color: var(--orange); min-width: 36px; text-align: right;
+  transition: color 0.3s;
+}
+.ia-timer-val.danger { color: var(--red); animation: blink-red 0.5s ease-in-out infinite; }
+@keyframes blink-red { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.ia-timer-bar-track {
+  flex: 1; height: 4px; background: rgba(255,255,255,0.07);
+  border-radius: 2px; overflow: hidden;
+}
+.ia-timer-bar-fill {
+  height: 100%; width: 100%;
+  background: linear-gradient(90deg, var(--red), var(--orange));
+  border-radius: 2px; transform-origin: left;
+  transition: transform 1s linear;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
   .q-card       { padding: 20px; }

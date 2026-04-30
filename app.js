@@ -2124,6 +2124,5 @@ const QUESTIONS = {
     { topic: "Hardware",              q: "Moore's Law states that transistor count doubles approximately every?",                                 opts: ["6 months","1 year","2 years","5 years"],                                                ans: 2, exp: "Moore's Law: transistor count ~doubles every 2 years." },
     { topic: "Software",              q: "Open source software means the source code is?",                                                       opts: ["Expensive","Publicly available","Encrypted","Only on Linux"],                           ans: 1, exp: "Open source: source code is freely available to view and modify." },
     { topic: "Software",              q: "A compiler translates?",                                                                               opts: ["Binary to source","High-level to machine code","Assembly to hex","Machine code to C"], ans: 1, exp: "Compiler: translates entire high-level program to machine code." },
-  { 
   ],
 };
